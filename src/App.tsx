@@ -11,6 +11,7 @@ import { Palette } from '@/tools/Palette'
 import { Temperature } from '@/tools/Temperature'
 import { PaintMix } from '@/tools/PaintMix'
 import { Histogram } from '@/tools/Histogram'
+import { Edges } from '@/tools/Edges'
 import styles from './App.module.css'
 
 function ActiveTool({ tool, image }: { tool: Tool; image: LoadedImage }) {
@@ -23,6 +24,7 @@ function ActiveTool({ tool, image }: { tool: Tool; image: LoadedImage }) {
   if (tool === 'temperature') return <Temperature image={image} />
   if (tool === 'paint-mix') return <PaintMix image={image} />
   if (tool === 'histogram') return <Histogram image={image} />
+  if (tool === 'edges') return <Edges image={image} />
   return <p className={styles.placeholder}>{tool} — coming soon</p>
 }
 
@@ -36,6 +38,7 @@ const TOOL_LABELS: Record<Tool, string> = {
   'temperature':   'Temperature',
   'paint-mix':     'Paint Mix',
   'histogram':     'Histogram',
+  'edges':         'Edges',
 }
 
 export default function App() {

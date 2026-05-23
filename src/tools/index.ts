@@ -8,6 +8,7 @@ export const TOOLS = [
   'temperature',
   'paint-mix',
   'histogram',
+  'edges',
 ] as const
 
 export type Tool = typeof TOOLS[number]

@@ -62,7 +62,7 @@ All tool slugs are defined here. `App.tsx` dispatches to the right component via
 | Export / save | 🔲 todo | Download processed canvas as PNG |
 | Side-by-side view | 🔲 todo | Original + processed panels for direct comparison |
 | Histogram | ✅ done | Luma histogram with log/linear scale; min/mean/max tonal range stats |
-| Edge detection overlay | 🔲 todo | Canny-style edge overlay for composition study |
+| Edge detection overlay | ✅ done | Sobel edge detection; blur/threshold/opacity controls; white or black lines |
 
 Paint brand database (Gamblin, W&N, Williamsburg, Rembrandt) is a key differentiator — competitors lack this.
 
