@@ -1,0 +1,89 @@
+/* Wraps canvas + ring so the ring is positioned relative to the canvas */
+.canvasFrame {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.canvas {
+  cursor: crosshair;
+}
+
+/* Indicator ring that follows the cursor */
+.ring {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  outline: 1px solid rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: border-color var(--transition-fast);
+}
+
+.ring.locked {
+  border-color: var(--color-accent);
+  outline-color: transparent;
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+/* Color info panel */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.swatch {
+  height: 80px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hexBadge {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  letter-spacing: 0.06em;
+  backdrop-filter: blur(4px);
+  transition: background var(--transition-fast);
+}
+
+.hexBadge:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+}
+
+.table th {
+  text-align: left;
+  color: var(--color-text-faint);
+  font-weight: 500;
+  width: 44px;
+  padding: 3px 0;
+  letter-spacing: 0.04em;
+}
+
+.table td {
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  padding: 3px 0;
+}
+
+.empty {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  text-align: center;
+  padding: var(--space-6) 0;
+}
