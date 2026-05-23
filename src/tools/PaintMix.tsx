@@ -47,7 +47,7 @@ export function PaintMix({ image }: Props) {
     setPick(null)
   }, [image])
 
-  const handleClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     const data = imageDataRef.current
     if (!canvas || !data) return
@@ -95,7 +95,7 @@ export function PaintMix({ image }: Props) {
           ref={canvasRef}
           className={toolStyles.canvas}
           style={{ cursor: 'crosshair' }}
-          onClick={handleClick}
+          onPointerUp={handlePointerUp}
         />
         {pick && (
           <div
@@ -119,7 +119,7 @@ export function PaintMix({ image }: Props) {
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Paint Mix</h2>
         <p className={toolStyles.description}>
-          Click the image to sample a color, then see the closest paints and a suggested 2-paint mix.
+          Tap or click the image to sample a color, then see the closest paints and a suggested 2-paint mix.
         </p>
 
         {/* Brand filter */}
@@ -137,7 +137,7 @@ export function PaintMix({ image }: Props) {
         </div>
 
         {!pick && (
-          <p className={styles.prompt}>Click anywhere on the image to sample a color.</p>
+          <p className={styles.prompt}>Tap or click anywhere on the image to sample a color.</p>
         )}
 
         {pick && hex && results && (

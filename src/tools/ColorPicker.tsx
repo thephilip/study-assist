@@ -44,34 +44,30 @@ export function ColorPicker({ image }: Props) {
     ctx.drawImage(tmp, 0, 0)
   }, [image])
 
-  const sample = useCallback((
-    e: React.MouseEvent<HTMLCanvasElement>,
-    locked: boolean,
-  ) => {
+  const sampleAt = useCallback((clientX: number, clientY: number, locked: boolean) => {
     const canvas = canvasRef.current
     const data = imageDataRef.current
     if (!canvas || !data) return
     const rect = canvas.getBoundingClientRect()
-    // scale CSS coords → image pixel coords
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
-    const ix = (e.clientX - rect.left) * scaleX
-    const iy = (e.clientY - rect.top) * scaleY
+    const ix = (clientX - rect.left) * scaleX
+    const iy = (clientY - rect.top) * scaleY
     const color = sampleRegion(data, ix, iy, radius)
-    // keep indicator in CSS coords
-    setPick({ color, x: e.clientX - rect.left, y: e.clientY - rect.top, locked })
+    setPick({ color, x: clientX - rect.left, y: clientY - rect.top, locked })
   }, [radius])
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     if (pick?.locked) return
-    sample(e, false)
-  }, [pick?.locked, sample])
+    sampleAt(e.clientX, e.clientY, false)
+  }, [pick?.locked, sampleAt])
 
-  const handleClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    sample(e, true)
-  }, [sample])
+  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
+    sampleAt(e.clientX, e.clientY, true)
+  }, [sampleAt])
 
-  const handleMouseLeave = useCallback(() => {
+  const handlePointerLeave = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (e.pointerType === 'touch') return
     if (!pick?.locked) setPick(null)
   }, [pick?.locked])
 
@@ -88,9 +84,9 @@ export function ColorPicker({ image }: Props) {
           <canvas
             ref={canvasRef}
             className={`${toolStyles.canvas} ${styles.canvas}`}
-            onMouseMove={handleMouseMove}
-            onClick={handleClick}
-            onMouseLeave={handleMouseLeave}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerLeave}
           />
           {pick && (
             <div
@@ -105,7 +101,7 @@ export function ColorPicker({ image }: Props) {
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Color Picker</h2>
         <p className={toolStyles.description}>
-          Hover to preview, click to lock. Drag the radius up to average a region.
+          Move or drag to preview — click or lift to lock. Increase radius to average a region.
         </p>
 
         <Slider label="Sample radius" value={radius} min={1} max={20} onChange={setRadius} />
@@ -144,7 +140,7 @@ export function ColorPicker({ image }: Props) {
             </table>
           </div>
         ) : (
-          <p className={styles.empty}>Move cursor over the image</p>
+          <p className={styles.empty}>Move or drag over the image to sample</p>
         )}
       </Panel>
     </div>

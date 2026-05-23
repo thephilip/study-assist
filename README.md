@@ -1,6 +1,6 @@
 # study assist
 
-A painting reference tool for artists — a web-first alternative to colorstudy.app, built with a clean, accessible, dark-mode-first UI.
+A painting reference tool for artists — value maps, notan, colour picking, paint mixing, and more in one place, built with a clean, accessible, dark-mode-first UI.
 
 Process reference photos entirely in your browser. No uploads, no accounts, no server — everything runs locally on your device.
 

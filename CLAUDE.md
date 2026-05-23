@@ -1,6 +1,6 @@
 # study-assist
 
-A painting reference tool for artists — a web-first alternative to colorstudy.app, built with a clean, accessible, dark-mode-first UI. A purpose-built native tablet app (iOS/Android) will follow the web release.
+A painting reference tool for artists — value maps, notan, colour picking, paint mixing, and more in one place, built with a clean, accessible, dark-mode-first UI. A purpose-built native tablet app (iOS/Android) will follow the web release.
 
 ## Project Goals
 
@@ -89,7 +89,6 @@ Shared tool layout (`src/tools/Tool.module.css`): two-column — canvas fills le
 
 | App | Strengths | Weaknesses |
 |---|---|---|
-| colorstudy.app | All-in-one, good mixing | Missing paint brands (Gamblin), mobile UI is a port not a native design |
 | Value Study app | Clean, free | No color tools |
 | Notanizer | Simple, $1.99 | Android/Mac only, no color |
 | Tonal Value Tool | Browser-based, free | Utility-grade UI, no mixing |
