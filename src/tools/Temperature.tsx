@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
-import { useProcessedCanvas } from '@/hooks/useProcessedCanvas'
+import { useCompare } from '@/hooks/useCompare'
 import { applyTemperature } from './temperature'
 import type { LoadedImage } from '@/hooks/useImage'
 import styles from './Tool.module.css'
@@ -18,12 +18,13 @@ export function Temperature({ image }: Props) {
     [intensity, blend],
   )
 
-  const canvasRef = useProcessedCanvas(image, processData)
+  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData)
 
   return (
     <div className={styles.root}>
-      <div className={styles.canvasWrap}>
-        <canvas ref={canvasRef} className={styles.canvas} />
+      <div className={`${styles.canvasWrap} ${compare ? styles.compareActive : ''}`}>
+        <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} />
+        <canvas ref={processedRef} className={styles.canvas} />
       </div>
       <Panel className={styles.controls}>
         <h2 className={styles.toolName}>Temperature Map</h2>
@@ -31,6 +32,13 @@ export function Temperature({ image }: Props) {
           Maps each pixel's hue to warm (orange) or cool (blue), preserving
           luminance so value structure remains readable.
         </p>
+        <button
+          className={`${styles.compareBtn} ${compare ? styles.compareBtnActive : ''}`}
+          onClick={toggleCompare}
+          aria-pressed={compare}
+        >
+          {compare ? 'Exit compare' : 'Compare'}
+        </button>
         <Slider
           label="Intensity"
           value={intensity}
@@ -60,7 +68,7 @@ export function Temperature({ image }: Props) {
         <p className={styles.description}>
           Warm &nbsp;·&nbsp; Cool
         </p>
-        <SaveButton canvasRef={canvasRef} filename="temperature-map.png" />
+        <SaveButton canvasRef={processedRef} filename="temperature-map.png" />
       </Panel>
     </div>
   )

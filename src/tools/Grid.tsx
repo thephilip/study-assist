@@ -21,10 +21,19 @@ type Props = { image: LoadedImage }
 
 export function Grid({ image }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const originalRef = useRef<HTMLCanvasElement>(null)
   const [cols, setCols] = useState(3)
   const [rows, setRows] = useState(3)
   const [opacity, setOpacity] = useState(50)
   const [lineColor, setLineColor] = useState<LineColor>('light')
+  const [compare, setCompare] = useState(false)
+
+  // Keep original canvas in sync with the image
+  useEffect(() => {
+    const original = originalRef.current
+    if (!original) return
+    drawImageToCanvas(original, image.bitmap)
+  }, [image])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -36,7 +45,8 @@ export function Grid({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div className={toolStyles.canvasWrap}>
+      <div className={`${toolStyles.canvasWrap} ${compare ? toolStyles.compareActive : ''}`}>
+        <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} />
         <canvas ref={canvasRef} className={toolStyles.canvas} />
       </div>
       <Panel className={toolStyles.controls}>
@@ -44,6 +54,14 @@ export function Grid({ image }: Props) {
         <p className={toolStyles.description}>
           Overlay a grid to check proportions and aid transfer to canvas.
         </p>
+
+        <button
+          className={`${toolStyles.compareBtn} ${compare ? toolStyles.compareBtnActive : ''}`}
+          onClick={() => setCompare(v => !v)}
+          aria-pressed={compare}
+        >
+          {compare ? 'Exit compare' : 'Compare'}
+        </button>
 
         <div className={styles.section}>
           <span className={styles.sectionLabel}>Presets</span>

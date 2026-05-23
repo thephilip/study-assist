@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
-import { useProcessedCanvas } from '@/hooks/useProcessedCanvas'
+import { useCompare } from '@/hooks/useCompare'
 import { applyShapeSimplify } from './shape-simplify'
 import type { LoadedImage } from '@/hooks/useImage'
 import styles from './Tool.module.css'
@@ -18,18 +18,26 @@ export function ShapeSimplify({ image }: Props) {
     [blurRadius, levels],
   )
 
-  const canvasRef = useProcessedCanvas(image, processData)
+  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData)
 
   return (
     <div className={styles.root}>
-      <div className={styles.canvasWrap}>
-        <canvas ref={canvasRef} className={styles.canvas} />
+      <div className={`${styles.canvasWrap} ${compare ? styles.compareActive : ''}`}>
+        <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} />
+        <canvas ref={processedRef} className={styles.canvas} />
       </div>
       <Panel className={styles.controls}>
         <h2 className={styles.toolName}>Shape Simplify</h2>
         <p className={styles.description}>
           Blur flattens texture; posterize snaps colours to flat planes. Together they reveal the big shapes of the composition.
         </p>
+        <button
+          className={`${styles.compareBtn} ${compare ? styles.compareBtnActive : ''}`}
+          onClick={toggleCompare}
+          aria-pressed={compare}
+        >
+          {compare ? 'Exit compare' : 'Compare'}
+        </button>
         <Slider
           label="Blur radius"
           value={blurRadius}
@@ -44,7 +52,7 @@ export function ShapeSimplify({ image }: Props) {
           max={10}
           onChange={setLevels}
         />
-        <SaveButton canvasRef={canvasRef} filename="shape-simplify.png" />
+        <SaveButton canvasRef={processedRef} filename="shape-simplify.png" />
       </Panel>
     </div>
   )

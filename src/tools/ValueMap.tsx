@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
-import { useProcessedCanvas } from '@/hooks/useProcessedCanvas'
+import { useCompare } from '@/hooks/useCompare'
 import { applyValueMap } from './value-map'
 import type { LoadedImage } from '@/hooks/useImage'
 import styles from './Tool.module.css'
@@ -17,18 +17,26 @@ export function ValueMap({ image }: Props) {
     [levels],
   )
 
-  const canvasRef = useProcessedCanvas(image, processData)
+  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData)
 
   return (
     <div className={styles.root}>
-      <div className={styles.canvasWrap}>
-        <canvas ref={canvasRef} className={styles.canvas} />
+      <div className={`${styles.canvasWrap} ${compare ? styles.compareActive : ''}`}>
+        <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} />
+        <canvas ref={processedRef} className={styles.canvas} />
       </div>
       <Panel className={styles.controls}>
         <h2 className={styles.toolName}>Value Map</h2>
         <p className={styles.description}>
           Posterizes the image to a fixed number of tonal levels to reveal value structure.
         </p>
+        <button
+          className={`${styles.compareBtn} ${compare ? styles.compareBtnActive : ''}`}
+          onClick={toggleCompare}
+          aria-pressed={compare}
+        >
+          {compare ? 'Exit compare' : 'Compare'}
+        </button>
         <Slider
           label="Levels"
           value={levels}
@@ -36,7 +44,7 @@ export function ValueMap({ image }: Props) {
           max={8}
           onChange={setLevels}
         />
-        <SaveButton canvasRef={canvasRef} filename="value-map.png" />
+        <SaveButton canvasRef={processedRef} filename="value-map.png" />
         <div className={styles.swatches}>
           {Array.from({ length: levels }, (_, i) => {
             const v = Math.round((i / (levels - 1)) * 255)
