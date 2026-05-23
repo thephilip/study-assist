@@ -61,7 +61,7 @@ All tool slugs are defined here. `App.tsx` dispatches to the right component via
 | Paint mixing guidance | ✅ done | LAB math + pigment database (key differentiator) |
 | Export / save | 🔲 todo | Download processed canvas as PNG |
 | Side-by-side view | 🔲 todo | Original + processed panels for direct comparison |
-| Histogram | 🔲 todo | Tonal distribution panel; pairs with Value Map and Notan |
+| Histogram | ✅ done | Luma histogram with log/linear scale; min/mean/max tonal range stats |
 | Edge detection overlay | 🔲 todo | Canny-style edge overlay for composition study |
 
 Paint brand database (Gamblin, W&N, Williamsburg, Rembrandt) is a key differentiator — competitors lack this.
