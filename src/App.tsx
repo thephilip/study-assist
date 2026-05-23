@@ -8,6 +8,7 @@ import { ColorPicker } from '@/tools/ColorPicker'
 import { ShapeSimplify } from '@/tools/ShapeSimplify'
 import { Grid } from '@/tools/Grid'
 import { Palette } from '@/tools/Palette'
+import { Temperature } from '@/tools/Temperature'
 import styles from './App.module.css'
 
 function ActiveTool({ tool, image }: { tool: Tool; image: LoadedImage }) {
@@ -17,6 +18,7 @@ function ActiveTool({ tool, image }: { tool: Tool; image: LoadedImage }) {
   if (tool === 'shape-simplify') return <ShapeSimplify image={image} />
   if (tool === 'grid') return <Grid image={image} />
   if (tool === 'palette') return <Palette image={image} />
+  if (tool === 'temperature') return <Temperature image={image} />
   return <p className={styles.placeholder}>{tool} — coming soon</p>
 }
 
