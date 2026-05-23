@@ -15,7 +15,10 @@ export function useImage() {
     setError(null)
     try {
       const bitmap = await createImageBitmap(file)
-      setImage({ bitmap, name: file.name, width: bitmap.width, height: bitmap.height })
+      setImage(prev => {
+        prev?.bitmap.close()
+        return { bitmap, name: file.name, width: bitmap.width, height: bitmap.height }
+      })
     } catch {
       setError('Could not load image. Try a JPEG, PNG, or WebP file.')
     }

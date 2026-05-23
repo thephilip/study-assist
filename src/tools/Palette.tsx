@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Panel } from '@/components/Panel'
 import { Slider } from '@/components/Slider'
 import { drawImageToCanvas, getPixelData } from '@/lib/canvas'
@@ -15,6 +15,7 @@ export function Palette({ image }: Props) {
   const [k, setK] = useState(6)
   const [result, setResult] = useState<PaletteResult | null>(null)
   const [running, setRunning] = useState(false)
+  const [runId, setRunId] = useState(0)
   const imageDataRef = useRef<ImageData | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -27,12 +28,12 @@ export function Palette({ image }: Props) {
     setResult(null)
   }, [image])
 
-  const run = useCallback(() => {
+  // Run k-means; cancel any in-flight worker on dep change or unmount
+  useEffect(() => {
     const data = imageDataRef.current
-    if (!data || running) return
+    if (!data) return
     setRunning(true)
-
-    const buffer = data.data.buffer.slice(0) // copy so the original stays intact
+    const buffer = data.data.buffer.slice(0)
     const worker = new Worker(
       new URL('../workers/kmeans.worker.ts', import.meta.url),
       { type: 'module' },
@@ -43,14 +44,8 @@ export function Palette({ image }: Props) {
       setRunning(false)
       worker.terminate()
     }
-    return () => worker.terminate()
-  }, [k, running])
-
-  // Auto-run when image loads or k changes
-  useEffect(() => {
-    if (imageDataRef.current) run()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image, k])
+    return () => { worker.terminate() }
+  }, [image, k, runId])
 
   return (
     <div className={toolStyles.root}>
@@ -68,7 +63,7 @@ export function Palette({ image }: Props) {
 
         <button
           className={styles.rerun}
-          onClick={run}
+          onClick={() => setRunId(id => id + 1)}
           disabled={running}
         >
           {running ? 'Analysing…' : 'Re-run'}

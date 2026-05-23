@@ -31,7 +31,7 @@ export function ImageDrop({ onFile }: Props) {
       role="button"
       tabIndex={0}
       aria-label="Drop an image here or click to browse"
-      onKeyDown={e => e.key === 'Enter' && inputRef.current?.click()}
+      onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && inputRef.current?.click()}
     >
       <input
         ref={inputRef}

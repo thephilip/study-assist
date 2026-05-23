@@ -57,8 +57,12 @@ All tool slugs are defined here. `App.tsx` dispatches to the right component via
 | Shape simplification | ✅ done | Separable box blur (O(w×h)) + posterize |
 | Grid overlay | ✅ done | Preset buttons, col/row sliders, opacity, white/black toggle |
 | Color palette extraction | ✅ done | K-means++ in a Web Worker; proportional swatch bar |
-| Temperature map | 🔲 sprint 7 | Per-pixel HSL hue → warm/cool overlay |
-| Paint mixing guidance | 🔲 sprint 8 | LAB math + pigment database (key differentiator) |
+| Temperature map | ✅ done | Per-pixel HSL hue → warm/cool overlay |
+| Paint mixing guidance | ✅ done | LAB math + pigment database (key differentiator) |
+| Export / save | 🔲 todo | Download processed canvas as PNG |
+| Side-by-side view | 🔲 todo | Original + processed panels for direct comparison |
+| Histogram | 🔲 todo | Tonal distribution panel; pairs with Value Map and Notan |
+| Edge detection overlay | 🔲 todo | Canny-style edge overlay for composition study |
 
 Paint brand database (Gamblin, W&N, Williamsburg, Rembrandt) is a key differentiator — competitors lack this.
 
