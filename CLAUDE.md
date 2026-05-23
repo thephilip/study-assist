@@ -59,8 +59,8 @@ All tool slugs are defined here. `App.tsx` dispatches to the right component via
 | Color palette extraction | ✅ done | K-means++ in a Web Worker; proportional swatch bar |
 | Temperature map | ✅ done | Per-pixel HSL hue → warm/cool overlay |
 | Paint mixing guidance | ✅ done | LAB math + pigment database (key differentiator) |
-| Export / save | 🔲 todo | Download processed canvas as PNG |
-| Side-by-side view | 🔲 todo | Original + processed panels for direct comparison |
+| Export / save | ✅ done | Save PNG button on all processed-canvas tools |
+| Side-by-side view | ✅ done | Compare toggle on all processed-canvas tools; original kept in DOM for instant toggle |
 | Histogram | ✅ done | Luma histogram with log/linear scale; min/mean/max tonal range stats |
 | Edge detection overlay | ✅ done | Sobel edge detection; blur/threshold/opacity controls; white or black lines |
 
