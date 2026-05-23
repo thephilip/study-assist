@@ -1,0 +1,17 @@
+.btn {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  align-self: flex-start;
+  margin-top: auto;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.btn:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-text-faint);
+  color: var(--color-text);
+}

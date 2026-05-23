@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
+import { SaveButton } from '@/components/SaveButton'
 import { useProcessedCanvas } from '@/hooks/useProcessedCanvas'
 import { applyNotan } from './notan'
 import type { LoadedImage } from '@/hooks/useImage'
@@ -35,6 +36,7 @@ export function Notan({ image }: Props) {
           max={254}
           onChange={setThreshold}
         />
+        <SaveButton canvasRef={canvasRef} filename="notan.png" />
       </Panel>
     </div>
   )

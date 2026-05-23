@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
+import { SaveButton } from '@/components/SaveButton'
 import { drawImageToCanvas } from '@/lib/canvas'
 import { drawGrid } from './grid'
 import type { LoadedImage } from '@/hooks/useImage'
@@ -78,6 +79,7 @@ export function Grid({ image }: Props) {
             ))}
           </div>
         </div>
+        <SaveButton canvasRef={canvasRef} filename="grid.png" />
       </Panel>
     </div>
   )

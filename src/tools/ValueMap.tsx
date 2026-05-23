@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
+import { SaveButton } from '@/components/SaveButton'
 import { useProcessedCanvas } from '@/hooks/useProcessedCanvas'
 import { applyValueMap } from './value-map'
 import type { LoadedImage } from '@/hooks/useImage'
@@ -35,6 +36,7 @@ export function ValueMap({ image }: Props) {
           max={8}
           onChange={setLevels}
         />
+        <SaveButton canvasRef={canvasRef} filename="value-map.png" />
         <div className={styles.swatches}>
           {Array.from({ length: levels }, (_, i) => {
             const v = Math.round((i / (levels - 1)) * 255)

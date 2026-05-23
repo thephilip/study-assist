@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
+import { SaveButton } from '@/components/SaveButton'
 import { useProcessedCanvas } from '@/hooks/useProcessedCanvas'
 import { applyTemperature } from './temperature'
 import type { LoadedImage } from '@/hooks/useImage'
@@ -59,6 +60,7 @@ export function Temperature({ image }: Props) {
         <p className={styles.description}>
           Warm &nbsp;·&nbsp; Cool
         </p>
+        <SaveButton canvasRef={canvasRef} filename="temperature-map.png" />
       </Panel>
     </div>
   )
