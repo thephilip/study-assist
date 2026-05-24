@@ -35,6 +35,15 @@
   }
 }
 
+/* CSS pseudo-fullscreen for platforms without the Fullscreen API (e.g. iOS Safari) */
+.cssFullscreen {
+  position: fixed !important;
+  inset: 0;
+  z-index: 9999;
+  background: var(--color-bg);
+  padding: var(--space-8);
+}
+
 .resetBtn {
   position: absolute;
   bottom: var(--space-3);

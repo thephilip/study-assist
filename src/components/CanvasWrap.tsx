@@ -70,8 +70,11 @@ interface Props {
 
 export function CanvasWrap({ children, compare, style }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const canFullscreen = !!(document.fullscreenEnabled || (document as unknown as Record<string, unknown>).webkitFullscreenEnabled)
-  const [isFullscreen, setIsFullscreen] = useState(false)
+  const doc = document as unknown as Record<string, unknown>
+  const hasNativeFullscreen = !!(document.fullscreenEnabled || doc.webkitFullscreenEnabled)
+  const [isNativeFullscreen, setIsNativeFullscreen] = useState(false)
+  const [isCssFullscreen, setIsCssFullscreen] = useState(false)
+  const isFullscreen = isNativeFullscreen || isCssFullscreen
   const [hovered, setHovered] = useState(false)
   const [xform, dispatch] = useReducer(xformReducer, INIT)
 
@@ -85,17 +88,16 @@ export function CanvasWrap({ children, compare, style }: Props) {
     dispatch({ type: 'reset' })
   }, [compare])
 
-  // Fullscreen change listener (standard + webkit for iOS Safari)
+  // Native fullscreen change listener
   useEffect(() => {
-    const doc = document as unknown as Record<string, unknown>
-    const handler = () => setIsFullscreen(!!(document.fullscreenElement || doc.webkitFullscreenElement))
+    const handler = () => setIsNativeFullscreen(!!(document.fullscreenElement || doc.webkitFullscreenElement))
     document.addEventListener('fullscreenchange', handler)
     document.addEventListener('webkitfullscreenchange', handler)
     return () => {
       document.removeEventListener('fullscreenchange', handler)
       document.removeEventListener('webkitfullscreenchange', handler)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Non-passive wheel handler for zoom
   useEffect(() => {
@@ -190,18 +192,22 @@ export function CanvasWrap({ children, compare, style }: Props) {
   const toggleFullscreen = useCallback(() => {
     const el = ref.current
     if (!el) return
-    const doc = document as unknown as Record<string, unknown>
-    const elAny = el as unknown as Record<string, unknown>
-    if (document.fullscreenElement || doc.webkitFullscreenElement) {
-      ;(doc.webkitExitFullscreen as (() => void) | undefined)?.() ?? document.exitFullscreen()
+    if (hasNativeFullscreen) {
+      const elAny = el as unknown as Record<string, unknown>
+      if (document.fullscreenElement || doc.webkitFullscreenElement) {
+        ;(doc.webkitExitFullscreen as (() => void) | undefined)?.() ?? document.exitFullscreen()
+      } else {
+        ;(elAny.webkitRequestFullscreen as (() => void) | undefined)?.() ?? el.requestFullscreen?.()
+      }
     } else {
-      ;(elAny.webkitRequestFullscreen as (() => void) | undefined)?.() ?? el.requestFullscreen?.()
+      setIsCssFullscreen(f => !f)
     }
-  }, [])
+  }, [hasNativeFullscreen]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const wrapClass = [
     toolStyles.canvasWrap,
     compare ? toolStyles.compareActive : '',
+    isCssFullscreen ? styles.cssFullscreen : '',
   ].filter(Boolean).join(' ')
 
   const { scale, x, y } = xform
@@ -237,16 +243,14 @@ export function CanvasWrap({ children, compare, style }: Props) {
         >
           {children}
         </div>
-        {canFullscreen && (
-          <button
-            className={`${styles.fullscreenBtn} ${hovered || isFullscreen ? styles.visible : ''}`}
-            onClick={toggleFullscreen}
-            aria-label={isFullscreen ? 'Exit full screen' : 'View full screen'}
-            title={isFullscreen ? 'Exit full screen' : 'View full screen'}
-          >
-            {isFullscreen ? <CollapseIcon /> : <ExpandIcon />}
-          </button>
-        )}
+        <button
+          className={`${styles.fullscreenBtn} ${hovered || isFullscreen ? styles.visible : ''}`}
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? 'Exit full screen' : 'View full screen'}
+          title={isFullscreen ? 'Exit full screen' : 'View full screen'}
+        >
+          {isFullscreen ? <CollapseIcon /> : <ExpandIcon />}
+        </button>
         {scale > 1 && (
           <button
             className={styles.resetBtn}
