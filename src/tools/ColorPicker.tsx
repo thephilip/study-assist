@@ -57,6 +57,10 @@ export function ColorPicker({ image }: Props) {
     setPick({ color, x: clientX - rect.left, y: clientY - rect.top, locked })
   }, [radius])
 
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
+    sampleAt(e.clientX, e.clientY, false)
+  }, [sampleAt])
+
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     if (pick?.locked) return
     sampleAt(e.clientX, e.clientY, false)
@@ -86,6 +90,7 @@ export function ColorPicker({ image }: Props) {
             className={`${toolStyles.canvas} ${styles.canvas}`}
             role="img"
             aria-label="Reference image — move pointer to preview a color, click to lock"
+            onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerLeave}

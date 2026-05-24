@@ -30,6 +30,7 @@ function rgbToHexStr({ r, g, b }: RGB) { return rgbToHex({ r, g, b }) }
 
 export function PaintMix({ image }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
   const imageDataRef = useRef<ImageData | null>(null)
   const [pick, setPick] = useState<{ color: RGB; x: number; y: number } | null>(null)
   const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(ALL_BRANDS))
@@ -49,15 +50,17 @@ export function PaintMix({ image }: Props) {
 
   const handlePointerUp = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
+    const wrap = wrapRef.current
     const data = imageDataRef.current
-    if (!canvas || !data) return
+    if (!canvas || !wrap || !data) return
     const rect = canvas.getBoundingClientRect()
+    const wrapRect = wrap.getBoundingClientRect()
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
     const ix = (e.clientX - rect.left) * scaleX
     const iy = (e.clientY - rect.top) * scaleY
     const color = sampleRegion(data, ix, iy, 3)
-    setPick({ color, x: e.clientX - rect.left, y: e.clientY - rect.top })
+    setPick({ color, x: e.clientX - wrapRect.left, y: e.clientY - wrapRect.top })
   }, [])
 
   const toggleBrand = useCallback((brand: Brand) => {
@@ -90,7 +93,7 @@ export function PaintMix({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div className={toolStyles.canvasWrap} style={{ position: 'relative' }}>
+      <div ref={wrapRef} className={toolStyles.canvasWrap} style={{ position: 'relative' }}>
         <canvas
           ref={canvasRef}
           className={toolStyles.canvas}

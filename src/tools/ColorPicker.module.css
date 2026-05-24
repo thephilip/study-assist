@@ -12,17 +12,19 @@
 /* Indicator ring that follows the cursor */
 .ring {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 2px solid #fff;
   outline: 1px solid rgba(0, 0, 0, 0.5);
   transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: border-color var(--transition-fast);
+  transition: width var(--transition-fast), height var(--transition-fast), border-color var(--transition-fast);
 }
 
 .ring.locked {
+  width: 16px;
+  height: 16px;
   border-color: var(--color-accent);
   outline-color: transparent;
   box-shadow: 0 0 0 1px var(--color-accent);
