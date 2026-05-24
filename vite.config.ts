@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
+  base: '/study-assist/',
   plugins: [react()],
   resolve: {
     alias: {
