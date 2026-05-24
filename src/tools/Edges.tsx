@@ -5,6 +5,7 @@ import { SaveButton } from '@/components/SaveButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyEdges } from './edges'
 import type { LoadedImage } from '@/hooks/useImage'
+import { CanvasWrap } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 import styles from './Edges.module.css'
 
@@ -26,10 +27,10 @@ export function Edges({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div className={`${toolStyles.canvasWrap} ${compare ? toolStyles.compareActive : ''}`}>
+      <CanvasWrap compare={compare}>
         <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={processedRef} className={toolStyles.canvas} role="img" aria-label="Edge detection overlay" />
-      </div>
+      </CanvasWrap>
 
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Edges</h2>

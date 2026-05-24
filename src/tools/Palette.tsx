@@ -4,6 +4,7 @@ import { Slider } from '@/components/Slider'
 import { drawImageToCanvas, getPixelData } from '@/lib/canvas'
 import { rgbToHex, type RGB } from '@/lib/color'
 import type { LoadedImage } from '@/hooks/useImage'
+import { CanvasWrap } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 import styles from './Palette.module.css'
 
@@ -49,9 +50,9 @@ export function Palette({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div className={toolStyles.canvasWrap}>
+      <CanvasWrap>
         <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Reference image" />
-      </div>
+      </CanvasWrap>
 
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Palette</h2>

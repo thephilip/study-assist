@@ -3,6 +3,7 @@ import { Panel } from '@/components/Panel'
 import { drawImageToCanvas, getPixelData } from '@/lib/canvas'
 import { computeLumaHistogram } from './histogram'
 import type { LoadedImage } from '@/hooks/useImage'
+import { CanvasWrap } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 import styles from './Histogram.module.css'
 
@@ -89,9 +90,9 @@ export function Histogram({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div className={toolStyles.canvasWrap}>
+      <CanvasWrap>
         <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Luminance histogram" />
-      </div>
+      </CanvasWrap>
 
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Histogram</h2>

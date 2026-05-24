@@ -9,6 +9,7 @@ import {
 import { sampleRegion } from './color-picker'
 import type { LoadedImage } from '@/hooks/useImage'
 import styles from './ColorPicker.module.css'
+import { CanvasWrap } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 
 type Props = { image: LoadedImage }
@@ -83,7 +84,7 @@ export function ColorPicker({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div className={toolStyles.canvasWrap}>
+      <CanvasWrap>
         <div className={styles.canvasFrame}>
           <canvas
             ref={canvasRef}
@@ -103,7 +104,7 @@ export function ColorPicker({ image }: Props) {
             />
           )}
         </div>
-      </div>
+      </CanvasWrap>
 
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Color Picker</h2>

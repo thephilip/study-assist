@@ -5,6 +5,7 @@ import { SaveButton } from '@/components/SaveButton'
 import { drawImageToCanvas } from '@/lib/canvas'
 import { drawGrid } from './grid'
 import type { LoadedImage } from '@/hooks/useImage'
+import { CanvasWrap } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 import styles from './Grid.module.css'
 
@@ -45,10 +46,10 @@ export function Grid({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div className={`${toolStyles.canvasWrap} ${compare ? toolStyles.compareActive : ''}`}>
+      <CanvasWrap compare={compare}>
         <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Grid overlay" />
-      </div>
+      </CanvasWrap>
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Grid</h2>
         <p className={toolStyles.description}>

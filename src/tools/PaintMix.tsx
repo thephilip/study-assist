@@ -12,6 +12,7 @@ import {
   type MixMatch,
 } from '@/lib/pigments'
 import type { LoadedImage } from '@/hooks/useImage'
+import { CanvasWrap } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 import styles from './PaintMix.module.css'
 
@@ -30,7 +31,6 @@ function rgbToHexStr({ r, g, b }: RGB) { return rgbToHex({ r, g, b }) }
 
 export function PaintMix({ image }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const wrapRef = useRef<HTMLDivElement>(null)
   const imageDataRef = useRef<ImageData | null>(null)
   const [pick, setPick] = useState<{ color: RGB; x: number; y: number } | null>(null)
   const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(ALL_BRANDS))
@@ -50,11 +50,10 @@ export function PaintMix({ image }: Props) {
 
   const handlePointerUp = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
-    const wrap = wrapRef.current
     const data = imageDataRef.current
-    if (!canvas || !wrap || !data) return
+    if (!canvas || !data) return
     const rect = canvas.getBoundingClientRect()
-    const wrapRect = wrap.getBoundingClientRect()
+    const wrapRect = canvas.parentElement!.getBoundingClientRect()
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
     const ix = (e.clientX - rect.left) * scaleX
@@ -93,7 +92,7 @@ export function PaintMix({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <div ref={wrapRef} className={toolStyles.canvasWrap} style={{ position: 'relative' }}>
+      <CanvasWrap style={{ position: 'relative' }}>
         <canvas
           ref={canvasRef}
           className={toolStyles.canvas}
@@ -119,7 +118,7 @@ export function PaintMix({ image }: Props) {
             }}
           />
         )}
-      </div>
+      </CanvasWrap>
 
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Paint Mix</h2>

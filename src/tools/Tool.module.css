@@ -12,6 +12,13 @@
   justify-content: center;
   overflow: hidden;
   padding: var(--space-4);
+  position: relative;
+}
+
+.canvasWrap:fullscreen,
+.canvasWrap:-webkit-full-screen {
+  background: var(--color-bg);
+  padding: var(--space-8);
 }
 
 .canvas {

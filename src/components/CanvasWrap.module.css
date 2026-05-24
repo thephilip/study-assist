@@ -1,0 +1,36 @@
+.fullscreenBtn {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.55);
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.fullscreenBtn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fullscreenBtn:hover,
+.fullscreenBtn:focus-visible {
+  color: #fff;
+}
+
+/* Always slightly visible on touch devices — no hover to reveal it */
+@media (hover: none) and (pointer: coarse) {
+  .fullscreenBtn {
+    opacity: 0.45;
+    pointer-events: auto;
+  }
+}

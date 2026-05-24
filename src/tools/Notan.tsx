@@ -5,6 +5,7 @@ import { SaveButton } from '@/components/SaveButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyNotan } from './notan'
 import type { LoadedImage } from '@/hooks/useImage'
+import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
 type Props = { image: LoadedImage }
@@ -21,10 +22,10 @@ export function Notan({ image }: Props) {
 
   return (
     <div className={styles.root}>
-      <div className={`${styles.canvasWrap} ${compare ? styles.compareActive : ''}`}>
+      <CanvasWrap compare={compare}>
         <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={processedRef} className={styles.canvas} role="img" aria-label="Notan" />
-      </div>
+      </CanvasWrap>
       <Panel className={styles.controls}>
         <h2 className={styles.toolName}>Notan</h2>
         <p className={styles.description}>
