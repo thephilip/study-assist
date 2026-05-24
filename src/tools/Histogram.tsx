@@ -18,7 +18,7 @@ function drawHistogram(
   buckets: Uint32Array,
   logScale: boolean,
 ): void {
-  ctx.fillStyle = '#0e0e0f'
+  ctx.fillStyle = '#161618'
   ctx.fillRect(0, 0, W, H)
 
   // Gridlines at 25 / 50 / 75 %
