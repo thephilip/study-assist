@@ -63,6 +63,10 @@ All tool slugs are defined here. `App.tsx` dispatches to the right component via
 | Side-by-side view | ✅ done | Compare toggle on all processed-canvas tools; original kept in DOM for instant toggle |
 | Histogram | ✅ done | Luma histogram with log/linear scale; min/mean/max tonal range stats |
 | Edge detection overlay | ✅ done | Sobel edge detection; blur/threshold/opacity controls; white or black lines |
+| Full-screen view | ✅ done | Fullscreen button overlay on all canvas tools via CanvasWrap; Fullscreen API |
+| PWA / installable | ✅ done | manifest.json, icons (192/512px), favicon, OG tags, Apple meta tags; vite-plugin-pwa |
+| Update notifications | ✅ done | Service worker update toast with Reload (skipWaiting) + dismiss |
+| Pinch-to-zoom | ✅ done | Pinch (touch) + scroll-wheel zoom 1×–8×; double-tap to reset; zoom state in CanvasWrap via useReducer + ZoomContext |
 
 Paint brand database (Gamblin, W&N, Williamsburg, Rembrandt) is a key differentiator — competitors lack this.
 
@@ -87,6 +91,7 @@ Shared tool layout (`src/tools/Tool.module.css`): two-column — canvas fills le
 - Pixel-math tools use `mapPixels()` from `lib/canvas.ts` — it clones ImageData and applies a per-pixel function
 - Heavy algorithms (K-means, future palette work) belong in `src/workers/` — post an ArrayBuffer, return results
 - Use `useProcessedCanvas(image, processData)` for transform tools; manage canvas manually when you need mouse events or overlays (see `ColorPicker.tsx`, `Grid.tsx`)
+- `CanvasWrap` (`src/components/CanvasWrap.tsx`) wraps every tool's canvas area — it owns zoom state (pinch + wheel), fullscreen, and the compare layout. Use `useZoom()` in any tool that positions an overlay (indicator ring, crosshair dot) so coordinates stay accurate under zoom.
 - Design tokens should cover every value — no one-off style values
 
 ## Competitive Landscape
