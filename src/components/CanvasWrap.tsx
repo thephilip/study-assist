@@ -70,7 +70,7 @@ interface Props {
 
 export function CanvasWrap({ children, compare, style }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const canFullscreen = !!document.documentElement.requestFullscreen
+  const canFullscreen = !!(document.fullscreenEnabled || (document as unknown as Record<string, unknown>).webkitFullscreenEnabled)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [xform, dispatch] = useReducer(xformReducer, INIT)
@@ -85,11 +85,16 @@ export function CanvasWrap({ children, compare, style }: Props) {
     dispatch({ type: 'reset' })
   }, [compare])
 
-  // Fullscreen change listener
+  // Fullscreen change listener (standard + webkit for iOS Safari)
   useEffect(() => {
-    const handler = () => setIsFullscreen(!!document.fullscreenElement)
+    const doc = document as unknown as Record<string, unknown>
+    const handler = () => setIsFullscreen(!!(document.fullscreenElement || doc.webkitFullscreenElement))
     document.addEventListener('fullscreenchange', handler)
-    return () => document.removeEventListener('fullscreenchange', handler)
+    document.addEventListener('webkitfullscreenchange', handler)
+    return () => {
+      document.removeEventListener('fullscreenchange', handler)
+      document.removeEventListener('webkitfullscreenchange', handler)
+    }
   }, [])
 
   // Non-passive wheel handler for zoom
@@ -185,10 +190,12 @@ export function CanvasWrap({ children, compare, style }: Props) {
   const toggleFullscreen = useCallback(() => {
     const el = ref.current
     if (!el) return
-    if (document.fullscreenElement) {
-      document.exitFullscreen()
+    const doc = document as unknown as Record<string, unknown>
+    const elAny = el as unknown as Record<string, unknown>
+    if (document.fullscreenElement || doc.webkitFullscreenElement) {
+      ;(doc.webkitExitFullscreen as (() => void) | undefined)?.() ?? document.exitFullscreen()
     } else {
-      el.requestFullscreen?.()
+      ;(elAny.webkitRequestFullscreen as (() => void) | undefined)?.() ?? el.requestFullscreen?.()
     }
   }, [])
 
