@@ -70,6 +70,7 @@ interface Props {
 
 export function CanvasWrap({ children, compare, style }: Props) {
   const ref = useRef<HTMLDivElement>(null)
+  const canFullscreen = !!document.documentElement.requestFullscreen
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [xform, dispatch] = useReducer(xformReducer, INIT)
@@ -229,14 +230,16 @@ export function CanvasWrap({ children, compare, style }: Props) {
         >
           {children}
         </div>
-        <button
-          className={`${styles.fullscreenBtn} ${hovered || isFullscreen ? styles.visible : ''}`}
-          onClick={toggleFullscreen}
-          aria-label={isFullscreen ? 'Exit full screen' : 'View full screen'}
-          title={isFullscreen ? 'Exit full screen' : 'View full screen'}
-        >
-          {isFullscreen ? <CollapseIcon /> : <ExpandIcon />}
-        </button>
+        {canFullscreen && (
+          <button
+            className={`${styles.fullscreenBtn} ${hovered || isFullscreen ? styles.visible : ''}`}
+            onClick={toggleFullscreen}
+            aria-label={isFullscreen ? 'Exit full screen' : 'View full screen'}
+            title={isFullscreen ? 'Exit full screen' : 'View full screen'}
+          >
+            {isFullscreen ? <CollapseIcon /> : <ExpandIcon />}
+          </button>
+        )}
         {scale > 1 && (
           <button
             className={styles.resetBtn}
