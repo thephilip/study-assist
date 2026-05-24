@@ -11,6 +11,8 @@
 
 A painting reference tool for artists — value maps, notan, colour picking, paint mixing, and more in one place, with a clean dark-mode-first UI.
 
+![study assist — temperature map tool](docs/screenshot.png)
+
 Process reference photos entirely in your browser. No uploads, no accounts, no server — everything runs locally on your device.
 
 ---
