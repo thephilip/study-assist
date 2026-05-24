@@ -31,6 +31,71 @@
   color: var(--color-text);
 }
 
+.brandBtn.locked {
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.lockIcon {
+  margin-left: 3px;
+  font-size: 9px;
+  vertical-align: middle;
+  filter: grayscale(1);
+}
+
+/* Upgrade modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-5);
+  max-width: 300px;
+  width: calc(100% - var(--space-8));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.modalTitle {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modalBody {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+.modalClose {
+  align-self: flex-end;
+  font-size: var(--text-xs);
+  font-family: var(--font-sans);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-3);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.modalClose:hover {
+  background: var(--color-surface-2);
+}
+
 /* Sampled color */
 .pickedSwatch {
   width: 100%;

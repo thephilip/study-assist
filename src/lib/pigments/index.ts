@@ -3,6 +3,12 @@ import type { RGB, LAB } from '@/lib/color'
 
 export type Brand = 'Gamblin' | 'W&N' | 'Williamsburg' | 'Rembrandt'
 
+export const FREE_BRANDS: Brand[] = ['Gamblin']
+export const ALL_BRANDS: Brand[] = ['Gamblin', 'W&N', 'Williamsburg', 'Rembrandt']
+export function isBrandFree(brand: Brand): boolean {
+  return (FREE_BRANDS as string[]).includes(brand)
+}
+
 export type Pigment = {
   id: string
   name: string

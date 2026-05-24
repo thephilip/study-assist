@@ -5,6 +5,9 @@ import { rgbToHex, rgbToLab, type RGB } from '@/lib/color'
 import { sampleRegion } from './color-picker'
 import {
   PIGMENTS,
+  ALL_BRANDS,
+  FREE_BRANDS,
+  isBrandFree,
   findTopSingles,
   findBestMix,
   type Brand,
@@ -18,7 +21,6 @@ import styles from './PaintMix.module.css'
 
 type Props = { image: LoadedImage }
 
-const ALL_BRANDS: Brand[] = ['Gamblin', 'W&N', 'Williamsburg', 'Rembrandt']
 const BRAND_SHORT: Record<Brand, string> = {
   'Gamblin': 'Gamblin',
   'W&N': 'W&N',
@@ -33,7 +35,8 @@ export function PaintMix({ image }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imageDataRef = useRef<ImageData | null>(null)
   const [pick, setPick] = useState<{ color: RGB; x: number; y: number } | null>(null)
-  const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(ALL_BRANDS))
+  const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(FREE_BRANDS))
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const { scale } = useZoom()
 
   useEffect(() => {
@@ -63,6 +66,10 @@ export function PaintMix({ image }: Props) {
   }, [scale])
 
   const toggleBrand = useCallback((brand: Brand) => {
+    if (!isBrandFree(brand)) {
+      setShowUpgradeModal(true)
+      return
+    }
     setActiveBrands(prev => {
       const next = new Set(prev)
       if (next.has(brand)) {
@@ -130,17 +137,39 @@ export function PaintMix({ image }: Props) {
 
         {/* Brand filter */}
         <div className={styles.brands}>
-          {ALL_BRANDS.map(brand => (
-            <button
-              key={brand}
-              className={`${styles.brandBtn} ${activeBrands.has(brand) ? styles.active : ''}`}
-              onClick={() => toggleBrand(brand)}
-              aria-pressed={activeBrands.has(brand)}
-            >
-              {BRAND_SHORT[brand]}
-            </button>
-          ))}
+          {ALL_BRANDS.map(brand => {
+            const free = isBrandFree(brand)
+            const active = activeBrands.has(brand)
+            return (
+              <button
+                key={brand}
+                className={`${styles.brandBtn} ${active ? styles.active : ''} ${!free ? styles.locked : ''}`}
+                onClick={() => toggleBrand(brand)}
+                aria-pressed={free ? active : undefined}
+                aria-label={free ? undefined : `${brand} — Pro brand pack`}
+              >
+                {BRAND_SHORT[brand]}
+                {!free && <span className={styles.lockIcon} aria-hidden>🔒</span>}
+              </button>
+            )
+          })}
         </div>
+
+        {/* Upgrade modal */}
+        {showUpgradeModal && (
+          <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-labelledby="upgrade-title">
+            <div className={styles.modal}>
+              <p className={styles.modalTitle} id="upgrade-title">Brand Packs</p>
+              <p className={styles.modalBody}>
+                W&N, Williamsburg, and Rembrandt brand packs are coming with the native app. The free tier includes the full Gamblin range.
+              </p>
+              <button className={styles.modalClose} onClick={() => setShowUpgradeModal(false)}>
+                Got it
+              </button>
+            </div>
+          </div>
+        )}
+
 
         {!pick && (
           <p className={styles.prompt}>Tap or click anywhere on the image to sample a color.</p>
