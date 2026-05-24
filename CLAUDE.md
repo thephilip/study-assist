@@ -63,12 +63,12 @@ All tool slugs are defined here. `App.tsx` dispatches to the right component via
 | Side-by-side view | ✅ done | Compare toggle on all processed-canvas tools; original kept in DOM for instant toggle |
 | Histogram | ✅ done | Luma histogram with log/linear scale; min/mean/max tonal range stats |
 | Edge detection overlay | ✅ done | Sobel edge detection; blur/threshold/opacity controls; white or black lines |
-| Full-screen view | ✅ done | Fullscreen button overlay on all canvas tools via CanvasWrap; Fullscreen API |
+| Full-screen view | ✅ done | Fullscreen button overlay on all canvas tools via CanvasWrap; native Fullscreen API on desktop/Android; CSS pseudo-fullscreen fallback on iOS Safari (position:fixed overlay) |
 | PWA / installable | ✅ done | manifest.json, icons (192/512px), favicon, OG tags, Apple meta tags; vite-plugin-pwa |
 | Update notifications | ✅ done | Service worker update toast with Reload (skipWaiting) + dismiss |
 | Pinch-to-zoom | ✅ done | Pinch (touch) + scroll-wheel zoom 1×–8×; double-tap to reset; zoom state in CanvasWrap via useReducer + ZoomContext |
 
-Paint brand database (Gamblin, W&N, Williamsburg, Rembrandt) is a key differentiator — competitors lack this.
+Paint brand database (Gamblin, W&N, Williamsburg, Rembrandt) is a key differentiator — competitors lack this. **Brand gating is live:** Gamblin is the free tier; W&N, Williamsburg, and Rembrandt are locked behind an upgrade modal pointing to the native app.
 
 ## Design System
 
@@ -91,7 +91,7 @@ Shared tool layout (`src/tools/Tool.module.css`): two-column — canvas fills le
 - Pixel-math tools use `mapPixels()` from `lib/canvas.ts` — it clones ImageData and applies a per-pixel function
 - Heavy algorithms (K-means, future palette work) belong in `src/workers/` — post an ArrayBuffer, return results
 - Use `useProcessedCanvas(image, processData)` for transform tools; manage canvas manually when you need mouse events or overlays (see `ColorPicker.tsx`, `Grid.tsx`)
-- `CanvasWrap` (`src/components/CanvasWrap.tsx`) wraps every tool's canvas area — it owns zoom state (pinch + wheel), fullscreen, and the compare layout. Use `useZoom()` in any tool that positions an overlay (indicator ring, crosshair dot) so coordinates stay accurate under zoom.
+- `CanvasWrap` (`src/components/CanvasWrap.tsx`) wraps every tool's canvas area — it owns zoom state (pinch + wheel), fullscreen, and the compare layout. Fullscreen uses the native Fullscreen API where available; falls back to a CSS `position:fixed` overlay on iOS Safari. Use `useZoom()` in any tool that positions an overlay (indicator ring, crosshair dot) so coordinates stay accurate under zoom.
 - Design tokens should cover every value — no one-off style values
 
 ## Competitive Landscape
@@ -106,8 +106,8 @@ Shared tool layout (`src/tools/Tool.module.css`): two-column — canvas fills le
 
 **Decided:** free core app + paid brand pack IAP (in-app purchase). No backend, no subscription.
 
-- **Free tier:** full access to all tools; pigment database includes a limited set of brands (e.g. 1–2)
-- **Paid:** additional paint brand packs (Gamblin, W&N, Williamsburg, Rembrandt, future brands) as one-time IAP purchases
+- **Free tier:** full access to all tools; pigment database includes Gamblin only (implemented — `FREE_BRANDS` constant in `src/lib/pigments/index.ts`)
+- **Paid:** additional paint brand packs (W&N, Williamsburg, Rembrandt, future brands) as one-time IAP purchases; locked brands show an upgrade modal on web pointing to the native app
 - **Rationale:** the pigment database is the key differentiator and the natural upgrade path; IAP avoids backend infrastructure and preserves the zero-upload privacy promise; no subscription fatigue
 - **Cloud sync / backend: do not build** — it conflicts with the core "runs locally, no uploads" promise and creates ongoing maintenance cost with no clear advantage over the IAP model
 - If a paid tier is ever introduced beyond brand packs, prefer a one-time purchase over a subscription
