@@ -13,6 +13,8 @@
   overflow: hidden;
   padding: var(--space-4);
   position: relative;
+  touch-action: none;
+  user-select: none;
 }
 
 .canvasWrap:fullscreen,

@@ -12,7 +12,7 @@ import {
   type MixMatch,
 } from '@/lib/pigments'
 import type { LoadedImage } from '@/hooks/useImage'
-import { CanvasWrap } from '@/components/CanvasWrap'
+import { CanvasWrap, useZoom } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 import styles from './PaintMix.module.css'
 
@@ -34,6 +34,7 @@ export function PaintMix({ image }: Props) {
   const imageDataRef = useRef<ImageData | null>(null)
   const [pick, setPick] = useState<{ color: RGB; x: number; y: number } | null>(null)
   const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(ALL_BRANDS))
+  const { scale } = useZoom()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -53,14 +54,13 @@ export function PaintMix({ image }: Props) {
     const data = imageDataRef.current
     if (!canvas || !data) return
     const rect = canvas.getBoundingClientRect()
-    const wrapRect = canvas.parentElement!.getBoundingClientRect()
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
     const ix = (e.clientX - rect.left) * scaleX
     const iy = (e.clientY - rect.top) * scaleY
     const color = sampleRegion(data, ix, iy, 3)
-    setPick({ color, x: e.clientX - wrapRect.left, y: e.clientY - wrapRect.top })
-  }, [])
+    setPick({ color, x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale })
+  }, [scale])
 
   const toggleBrand = useCallback((brand: Brand) => {
     setActiveBrands(prev => {
@@ -92,32 +92,34 @@ export function PaintMix({ image }: Props) {
 
   return (
     <div className={toolStyles.root}>
-      <CanvasWrap style={{ position: 'relative' }}>
-        <canvas
-          ref={canvasRef}
-          className={toolStyles.canvas}
-          role="img"
-          aria-label="Reference image — click to sample a color for paint matching"
-          style={{ cursor: 'crosshair' }}
-          onPointerUp={handlePointerUp}
-        />
-        {pick && (
-          <div
-            aria-hidden
-            style={{
-              position: 'absolute',
-              left: pick.x,
-              top: pick.y,
-              width: 14,
-              height: 14,
-              borderRadius: '50%',
-              border: '2px solid #fff',
-              outline: '1px solid #000',
-              transform: 'translate(-50%, -50%)',
-              pointerEvents: 'none',
-            }}
+      <CanvasWrap>
+        <div style={{ position: 'relative', display: 'inline-block', lineHeight: 0 }}>
+          <canvas
+            ref={canvasRef}
+            className={toolStyles.canvas}
+            role="img"
+            aria-label="Reference image — click to sample a color for paint matching"
+            style={{ cursor: 'crosshair' }}
+            onPointerUp={handlePointerUp}
           />
-        )}
+          {pick && (
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                left: pick.x,
+                top: pick.y,
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                border: '2px solid #fff',
+                outline: '1px solid #000',
+                transform: 'translate(-50%, -50%)',
+                pointerEvents: 'none',
+              }}
+            />
+          )}
+        </div>
       </CanvasWrap>
 
       <Panel className={toolStyles.controls}>

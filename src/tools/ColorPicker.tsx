@@ -9,7 +9,7 @@ import {
 import { sampleRegion } from './color-picker'
 import type { LoadedImage } from '@/hooks/useImage'
 import styles from './ColorPicker.module.css'
-import { CanvasWrap } from '@/components/CanvasWrap'
+import { CanvasWrap, useZoom } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
 
 type Props = { image: LoadedImage }
@@ -31,6 +31,7 @@ export function ColorPicker({ image }: Props) {
   const imageDataRef = useRef<ImageData | null>(null)
   const [radius, setRadius] = useState(1)
   const [pick, setPick] = useState<PickState | null>(null)
+  const { scale } = useZoom()
 
   // Draw image once per source image
   useEffect(() => {
@@ -55,8 +56,8 @@ export function ColorPicker({ image }: Props) {
     const ix = (clientX - rect.left) * scaleX
     const iy = (clientY - rect.top) * scaleY
     const color = sampleRegion(data, ix, iy, radius)
-    setPick({ color, x: clientX - rect.left, y: clientY - rect.top, locked })
-  }, [radius])
+    setPick({ color, x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale, locked })
+  }, [radius, scale])
 
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     sampleAt(e.clientX, e.clientY, false)
