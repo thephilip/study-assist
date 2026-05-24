@@ -5,28 +5,27 @@ import './index.css'
 import App from './App'
 import { UpdateToast } from './components/UpdateToast'
 
+// Called once at module load — outside any React component
+let _notifyUpdate: (() => void) | undefined
+
+const triggerUpdate = registerSW({
+  onNeedRefresh() {
+    _notifyUpdate?.()
+  },
+})
+
 function Root() {
   const [needsUpdate, setNeedsUpdate] = useState(false)
-  const [updateSW, setUpdateSW] = useState<(() => Promise<void>) | null>(null)
 
-  registerSW({
-    onNeedRefresh() {
-      setNeedsUpdate(true)
-    },
-    onRegistered(r: ServiceWorkerRegistration | undefined) {
-      setUpdateSW(() => async () => {
-        await r?.update()
-        window.location.reload()
-      })
-    },
-  })
+  // Wire up the module-level callback to React state
+  _notifyUpdate = () => setNeedsUpdate(true)
 
   return (
     <StrictMode>
       <App />
       {needsUpdate && (
         <UpdateToast
-          onUpdate={() => updateSW?.()}
+          onUpdate={() => triggerUpdate(true)}
           onDismiss={() => setNeedsUpdate(false)}
         />
       )}
