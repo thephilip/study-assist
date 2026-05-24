@@ -97,6 +97,16 @@ Shared tool layout (`src/tools/Tool.module.css`): two-column — canvas fills le
 | Notanizer | Simple, $1.99 | Android/Mac only, no color |
 | Tonal Value Tool | Browser-based, free | Utility-grade UI, no mixing |
 
+## Monetization Strategy
+
+**Decided:** free core app + paid brand pack IAP (in-app purchase). No backend, no subscription.
+
+- **Free tier:** full access to all tools; pigment database includes a limited set of brands (e.g. 1–2)
+- **Paid:** additional paint brand packs (Gamblin, W&N, Williamsburg, Rembrandt, future brands) as one-time IAP purchases
+- **Rationale:** the pigment database is the key differentiator and the natural upgrade path; IAP avoids backend infrastructure and preserves the zero-upload privacy promise; no subscription fatigue
+- **Cloud sync / backend: do not build** — it conflicts with the core "runs locally, no uploads" promise and creates ongoing maintenance cost with no clear advantage over the IAP model
+- If a paid tier is ever introduced beyond brand packs, prefer a one-time purchase over a subscription
+
 ## Known User Pain Points (from market research)
 
 - Paint brand specificity: users want to select exact brand + pigment, not generic approximations
