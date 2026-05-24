@@ -208,21 +208,27 @@ export function CanvasWrap({ children, compare, style }: Props) {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {compare ? children : (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transformOrigin: '0 0',
-              transform: transformStr,
-            }}
-          >
-            {children}
-          </div>
-        )}
+        <div
+          style={compare ? {
+            position: 'absolute',
+            inset: 0,
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 'var(--space-4)',
+            alignItems: 'center',
+            padding: 'var(--space-4)',
+          } : {
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transformOrigin: '0 0',
+            transform: transformStr,
+          }}
+        >
+          {children}
+        </div>
         <button
           className={`${styles.fullscreenBtn} ${hovered || isFullscreen ? styles.visible : ''}`}
           onClick={toggleFullscreen}
