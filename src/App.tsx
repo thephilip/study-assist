@@ -48,7 +48,7 @@ export default function App() {
   return (
     <div className={styles.root}>
       <header className={styles.header}>
-        <span className={styles.wordmark}>study assist</span>
+        <h1 className={styles.wordmark}>study assist</h1>
         {image && (
           <button className={styles.clearBtn} onClick={clear} aria-label="Remove image">
             ✕ Remove image

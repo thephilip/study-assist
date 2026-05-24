@@ -50,7 +50,7 @@ export function Palette({ image }: Props) {
   return (
     <div className={toolStyles.root}>
       <div className={toolStyles.canvasWrap}>
-        <canvas ref={canvasRef} className={toolStyles.canvas} />
+        <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Reference image" />
       </div>
 
       <Panel className={toolStyles.controls}>
@@ -97,10 +97,12 @@ export function Palette({ image }: Props) {
               return (
                 <div key={i} className={styles.row}>
                   <div className={styles.dot} style={{ background: hex }} />
-                  <span className={styles.hex}
+                  <button
+                    className={styles.hex}
                     onClick={() => navigator.clipboard.writeText(hex)}
+                    aria-label={`Copy ${hex}`}
                     title="Click to copy"
-                  >{hex}</span>
+                  >{hex}</button>
                   <span className={styles.pct}>{Math.round(result.sizes[i] * 100)}%</span>
                 </div>
               )
@@ -108,9 +110,9 @@ export function Palette({ image }: Props) {
           </div>
         )}
 
-        {running && !result && (
-          <p className={styles.empty}>Analysing…</p>
-        )}
+        <p className={styles.empty} aria-live="polite">
+          {running && !result ? 'Analysing…' : ''}
+        </p>
       </Panel>
     </div>
   )

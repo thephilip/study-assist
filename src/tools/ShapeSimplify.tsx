@@ -23,8 +23,8 @@ export function ShapeSimplify({ image }: Props) {
   return (
     <div className={styles.root}>
       <div className={`${styles.canvasWrap} ${compare ? styles.compareActive : ''}`}>
-        <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} />
-        <canvas ref={processedRef} className={styles.canvas} />
+        <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} role="img" aria-label="Original image" />
+        <canvas ref={processedRef} className={styles.canvas} role="img" aria-label="Simplified shapes" />
       </div>
       <Panel className={styles.controls}>
         <h2 className={styles.toolName}>Shape Simplify</h2>

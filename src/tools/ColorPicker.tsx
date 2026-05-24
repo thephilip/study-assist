@@ -84,6 +84,8 @@ export function ColorPicker({ image }: Props) {
           <canvas
             ref={canvasRef}
             className={`${toolStyles.canvas} ${styles.canvas}`}
+            role="img"
+            aria-label="Reference image — move pointer to preview a color, click to lock"
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerLeave}
@@ -112,6 +114,7 @@ export function ColorPicker({ image }: Props) {
               <button
                 className={styles.hexBadge}
                 onClick={() => navigator.clipboard.writeText(hex)}
+                aria-label={`Copy ${hex}`}
                 title="Copy hex"
               >
                 {hex}

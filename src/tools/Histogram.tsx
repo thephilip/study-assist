@@ -90,7 +90,7 @@ export function Histogram({ image }: Props) {
   return (
     <div className={toolStyles.root}>
       <div className={toolStyles.canvasWrap}>
-        <canvas ref={canvasRef} className={toolStyles.canvas} />
+        <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Luminance histogram" />
       </div>
 
       <Panel className={toolStyles.controls}>

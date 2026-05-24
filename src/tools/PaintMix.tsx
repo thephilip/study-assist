@@ -94,6 +94,8 @@ export function PaintMix({ image }: Props) {
         <canvas
           ref={canvasRef}
           className={toolStyles.canvas}
+          role="img"
+          aria-label="Reference image — click to sample a color for paint matching"
           style={{ cursor: 'crosshair' }}
           onPointerUp={handlePointerUp}
         />

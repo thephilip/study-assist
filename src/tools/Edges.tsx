@@ -27,8 +27,8 @@ export function Edges({ image }: Props) {
   return (
     <div className={toolStyles.root}>
       <div className={`${toolStyles.canvasWrap} ${compare ? toolStyles.compareActive : ''}`}>
-        <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} />
-        <canvas ref={processedRef} className={toolStyles.canvas} />
+        <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} role="img" aria-label="Original image" />
+        <canvas ref={processedRef} className={toolStyles.canvas} role="img" aria-label="Edge detection overlay" />
       </div>
 
       <Panel className={toolStyles.controls}>

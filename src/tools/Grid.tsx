@@ -46,8 +46,8 @@ export function Grid({ image }: Props) {
   return (
     <div className={toolStyles.root}>
       <div className={`${toolStyles.canvasWrap} ${compare ? toolStyles.compareActive : ''}`}>
-        <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} />
-        <canvas ref={canvasRef} className={toolStyles.canvas} />
+        <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} role="img" aria-label="Original image" />
+        <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Grid overlay" />
       </div>
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Grid</h2>

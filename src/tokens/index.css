@@ -1,4 +1,6 @@
 :root {
+  color-scheme: dark;
+
   /* Surface */
   --color-bg:           #0e0e0f;
   --color-surface:      #161618;
