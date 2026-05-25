@@ -11,9 +11,8 @@ export function ChangelogModal({ onDismiss }: Props) {
 
   useEffect(() => {
     const dialog = dialogRef.current
-    if (!dialog) return
-    if (!dialog.open) dialog.showModal()
-    return () => { if (dialog.open) dialog.close() }
+    if (!dialog || dialog.open) return
+    dialog.showModal()
   }, [])
 
   function close() {
