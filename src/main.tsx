@@ -49,7 +49,7 @@ function Root() {
           onDismiss={() => setNeedsUpdate(false)}
         />
       )}
-      {showChangelog && <ChangelogModal onDismiss={dismissChangelog} />}
+      {showChangelog && !needsUpdate && <ChangelogModal onDismiss={dismissChangelog} />}
     </StrictMode>
   )
 }

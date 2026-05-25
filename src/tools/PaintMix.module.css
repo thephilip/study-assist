@@ -71,6 +71,7 @@
   font-size: var(--text-sm);
   font-weight: 600;
   color: var(--color-text);
+  text-align: center;
 }
 
 .modalBody {
