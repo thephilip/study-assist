@@ -10,19 +10,26 @@ export function ChangelogModal({ onDismiss }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
-    dialogRef.current?.showModal()
+    const dialog = dialogRef.current
+    if (!dialog) return
+    if (!dialog.open) dialog.showModal()
+    return () => { if (dialog.open) dialog.close() }
   }, [])
 
+  function close() {
+    dialogRef.current?.close()
+  }
+
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
-    if (e.target === dialogRef.current) onDismiss()
+    if (e.target === dialogRef.current) close()
   }
 
   return (
-    <dialog ref={dialogRef} className={styles.dialog} onClick={handleBackdropClick} onCancel={onDismiss}>
+    <dialog ref={dialogRef} className={styles.dialog} onClick={handleBackdropClick} onClose={onDismiss}>
       <div className={styles.panel}>
         <div className={styles.header}>
           <h2 className={styles.title}>What's new</h2>
-          <button className={styles.closeBtn} onClick={onDismiss} aria-label="Close">✕</button>
+          <button type="button" className={styles.closeBtn} onClick={close} aria-label="Close">✕</button>
         </div>
 
         <div className={styles.releases}>
@@ -49,7 +56,7 @@ export function ChangelogModal({ onDismiss }: Props) {
           })}
         </div>
 
-        <button className={styles.dismissBtn} onClick={onDismiss}>Got it</button>
+        <button type="button" className={styles.dismissBtn} onClick={close}>Got it</button>
       </div>
     </dialog>
   )
