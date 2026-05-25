@@ -20,11 +20,11 @@ const OVERLAYS: { label: string; value: Overlay; title: string }[] = [
   { label: 'Center',  value: 'center',    title: 'Centre crosshair' },
 ]
 
-const SPIRAL_ORIENTS: { orient: SpiralOrient; label: string; title: string }[] = [
-  { orient: 0, label: '↗', title: 'Focus upper-right' },
-  { orient: 1, label: '↖', title: 'Focus upper-left' },
-  { orient: 2, label: '↘', title: 'Focus lower-right' },
-  { orient: 3, label: '↙', title: 'Focus lower-left' },
+const SPIRAL_ORIENTS: { orient: SpiralOrient; label: string }[] = [
+  { orient: 0, label: 'TR' },
+  { orient: 1, label: 'TL' },
+  { orient: 2, label: 'BR' },
+  { orient: 3, label: 'BL' },
 ]
 
 type Props = {
@@ -98,14 +98,14 @@ export function Composition({ image, originalImage, onApply }: Props) {
           <div className={styles.section}>
             <span className={styles.sectionLabel}>Orientation</span>
             <div className={styles.toggle}>
-              {SPIRAL_ORIENTS.map(({ orient, label, title }) => (
+              {SPIRAL_ORIENTS.map(({ orient, label }) => (
                 <button
                   key={orient}
                   type="button"
-                  title={title}
                   className={`${styles.toggleBtn} ${spiralOrient === orient ? styles.active : ''}`}
                   onClick={() => setSpiralOrient(orient)}
                   aria-pressed={spiralOrient === orient}
+                  aria-label={`${label} — ${orient === 0 || orient === 2 ? 'right' : 'left'}, ${orient < 2 ? 'upper' : 'lower'}`}
                 >
                   {label}
                 </button>

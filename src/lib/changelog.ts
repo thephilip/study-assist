@@ -17,6 +17,7 @@ export const CHANGELOG: ChangelogRelease[] = [
     date: '2026-05-25',
     entries: [
       { text: 'Larger touch targets — all buttons, toggles, and slider thumbs now meet 44×44px minimum on tablet', visibility: 'public' },
+      { text: 'Composition spiral orientation now shows visible TL/TR/BL/BR labels instead of invisible title attributes', visibility: 'public' },
       { text: 'Bug fixes and improvements', visibility: 'hidden' },
     ],
   },
