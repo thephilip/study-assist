@@ -62,3 +62,14 @@
   color: var(--color-text);
   background: var(--color-surface-3);
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .preset {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .toggleBtn {
+    min-height: 44px;
+  }
+}

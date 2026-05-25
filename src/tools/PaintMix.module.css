@@ -98,6 +98,18 @@
   opacity: 0.85;
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .brandBtn {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .modalClose {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-8);
+  }
+}
+
 /* Sampled color */
 .pickedSwatch {
   width: 100%;

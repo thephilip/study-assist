@@ -30,8 +30,15 @@
 /* Always slightly visible on touch devices — no hover to reveal it */
 @media (hover: none) and (pointer: coarse) {
   .fullscreenBtn {
+    width: 44px;
+    height: 44px;
     opacity: 0.45;
     pointer-events: auto;
+  }
+
+  .resetBtn {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
   }
 }
 

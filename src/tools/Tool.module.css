@@ -127,3 +127,10 @@
 .compareBtnActive:hover {
   background: rgba(124, 106, 247, 0.25);
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .compareBtn {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+  }
+}

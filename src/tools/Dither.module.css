@@ -64,3 +64,13 @@
   color: var(--color-text);
   background: var(--color-surface-3);
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .toggleBtn {
+    min-height: 44px;
+  }
+
+  .algoBtn {
+    min-height: 44px;
+  }
+}

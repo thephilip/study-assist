@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.5.0',
+    date: '2026-05-25',
+    entries: [
+      { text: 'Larger touch targets — all buttons, toggles, and slider thumbs now meet 44×44px minimum on tablet', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.4.0',
     date: '2026-05-25',
     entries: [

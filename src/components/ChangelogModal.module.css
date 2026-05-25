@@ -118,3 +118,15 @@
 .dismissBtn:hover {
   opacity: 0.85;
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .closeBtn {
+    min-height: 44px;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .dismissBtn {
+    min-height: 44px;
+    padding: var(--space-4) var(--space-8);
+  }
+}

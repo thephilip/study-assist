@@ -142,8 +142,14 @@
 }
 
 @media (hover: none) and (pointer: coarse) {
+  .undoBtn,
+  .clearBtn {
+    min-height: 44px;
+  }
+
   .toolBtn {
-    padding: var(--space-2) var(--space-3);
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
   }
 }
 

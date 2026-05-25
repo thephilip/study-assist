@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openai/gemma-4-26B-A4B-it-uncensored.gguf",
+  "provider": {
+    "openai": {
+      "options": {
+        "baseURL": "http://0.0.0.0:8080/v1",
+        "apiKey": "noop"
+      }
+    }
+  }
+}
