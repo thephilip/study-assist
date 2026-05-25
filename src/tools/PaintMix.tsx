@@ -162,7 +162,7 @@ export function PaintMix({ image }: Props) {
             <div className={styles.modal}>
               <p className={styles.modalTitle} id="upgrade-title">Brand Packs</p>
               <p className={styles.modalBody}>
-                W&N, Williamsburg, and Rembrandt brand packs are coming with the native app. The free tier includes the full Gamblin range.
+                Additional brand packs are coming with the native app. The free tier includes the full Gamblin range.
               </p>
               <button className={styles.modalClose} onClick={() => setShowUpgradeModal(false)}>
                 Got it
