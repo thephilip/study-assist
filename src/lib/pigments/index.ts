@@ -1,10 +1,10 @@
 import { hexToRgb, rgbToLab, labDeltaE } from '@/lib/color'
 import type { RGB, LAB } from '@/lib/color'
 
-export type Brand = 'Gamblin' | 'W&N' | 'Williamsburg' | 'Rembrandt'
+export type Brand = 'Gamblin' | 'W&N' | 'Williamsburg' | 'Rembrandt' | 'Utrecht' | 'Geneva'
 
 export const FREE_BRANDS: Brand[] = ['Gamblin']
-export const ALL_BRANDS: Brand[] = ['Gamblin', 'W&N', 'Williamsburg', 'Rembrandt']
+export const ALL_BRANDS: Brand[] = ['Gamblin', 'W&N', 'Williamsburg', 'Rembrandt', 'Utrecht', 'Geneva']
 export function isBrandFree(brand: Brand): boolean {
   return (FREE_BRANDS as string[]).includes(brand)
 }

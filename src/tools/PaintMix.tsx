@@ -6,14 +6,13 @@ import { sampleRegion } from './color-picker'
 import {
   PIGMENTS,
   ALL_BRANDS,
-  FREE_BRANDS,
-  isBrandFree,
   findTopSingles,
   findBestMix,
   type Brand,
   type SingleMatch,
   type MixMatch,
 } from '@/lib/pigments'
+import { isBrandUnlocked, getUnlockedBrands } from '@/lib/entitlements'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap, useZoom } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
@@ -22,10 +21,12 @@ import styles from './PaintMix.module.css'
 type Props = { image: LoadedImage }
 
 const BRAND_SHORT: Record<Brand, string> = {
-  'Gamblin': 'Gamblin',
-  'W&N': 'W&N',
-  'Williamsburg': 'Wmsburg',
-  'Rembrandt': 'Rembdt',
+  'Gamblin':     'Gamblin',
+  'W&N':         'W&N',
+  'Williamsburg':'Wmsburg',
+  'Rembrandt':   'Rembdt',
+  'Utrecht':     'Utrecht',
+  'Geneva':      'Geneva',
 }
 
 function pct(n: number) { return `${Math.round(n * 100)}%` }
@@ -35,7 +36,7 @@ export function PaintMix({ image }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imageDataRef = useRef<ImageData | null>(null)
   const [pick, setPick] = useState<{ color: RGB; x: number; y: number } | null>(null)
-  const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(FREE_BRANDS))
+  const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(getUnlockedBrands()))
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const { scale } = useZoom()
 
@@ -66,7 +67,7 @@ export function PaintMix({ image }: Props) {
   }, [scale])
 
   const toggleBrand = useCallback((brand: Brand) => {
-    if (!isBrandFree(brand)) {
+    if (!isBrandUnlocked(brand)) {
       setShowUpgradeModal(true)
       return
     }
@@ -138,7 +139,7 @@ export function PaintMix({ image }: Props) {
         {/* Brand filter */}
         <div className={styles.brands}>
           {ALL_BRANDS.map(brand => {
-            const free = isBrandFree(brand)
+            const free = isBrandUnlocked(brand)
             const active = activeBrands.has(brand)
             return (
               <button
