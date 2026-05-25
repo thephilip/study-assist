@@ -13,6 +13,7 @@ const TOOLS = [
   { name: 'Paint Mix',       desc: 'Match reference colors to your paint brand with a 2-paint mix suggestion.' },
   { name: 'Histogram',       desc: 'Visualize the tonal distribution and spot clipping or low contrast.' },
   { name: 'Edges',           desc: 'Reveal edge types with Sobel detection — find lost and found edges.' },
+  { name: 'Composition',     desc: 'Overlay rule-of-thirds, phi grid, diagonals, or golden spiral guides.' },
 ]
 
 type Props = { onFile: (file: File) => void; error?: string }

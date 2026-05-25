@@ -8,6 +8,7 @@ type Xform = { scale: number; x: number; y: number }
 type XformAction =
   | { type: 'wheel'; cx: number; cy: number; factor: number }
   | { type: 'pinch'; newMx: number; newMy: number; lastMx: number; lastMy: number; distFactor: number }
+  | { type: 'pan'; dx: number; dy: number }
   | { type: 'reset' }
 
 const INIT: Xform = { scale: 1, x: 0, y: 0 }
@@ -26,6 +27,9 @@ function xformReducer(state: Xform, action: XformAction): Xform {
       if (newScale === 1) return INIT
       const f = newScale / state.scale
       return { scale: newScale, x: action.newMx - (action.lastMx - state.x) * f, y: action.newMy - (action.lastMy - state.y) * f }
+    }
+    case 'pan': {
+      return { ...state, x: state.x + action.dx, y: state.y + action.dy }
     }
     case 'reset': return INIT
   }
@@ -82,6 +86,8 @@ export function CanvasWrap({ children, compare, style }: Props) {
   const lastTapRef = useRef(0)
   const compareRef = useRef(!!compare)
   useEffect(() => { compareRef.current = !!compare }, [compare])
+  const xformRef = useRef(xform)
+  useEffect(() => { xformRef.current = xform }, [xform])
 
   // Reset zoom when switching compare mode
   useEffect(() => {
@@ -169,7 +175,13 @@ export function CanvasWrap({ children, compare, style }: Props) {
           })
         }
       } else {
+        const prev = ptrs.get(e.pointerId)!
+        const dx = e.clientX - prev.x
+        const dy = e.clientY - prev.y
         ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY })
+        if (xformRef.current.scale > 1 && !compareRef.current) {
+          dispatch({ type: 'pan', dx, dy })
+        }
       }
     }
 
