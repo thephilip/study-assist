@@ -80,6 +80,7 @@ export function useImage() {
 
   return {
     image: state.image,
+    originalImage: state.stack.length > 0 ? state.stack[0] : state.image,
     error: state.error || null,
     canUndo: state.stack.length > 0,
     undoDepth: state.stack.length,

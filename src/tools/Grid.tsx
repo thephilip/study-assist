@@ -19,9 +19,9 @@ const PRESETS = [
   { label: '3×4', cols: 3, rows: 4 },
 ]
 
-type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
+type Props = { image: LoadedImage; originalImage: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Grid({ image, onApply }: Props) {
+export function Grid({ image, originalImage, onApply }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const originalRef = useRef<HTMLCanvasElement>(null)
   const [cols, setCols] = useState(3)
@@ -30,12 +30,12 @@ export function Grid({ image, onApply }: Props) {
   const [lineColor, setLineColor] = useState<LineColor>('light')
   const [compare, setCompare] = useState(false)
 
-  // Keep original canvas in sync with the image
+  // Keep original canvas showing the root original (before any Use as source)
   useEffect(() => {
     const original = originalRef.current
     if (!original) return
-    drawImageToCanvas(original, image.bitmap)
-  }, [image])
+    drawImageToCanvas(original, originalImage.bitmap)
+  }, [originalImage])
 
   useEffect(() => {
     const canvas = canvasRef.current

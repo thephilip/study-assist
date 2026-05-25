@@ -5,6 +5,7 @@ import type { LoadedImage } from './useImage'
 export function useCompare(
   image: LoadedImage | null,
   processData: (data: ImageData) => ImageData,
+  originalImage?: LoadedImage | null,
 ): {
   processedRef: RefObject<HTMLCanvasElement | null>
   originalRef: RefObject<HTMLCanvasElement | null>
@@ -15,6 +16,7 @@ export function useCompare(
   const originalRef = useRef<HTMLCanvasElement | null>(null)
   const [compare, setCompare] = useState(false)
 
+  // Render the processed output whenever the source image or settings change
   useEffect(() => {
     const processed = processedRef.current
     if (!processed || !image) return
@@ -27,15 +29,18 @@ export function useCompare(
     processed.width = tmp.width
     processed.height = tmp.height
     putPixelData(processed, outData)
-
-    // Always draw to originalRef so it's ready when compare is toggled
-    const original = originalRef.current
-    if (original) {
-      original.width = tmp.width
-      original.height = tmp.height
-      original.getContext('2d')!.drawImage(tmp, 0, 0)
-    }
   }, [image, processData])
+
+  // Render the compare baseline — the root original if provided, otherwise the current source
+  useEffect(() => {
+    const original = originalRef.current
+    const src = originalImage ?? image
+    if (!original || !src) return
+
+    original.width = src.width
+    original.height = src.height
+    original.getContext('2d')!.drawImage(src.bitmap, 0, 0)
+  }, [originalImage, image])
 
   const toggleCompare = useCallback(() => setCompare(v => !v), [])
 

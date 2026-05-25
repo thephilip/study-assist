@@ -67,6 +67,8 @@ All tool slugs are defined here. `App.tsx` dispatches to the right component via
 | PWA / installable | ✅ done | manifest.json, icons (192/512px), favicon, OG tags, Apple meta tags; vite-plugin-pwa |
 | Update notifications | ✅ done | Service worker update toast with Reload (skipWaiting) + dismiss |
 | Pinch-to-zoom | ✅ done | Pinch (touch) + scroll-wheel zoom 1×–8×; double-tap to reset; zoom state in CanvasWrap via useReducer + ZoomContext |
+| Use as source / Undo | ✅ done | Any processed-canvas tool can bake its output as the new working image; full undo stack in useImage (useReducer); compare always shows the root original |
+| Changelog modal | 🗓 planned | Show release notes on update; entries tagged `public`/`hidden` — hidden entries (e.g. new premium brand packs) render as "Bug fixes and improvements" to avoid leaking the premium roadmap |
 
 Paint brand database (Gamblin, W&N, Williamsburg, Rembrandt) is a key differentiator — competitors lack this. **Brand gating is live:** Gamblin is the free tier; W&N, Williamsburg, and Rembrandt are locked behind an upgrade modal pointing to the native app.
 

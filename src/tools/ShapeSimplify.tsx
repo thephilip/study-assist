@@ -9,9 +9,9 @@ import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
-type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
+type Props = { image: LoadedImage; originalImage: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function ShapeSimplify({ image, onApply }: Props) {
+export function ShapeSimplify({ image, originalImage, onApply }: Props) {
   const [blurRadius, setBlurRadius] = useState(8)
   const [levels, setLevels] = useState(4)
 
@@ -20,7 +20,7 @@ export function ShapeSimplify({ image, onApply }: Props) {
     [blurRadius, levels],
   )
 
-  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData)
+  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData, originalImage)
 
   return (
     <div className={styles.root}>

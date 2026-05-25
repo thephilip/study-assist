@@ -9,9 +9,9 @@ import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
-type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
+type Props = { image: LoadedImage; originalImage: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Temperature({ image, onApply }: Props) {
+export function Temperature({ image, originalImage, onApply }: Props) {
   const [intensity, setIntensity] = useState(80)
   const [blend, setBlend] = useState(100)
 
@@ -20,7 +20,7 @@ export function Temperature({ image, onApply }: Props) {
     [intensity, blend],
   )
 
-  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData)
+  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData, originalImage)
 
   return (
     <div className={styles.root}>

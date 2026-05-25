@@ -9,9 +9,9 @@ import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
-type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
+type Props = { image: LoadedImage; originalImage: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Notan({ image, onApply }: Props) {
+export function Notan({ image, originalImage, onApply }: Props) {
   const [threshold, setThreshold] = useState(128)
 
   const processData = useCallback(
@@ -19,7 +19,7 @@ export function Notan({ image, onApply }: Props) {
     [threshold],
   )
 
-  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData)
+  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData, originalImage)
 
   return (
     <div className={styles.root}>

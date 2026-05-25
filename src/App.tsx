@@ -16,17 +16,17 @@ import styles from './App.module.css'
 
 type ApplyFn = (canvas: HTMLCanvasElement) => void
 
-function ActiveTool({ tool, image, onApply }: { tool: Tool; image: LoadedImage; onApply: ApplyFn }) {
-  if (tool === 'value-map') return <ValueMap image={image} onApply={onApply} />
-  if (tool === 'notan') return <Notan image={image} onApply={onApply} />
+function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image: LoadedImage; originalImage: LoadedImage; onApply: ApplyFn }) {
+  if (tool === 'value-map') return <ValueMap image={image} originalImage={originalImage} onApply={onApply} />
+  if (tool === 'notan') return <Notan image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'color-picker') return <ColorPicker image={image} />
-  if (tool === 'shape-simplify') return <ShapeSimplify image={image} onApply={onApply} />
-  if (tool === 'grid') return <Grid image={image} onApply={onApply} />
+  if (tool === 'shape-simplify') return <ShapeSimplify image={image} originalImage={originalImage} onApply={onApply} />
+  if (tool === 'grid') return <Grid image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'palette') return <Palette image={image} />
-  if (tool === 'temperature') return <Temperature image={image} onApply={onApply} />
+  if (tool === 'temperature') return <Temperature image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'paint-mix') return <PaintMix image={image} />
   if (tool === 'histogram') return <Histogram image={image} />
-  if (tool === 'edges') return <Edges image={image} onApply={onApply} />
+  if (tool === 'edges') return <Edges image={image} originalImage={originalImage} onApply={onApply} />
   return <p className={styles.placeholder}>{tool} — coming soon</p>
 }
 
@@ -44,7 +44,7 @@ const TOOL_LABELS: Record<Tool, string> = {
 }
 
 export default function App() {
-  const { image, error, load, clear, push, undo, canUndo, undoDepth } = useImage()
+  const { image, originalImage, error, load, clear, push, undo, canUndo, undoDepth } = useImage()
   const [activeTool, setActiveTool] = useState<Tool>('value-map')
 
   const handleApply = useCallback((canvas: HTMLCanvasElement) => {
@@ -90,7 +90,7 @@ export default function App() {
               ))}
             </nav>
             <div className={styles.canvas}>
-              <ActiveTool tool={activeTool} image={image} onApply={handleApply} />
+              <ActiveTool tool={activeTool} image={image} originalImage={originalImage!} onApply={handleApply} />
             </div>
           </div>
         )}

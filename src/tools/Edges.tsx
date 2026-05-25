@@ -11,9 +11,9 @@ import toolStyles from './Tool.module.css'
 import styles from './Edges.module.css'
 
 type EdgeColor = 'light' | 'dark'
-type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
+type Props = { image: LoadedImage; originalImage: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Edges({ image, onApply }: Props) {
+export function Edges({ image, originalImage, onApply }: Props) {
   const [blurRadius, setBlurRadius] = useState(2)
   const [threshold, setThreshold] = useState(20)
   const [opacity, setOpacity] = useState(80)
@@ -24,7 +24,7 @@ export function Edges({ image, onApply }: Props) {
     [blurRadius, threshold, opacity, edgeColor],
   )
 
-  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData)
+  const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData, originalImage)
 
   return (
     <div className={toolStyles.root}>
