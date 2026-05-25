@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { ImageDrop } from '@/components/ImageDrop'
 import { useImage, type LoadedImage } from '@/hooks/useImage'
 import { TOOLS, type Tool } from '@/tools/index'
@@ -46,9 +46,11 @@ const TOOL_LABELS: Record<Tool, string> = {
   'edges':         'Edges',
 }
 
-export default function App() {
+export default function App({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
   const { image, originalImage, error, load, clear, push, undo, canUndo, undoDepth } = useImage()
   const [activeTool, setActiveTool] = useState<Tool>('value-map')
+
+  useEffect(() => { onImageChange?.(!!image) }, [image, onImageChange])
 
   const handleApply = useCallback((canvas: HTMLCanvasElement) => {
     push(canvas)

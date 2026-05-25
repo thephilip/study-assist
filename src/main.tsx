@@ -20,6 +20,8 @@ const triggerUpdate = registerSW({
 
 function Root() {
   const [needsUpdate, setNeedsUpdate] = useState(false)
+  const [confirmingUpdate, setConfirmingUpdate] = useState(false)
+  const [hasImage, setHasImage] = useState(false)
   const [showChangelog, setShowChangelog] = useState(false)
 
   // Wire up the module-level callback to React state
@@ -35,6 +37,14 @@ function Root() {
     }
   }, [])
 
+  function handleUpdateRequest() {
+    if (hasImage) {
+      setConfirmingUpdate(true)
+    } else {
+      triggerUpdate(true)
+    }
+  }
+
   function dismissChangelog() {
     localStorage.setItem(SEEN_VERSION_KEY, CURRENT_VERSION)
     setShowChangelog(false)
@@ -42,11 +52,14 @@ function Root() {
 
   return (
     <StrictMode>
-      <App />
+      <App onImageChange={setHasImage} />
       {needsUpdate && (
         <UpdateToast
-          onUpdate={() => triggerUpdate(true)}
-          onDismiss={() => setNeedsUpdate(false)}
+          confirming={confirmingUpdate}
+          onUpdate={handleUpdateRequest}
+          onConfirm={() => triggerUpdate(true)}
+          onCancelConfirm={() => setConfirmingUpdate(false)}
+          onDismiss={() => { setNeedsUpdate(false); setConfirmingUpdate(false) }}
         />
       )}
       {showChangelog && !needsUpdate && <ChangelogModal onDismiss={dismissChangelog} />}
