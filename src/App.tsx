@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { ImageDrop } from '@/components/ImageDrop'
+import { Welcome } from '@/components/Welcome'
 import { useImage, type LoadedImage } from '@/hooks/useImage'
 import { TOOLS, type Tool } from '@/tools/index'
 import { ValueMap } from '@/tools/ValueMap'
@@ -77,8 +77,7 @@ export default function App({ onImageChange }: { onImageChange?: (has: boolean) 
       <main className={styles.main}>
         {!image ? (
           <div className={styles.dropZone}>
-            <ImageDrop onFile={load} />
-            {error && <p className={styles.error}>{error}</p>}
+            <Welcome onFile={load} error={error ?? undefined} />
           </div>
         ) : (
           <div className={styles.workspace}>

@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/license-MIT-8a8a96?style=flat-square" alt="MIT License">
 </p>
 
-A painting reference tool for artists — value maps, notan, colour picking, paint mixing, and more in one place, with a clean dark-mode-first UI.
+A painting reference tool for artists — value maps, notan, colour picking, paint mixing, dithering, and more in one place, with a clean dark-mode-first UI.
 
 ![study assist — temperature map tool](docs/screenshot.png)
 
@@ -25,14 +25,32 @@ Process reference photos entirely in your browser. No uploads, no accounts, no s
 | **Notan** | Reduces to pure black and white to study shape and silhouette |
 | **Color Picker** | Hover to preview, click to lock; averages a sampled region; copies hex |
 | **Shape Simplify** | Box blur + posterize to flatten texture into readable flat shapes |
+| **Dither** | Floyd-Steinberg, Atkinson, Bayer 4×4/8×8 — grayscale and colour modes |
 | **Grid Overlay** | Configurable grid with presets, opacity, and line-colour controls |
 | **Palette Extraction** | K-means++ colour clustering with a proportional swatch bar |
 | **Temperature Map** | Maps hue to warm/cool overlay while preserving luminance |
-| **Paint Mix** | Matches sampled colours to paints from Gamblin, W&N, Williamsburg, and Rembrandt; suggests 2-paint mix ratios |
+| **Paint Mix** | Matches sampled colours to your paint brand; suggests a 2-paint mix ratio |
 | **Histogram** | Luma histogram with log/linear scale; min, mean, and max tonal range stats |
 | **Edge Detection** | Sobel edge overlay with blur, threshold, and opacity controls |
 
-All tools include a side-by-side compare mode and a Save PNG export.
+All processed-canvas tools include a **side-by-side compare mode**, **Save PNG**, and **Use as source** (bake the output as the new working image). A full **undo stack** lets you step back through applied changes.
+
+---
+
+## Paint brand database
+
+Paint Mix includes pigment data for four brands, matched using LAB ΔE colour distance:
+
+| Brand | Tier |
+|---|---|
+| Gamblin Artists' Oil | Free |
+| Winsor & Newton Artists' Oil | Premium |
+| Williamsburg Handmade Oil | Premium |
+| Rembrandt Artists' Oil | Premium |
+| Utrecht Artists' Oil | Premium |
+| Geneva Artists' Oil | Premium |
+
+Hex values are sourced from manufacturer swatch cards and handprint.com reference data (D65 illuminant, reference approximations).
 
 ---
 
@@ -58,6 +76,7 @@ pnpm build
 - **CSS Modules** + CSS custom properties — design tokens in `src/tokens/index.css`
 - **Canvas API** + `getImageData` pixel manipulation — no image processing libraries
 - **Web Workers** for heavy algorithms (K-means palette extraction)
+- **PWA** — installable, offline-capable, update notifications via service worker
 - **No backend** — all processing is client-side; no data ever leaves the device
 
 ---
@@ -66,11 +85,13 @@ pnpm build
 
 ```
 src/
-  components/       # Panel, Slider, ImageDrop, SaveButton
-  hooks/            # useImage, useProcessedCanvas, useCompare
+  components/       # Panel, Slider, ImageDrop, CanvasWrap, Welcome
+  hooks/            # useImage (with undo stack), useCompare
   lib/
     canvas.ts       # getPixelData, putPixelData, mapPixels, drawImageToCanvas
     color.ts        # RGB ↔ HSL ↔ LAB ↔ CMYK conversions + deltaE
+    changelog.ts    # Versioned release notes (shown post-update)
+    entitlements.ts # Brand pack unlock state (localStorage)
     pigments/       # Paint brand database + LAB nearest-neighbour matching
   tokens/
     index.css       # All design tokens (colour, type, spacing, radii, shadows)
@@ -85,7 +106,6 @@ src/
 
 - [ ] Native tablet app — iOS + Android (Flutter, post web release)
 - [ ] Spectral-measured pigment data for improved mix accuracy
-- [ ] PWA manifest for iPad home screen install
 
 ---
 
