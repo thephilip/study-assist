@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Welcome } from '@/components/Welcome'
 import { useImage, type LoadedImage } from '@/hooks/useImage'
 import { TOOLS, type Tool } from '@/tools/index'
@@ -52,31 +52,6 @@ const TOOL_LABELS: Record<Tool, string> = {
 export default function App({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
   const { image, originalImage, error, load, clear, push, undo, canUndo, undoDepth } = useImage()
   const [activeTool, setActiveTool] = useState<Tool>('value-map')
-  const [menuOpen, setMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!menuOpen) return
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false)
-      }
-    }
-    const id = setTimeout(() => document.addEventListener('click', handler), 0)
-    return () => {
-      clearTimeout(id)
-      document.removeEventListener('click', handler)
-    }
-  }, [menuOpen])
-
-  useEffect(() => {
-    if (!menuOpen) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false)
-    }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [menuOpen])
 
   useEffect(() => { onImageChange?.(!!image) }, [image, onImageChange])
 
@@ -121,35 +96,6 @@ export default function App({ onImageChange }: { onImageChange?: (has: boolean) 
                 </button>
               ))}
             </nav>
-            <div className={styles.fabContainer} ref={menuRef}>
-              <button
-                className={styles.fab}
-                onClick={() => setMenuOpen(o => !o)}
-                aria-label="Open tools menu"
-                aria-expanded={menuOpen}
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="7" height="7" rx="1" />
-                </svg>
-              </button>
-              {menuOpen && (
-                <div className={styles.popover} role="dialog" aria-label="Tools">
-                  {TOOLS.map(tool => (
-                    <button
-                      key={tool}
-                      className={`${styles.popoverToolBtn} ${activeTool === tool ? styles.active : ''}`}
-                      onClick={() => { setActiveTool(tool); setMenuOpen(false) }}
-                      aria-pressed={activeTool === tool}
-                    >
-                      {TOOL_LABELS[tool]}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
             <div className={styles.canvas}>
               <ActiveTool tool={activeTool} image={image} originalImage={originalImage!} onApply={handleApply} />
             </div>
