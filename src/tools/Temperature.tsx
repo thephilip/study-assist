@@ -2,15 +2,16 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
+import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyTemperature } from './temperature'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Temperature({ image }: Props) {
+export function Temperature({ image, onApply }: Props) {
   const [intensity, setIntensity] = useState(80)
   const [blend, setBlend] = useState(100)
 
@@ -70,6 +71,7 @@ export function Temperature({ image }: Props) {
           Warm &nbsp;·&nbsp; Cool
         </p>
         <SaveButton canvasRef={processedRef} filename="temperature-map.png" />
+        <ApplyButton canvasRef={processedRef} onApply={onApply} />
       </Panel>
     </div>
   )

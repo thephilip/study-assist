@@ -2,15 +2,16 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
+import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyShapeSimplify } from './shape-simplify'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function ShapeSimplify({ image }: Props) {
+export function ShapeSimplify({ image, onApply }: Props) {
   const [blurRadius, setBlurRadius] = useState(8)
   const [levels, setLevels] = useState(4)
 
@@ -54,6 +55,7 @@ export function ShapeSimplify({ image }: Props) {
           onChange={setLevels}
         />
         <SaveButton canvasRef={processedRef} filename="shape-simplify.png" />
+        <ApplyButton canvasRef={processedRef} onApply={onApply} />
       </Panel>
     </div>
   )

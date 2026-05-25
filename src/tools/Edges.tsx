@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
+import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyEdges } from './edges'
 import type { LoadedImage } from '@/hooks/useImage'
@@ -10,9 +11,9 @@ import toolStyles from './Tool.module.css'
 import styles from './Edges.module.css'
 
 type EdgeColor = 'light' | 'dark'
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Edges({ image }: Props) {
+export function Edges({ image, onApply }: Props) {
   const [blurRadius, setBlurRadius] = useState(2)
   const [threshold, setThreshold] = useState(20)
   const [opacity, setOpacity] = useState(80)
@@ -68,6 +69,7 @@ export function Edges({ image }: Props) {
         </div>
 
         <SaveButton canvasRef={processedRef} filename="edges.png" />
+        <ApplyButton canvasRef={processedRef} onApply={onApply} />
       </Panel>
     </div>
   )

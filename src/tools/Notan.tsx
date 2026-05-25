@@ -2,15 +2,16 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
+import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyNotan } from './notan'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Notan({ image }: Props) {
+export function Notan({ image, onApply }: Props) {
   const [threshold, setThreshold] = useState(128)
 
   const processData = useCallback(
@@ -46,6 +47,7 @@ export function Notan({ image }: Props) {
           onChange={setThreshold}
         />
         <SaveButton canvasRef={processedRef} filename="notan.png" />
+        <ApplyButton canvasRef={processedRef} onApply={onApply} />
       </Panel>
     </div>
   )

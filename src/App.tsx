@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { ImageDrop } from '@/components/ImageDrop'
 import { useImage, type LoadedImage } from '@/hooks/useImage'
 import { TOOLS, type Tool } from '@/tools/index'
@@ -14,17 +14,19 @@ import { Histogram } from '@/tools/Histogram'
 import { Edges } from '@/tools/Edges'
 import styles from './App.module.css'
 
-function ActiveTool({ tool, image }: { tool: Tool; image: LoadedImage }) {
-  if (tool === 'value-map') return <ValueMap image={image} />
-  if (tool === 'notan') return <Notan image={image} />
+type ApplyFn = (canvas: HTMLCanvasElement) => void
+
+function ActiveTool({ tool, image, onApply }: { tool: Tool; image: LoadedImage; onApply: ApplyFn }) {
+  if (tool === 'value-map') return <ValueMap image={image} onApply={onApply} />
+  if (tool === 'notan') return <Notan image={image} onApply={onApply} />
   if (tool === 'color-picker') return <ColorPicker image={image} />
-  if (tool === 'shape-simplify') return <ShapeSimplify image={image} />
-  if (tool === 'grid') return <Grid image={image} />
+  if (tool === 'shape-simplify') return <ShapeSimplify image={image} onApply={onApply} />
+  if (tool === 'grid') return <Grid image={image} onApply={onApply} />
   if (tool === 'palette') return <Palette image={image} />
-  if (tool === 'temperature') return <Temperature image={image} />
+  if (tool === 'temperature') return <Temperature image={image} onApply={onApply} />
   if (tool === 'paint-mix') return <PaintMix image={image} />
   if (tool === 'histogram') return <Histogram image={image} />
-  if (tool === 'edges') return <Edges image={image} />
+  if (tool === 'edges') return <Edges image={image} onApply={onApply} />
   return <p className={styles.placeholder}>{tool} — coming soon</p>
 }
 
@@ -42,17 +44,28 @@ const TOOL_LABELS: Record<Tool, string> = {
 }
 
 export default function App() {
-  const { image, error, load, clear } = useImage()
+  const { image, error, load, clear, push, undo, canUndo, undoDepth } = useImage()
   const [activeTool, setActiveTool] = useState<Tool>('value-map')
+
+  const handleApply = useCallback((canvas: HTMLCanvasElement) => {
+    push(canvas)
+  }, [push])
 
   return (
     <div className={styles.root}>
       <header className={styles.header}>
         <h1 className={styles.wordmark}>study assist</h1>
         {image && (
-          <button className={styles.clearBtn} onClick={clear} aria-label="Remove image">
-            ✕ Remove image
-          </button>
+          <div className={styles.headerActions}>
+            {canUndo && (
+              <button className={styles.undoBtn} onClick={undo} aria-label={`Undo — ${undoDepth} step${undoDepth !== 1 ? 's' : ''} back`}>
+                Undo{undoDepth > 1 ? ` (${undoDepth})` : ''}
+              </button>
+            )}
+            <button className={styles.clearBtn} onClick={clear} aria-label="Remove image">
+              Remove image
+            </button>
+          </div>
         )}
       </header>
 
@@ -77,7 +90,7 @@ export default function App() {
               ))}
             </nav>
             <div className={styles.canvas}>
-              <ActiveTool tool={activeTool} image={image} />
+              <ActiveTool tool={activeTool} image={image} onApply={handleApply} />
             </div>
           </div>
         )}

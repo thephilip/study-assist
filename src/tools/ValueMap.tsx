@@ -2,15 +2,16 @@ import { useState, useCallback } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
+import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyValueMap } from './value-map'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
 import styles from './Tool.module.css'
 
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function ValueMap({ image }: Props) {
+export function ValueMap({ image, onApply }: Props) {
   const [levels, setLevels] = useState(4)
 
   const processData = useCallback(
@@ -46,6 +47,7 @@ export function ValueMap({ image }: Props) {
           onChange={setLevels}
         />
         <SaveButton canvasRef={processedRef} filename="value-map.png" />
+        <ApplyButton canvasRef={processedRef} onApply={onApply} />
         <div className={styles.swatches}>
           {Array.from({ length: levels }, (_, i) => {
             const v = Math.round((i / (levels - 1)) * 255)

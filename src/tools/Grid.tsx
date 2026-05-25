@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { SaveButton } from '@/components/SaveButton'
+import { ApplyButton } from '@/components/ApplyButton'
 import { drawImageToCanvas } from '@/lib/canvas'
 import { drawGrid } from './grid'
 import type { LoadedImage } from '@/hooks/useImage'
@@ -18,9 +19,9 @@ const PRESETS = [
   { label: '3×4', cols: 3, rows: 4 },
 ]
 
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
 
-export function Grid({ image }: Props) {
+export function Grid({ image, onApply }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const originalRef = useRef<HTMLCanvasElement>(null)
   const [cols, setCols] = useState(3)
@@ -99,6 +100,7 @@ export function Grid({ image }: Props) {
           </div>
         </div>
         <SaveButton canvasRef={canvasRef} filename="grid.png" />
+        <ApplyButton canvasRef={canvasRef} onApply={onApply} />
       </Panel>
     </div>
   )
