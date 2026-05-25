@@ -79,6 +79,37 @@ export const PIGMENTS: Pigment[] = [
   p('rb-pb29', 'Ultramarine Deep',           'Rembrandt',   'PB29',     '#182878'),
   p('rb-pb28', 'Cobalt Blue',                'Rembrandt',   'PB28',     '#1a4898'),
   p('rb-pbk9', 'Ivory Black',                'Rembrandt',   'PBk9',     '#1a1816'),
+
+  // ── Utrecht ──────────────────────────────────────────────────────────────
+  p('ut-pw6',  'Titanium White',             'Utrecht',     'PW6',      '#f0eee8'),
+  p('ut-py35l','Cadmium Yellow Light',        'Utrecht',     'PY35',     '#ffe030'),
+  p('ut-py43', 'Yellow Ochre',               'Utrecht',     'PY43',     '#c08828'),
+  p('ut-pbr7s','Raw Sienna',                 'Utrecht',     'PBr7',     '#c27830'),
+  p('ut-pbr7b','Burnt Sienna',               'Utrecht',     'PBr7',     '#9c3820'),
+  p('ut-pbr7r','Raw Umber',                  'Utrecht',     'PBr7',     '#6a4018'),
+  p('ut-pbr7u','Burnt Umber',                'Utrecht',     'PBr7',     '#582810'),
+  p('ut-pr108','Cadmium Red Medium',         'Utrecht',     'PR108',    '#cc1e18'),
+  p('ut-pr83', 'Alizarin Crimson',           'Utrecht',     'PR83',     '#7e1830'),
+  p('ut-pb29', 'Ultramarine Blue',           'Utrecht',     'PB29',     '#1a3888'),
+  p('ut-pb28', 'Cobalt Blue',                'Utrecht',     'PB28',     '#225098'),
+  p('ut-pb15', 'Phthalo Blue',               'Utrecht',     'PB15:3',   '#002a6e'),
+  p('ut-pg18', 'Viridian',                   'Utrecht',     'PG18',     '#3a7858'),
+  p('ut-pg7',  'Phthalo Green',              'Utrecht',     'PG7',      '#00483a'),
+  p('ut-pbk9', 'Ivory Black',                'Utrecht',     'PBk9',     '#1a1816'),
+
+  // ── Geneva ───────────────────────────────────────────────────────────────
+  // Pigment codes sourced directly from genevafineart.com product pages.
+  p('gv-pw6',  'Titanium White',             'Geneva',      'PW6',      '#f2f0ec'),
+  p('gv-py184','Bismuth Yellow',             'Geneva',      'PY184',    '#fce038'),
+  p('gv-py35', 'Cadmium Yellow',             'Geneva',      'PY35',     '#ffc018'),
+  p('gv-pr108','Cadmium Red',                'Geneva',      'PR108',    '#cc2018'),
+  p('gv-pr264','Pyrrole Rubine',             'Geneva',      'PR264',    '#a21830'),
+  p('gv-pr177','Permanent Alizarin Crimson', 'Geneva',      'PR177',    '#8c1830'),
+  p('gv-pb29', 'French Ultramarine',         'Geneva',      'PB29',     '#162278'),
+  p('gv-pb154','Phthalo Blue',               'Geneva',      'PB15:4',   '#002c72'),
+  p('gv-pv23', 'Dioxazine Purple',           'Geneva',      'PV23',     '#381848'),
+  p('gv-pbr7u','Burnt Umber',                'Geneva',      'PBr7',     '#582810'),
+  p('gv-blk',  'Geneva Black',               'Geneva',      'PB29, PBr7','#1c1a20'),
 ]
 
 export type SingleMatch = { paint: Pigment; dE: number }
