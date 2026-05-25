@@ -13,6 +13,13 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.2.0',
+    date: '2026-05-25',
+    entries: [
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.1.0',
     date: '2026-05-25',
     entries: [
