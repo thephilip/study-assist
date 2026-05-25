@@ -1,6 +1,12 @@
 import { hexToRgb, rgbToLab, labDeltaE } from '@/lib/color'
 import type { RGB, LAB } from '@/lib/color'
-import { PREMIUM_SPECS } from './premium'
+
+// premium.ts is gitignored — absent on public clones; gracefully degrades to no locked-brand pigments
+const _premiumMods = import.meta.glob<{ PREMIUM_SPECS: [string, string, string, string, string][] }>(
+  './premium.ts',
+  { eager: true },
+)
+const PREMIUM_SPECS = _premiumMods['./premium.ts']?.PREMIUM_SPECS ?? []
 
 export type Brand = 'Gamblin' | 'W&N' | 'Williamsburg' | 'Rembrandt' | 'Utrecht' | 'Geneva'
 
