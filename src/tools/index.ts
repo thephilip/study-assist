@@ -3,6 +3,7 @@ export const TOOLS = [
   'notan',
   'color-picker',
   'shape-simplify',
+  'dither',
   'grid',
   'palette',
   'temperature',

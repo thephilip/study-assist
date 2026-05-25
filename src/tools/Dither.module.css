@@ -1,0 +1,66 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sectionLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.toggle {
+  display: flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.toggleBtn {
+  flex: 1;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  padding: var(--space-1) 0;
+  background: var(--color-surface-2);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.toggleBtn + .toggleBtn {
+  border-left: 1px solid var(--color-border);
+}
+
+.toggleBtnActive {
+  color: var(--color-text);
+  background: var(--color-surface-3);
+}
+
+/* 2×2 grid for the 4-algorithm selector */
+.algoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.algoBtn {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  padding: var(--space-2) 0;
+  background: var(--color-surface-2);
+  text-align: center;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.algoBtn:nth-child(odd) {
+  border-right: 1px solid var(--color-border);
+}
+
+.algoBtn:nth-child(n+3) {
+  border-top: 1px solid var(--color-border);
+}
+
+.algoBtnActive {
+  color: var(--color-text);
+  background: var(--color-surface-3);
+}

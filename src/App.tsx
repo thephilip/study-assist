@@ -11,6 +11,7 @@ import { Palette } from '@/tools/Palette'
 import { Temperature } from '@/tools/Temperature'
 import { PaintMix } from '@/tools/PaintMix'
 import { Histogram } from '@/tools/Histogram'
+import { Dither } from '@/tools/Dither'
 import { Edges } from '@/tools/Edges'
 import styles from './App.module.css'
 
@@ -21,6 +22,7 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
   if (tool === 'notan') return <Notan image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'color-picker') return <ColorPicker image={image} />
   if (tool === 'shape-simplify') return <ShapeSimplify image={image} originalImage={originalImage} onApply={onApply} />
+  if (tool === 'dither') return <Dither image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'grid') return <Grid image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'palette') return <Palette image={image} />
   if (tool === 'temperature') return <Temperature image={image} originalImage={originalImage} onApply={onApply} />
@@ -35,6 +37,7 @@ const TOOL_LABELS: Record<Tool, string> = {
   'notan':         'Notan',
   'color-picker':  'Color Picker',
   'shape-simplify':'Shape Simplify',
+  'dither':        'Dither',
   'grid':          'Grid',
   'palette':       'Palette',
   'temperature':   'Temperature',
