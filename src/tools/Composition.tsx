@@ -1,0 +1,141 @@
+import { useRef, useEffect, useState } from 'react'
+import { Slider } from '@/components/Slider'
+import { Panel } from '@/components/Panel'
+import { SaveButton } from '@/components/SaveButton'
+import { ApplyButton } from '@/components/ApplyButton'
+import { drawImageToCanvas } from '@/lib/canvas'
+import { drawComposition, type Overlay, type SpiralOrient } from './composition'
+import type { LoadedImage } from '@/hooks/useImage'
+import { CanvasWrap } from '@/components/CanvasWrap'
+import toolStyles from './Tool.module.css'
+import styles from './Composition.module.css'
+
+type LineColor = 'light' | 'dark'
+
+const OVERLAYS: { label: string; value: Overlay; title: string }[] = [
+  { label: 'Thirds',  value: 'thirds',    title: 'Rule of thirds' },
+  { label: 'Phi',     value: 'phi',       title: 'Golden ratio (phi) grid' },
+  { label: 'Diag.',   value: 'diagonals', title: 'Corner diagonals' },
+  { label: 'Spiral',  value: 'spiral',    title: 'Golden spiral' },
+  { label: 'Center',  value: 'center',    title: 'Centre crosshair' },
+]
+
+const SPIRAL_ORIENTS: { orient: SpiralOrient; label: string; title: string }[] = [
+  { orient: 0, label: '↗', title: 'Focus upper-right' },
+  { orient: 1, label: '↖', title: 'Focus upper-left' },
+  { orient: 2, label: '↘', title: 'Focus lower-right' },
+  { orient: 3, label: '↙', title: 'Focus lower-left' },
+]
+
+type Props = {
+  image: LoadedImage
+  originalImage: LoadedImage
+  onApply: (canvas: HTMLCanvasElement) => void
+}
+
+export function Composition({ image, originalImage, onApply }: Props) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const originalRef = useRef<HTMLCanvasElement>(null)
+  const [overlay, setOverlay] = useState<Overlay>('thirds')
+  const [opacity, setOpacity] = useState(50)
+  const [lineColor, setLineColor] = useState<LineColor>('light')
+  const [spiralOrient, setSpiralOrient] = useState<SpiralOrient>(0)
+  const [compare, setCompare] = useState(false)
+
+  useEffect(() => {
+    const canvas = originalRef.current
+    if (!canvas) return
+    drawImageToCanvas(canvas, originalImage.bitmap)
+  }, [originalImage])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    drawImageToCanvas(canvas, image.bitmap)
+    const ctx = canvas.getContext('2d')!
+    drawComposition(ctx, canvas.width, canvas.height, overlay, opacity / 100, lineColor, spiralOrient)
+  }, [image, overlay, opacity, lineColor, spiralOrient])
+
+  return (
+    <div className={toolStyles.root}>
+      <CanvasWrap compare={compare}>
+        <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} role="img" aria-label="Original image" />
+        <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Composition overlay" />
+      </CanvasWrap>
+      <Panel className={toolStyles.controls}>
+        <h2 className={toolStyles.toolName}>Composition</h2>
+        <p className={toolStyles.description}>
+          Overlay compositional guides to analyse structure and focal points.
+        </p>
+
+        <button
+          type="button"
+          className={`${toolStyles.compareBtn} ${compare ? toolStyles.compareBtnActive : ''}`}
+          onClick={() => setCompare(v => !v)}
+          aria-pressed={compare}
+        >
+          {compare ? 'Exit compare' : 'Compare'}
+        </button>
+
+        <div className={styles.section}>
+          <span className={styles.sectionLabel}>Overlay</span>
+          <div className={styles.presets}>
+            {OVERLAYS.map(o => (
+              <button
+                key={o.value}
+                type="button"
+                title={o.title}
+                className={`${styles.preset} ${overlay === o.value ? styles.active : ''}`}
+                onClick={() => setOverlay(o.value)}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {overlay === 'spiral' && (
+          <div className={styles.section}>
+            <span className={styles.sectionLabel}>Orientation</span>
+            <div className={styles.toggle}>
+              {SPIRAL_ORIENTS.map(({ orient, label, title }) => (
+                <button
+                  key={orient}
+                  type="button"
+                  title={title}
+                  className={`${styles.toggleBtn} ${spiralOrient === orient ? styles.active : ''}`}
+                  onClick={() => setSpiralOrient(orient)}
+                  aria-pressed={spiralOrient === orient}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <Slider label="Opacity" value={opacity} min={5} max={100} onChange={setOpacity} />
+
+        <div className={styles.section}>
+          <span className={styles.sectionLabel}>Line colour</span>
+          <div className={styles.toggle}>
+            {(['light', 'dark'] as LineColor[]).map(c => (
+              <button
+                key={c}
+                type="button"
+                className={`${styles.toggleBtn} ${lineColor === c ? styles.active : ''}`}
+                onClick={() => setLineColor(c)}
+                aria-pressed={lineColor === c}
+              >
+                {c === 'light' ? 'White' : 'Black'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <SaveButton canvasRef={canvasRef} filename="composition.png" />
+        <ApplyButton canvasRef={canvasRef} onApply={onApply} />
+      </Panel>
+    </div>
+  )
+}

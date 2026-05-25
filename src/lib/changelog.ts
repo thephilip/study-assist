@@ -13,6 +13,13 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.3.0',
+    date: '2026-05-25',
+    entries: [
+      { text: 'New Composition tool — rule of thirds, phi grid, diagonals, golden spiral, and centre crosshair overlays', visibility: 'public' },
+    ],
+  },
+  {
     version: '1.2.0',
     date: '2026-05-25',
     entries: [

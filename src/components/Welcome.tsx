@@ -23,7 +23,7 @@ export function Welcome({ onFile, error }: Props) {
       <div className={styles.hero}>
         <h2 className={styles.tagline}>Study your reference before you paint.</h2>
         <p className={styles.sub}>
-          Drop any photo to analyse it with eleven tools — all on-device, nothing uploaded.
+          Drop any photo to analyse it with twelve tools — all on-device, nothing uploaded.
         </p>
       </div>
 

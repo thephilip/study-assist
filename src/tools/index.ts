@@ -5,6 +5,7 @@ export const TOOLS = [
   'shape-simplify',
   'dither',
   'grid',
+  'composition',
   'palette',
   'temperature',
   'paint-mix',

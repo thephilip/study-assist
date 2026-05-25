@@ -7,6 +7,7 @@ import { Notan } from '@/tools/Notan'
 import { ColorPicker } from '@/tools/ColorPicker'
 import { ShapeSimplify } from '@/tools/ShapeSimplify'
 import { Grid } from '@/tools/Grid'
+import { Composition } from '@/tools/Composition'
 import { Palette } from '@/tools/Palette'
 import { Temperature } from '@/tools/Temperature'
 import { PaintMix } from '@/tools/PaintMix'
@@ -24,6 +25,7 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
   if (tool === 'shape-simplify') return <ShapeSimplify image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'dither') return <Dither image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'grid') return <Grid image={image} originalImage={originalImage} onApply={onApply} />
+  if (tool === 'composition') return <Composition image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'palette') return <Palette image={image} />
   if (tool === 'temperature') return <Temperature image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'paint-mix') return <PaintMix image={image} />
@@ -39,6 +41,7 @@ const TOOL_LABELS: Record<Tool, string> = {
   'shape-simplify':'Shape Simplify',
   'dither':        'Dither',
   'grid':          'Grid',
+  'composition':   'Composition',
   'palette':       'Palette',
   'temperature':   'Temperature',
   'paint-mix':     'Paint Mix',
