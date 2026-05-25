@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.4.0',
+    date: '2026-05-25',
+    entries: [
+      { text: 'Single-finger pan — drag to navigate when zoomed in on any canvas tool', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.3.0',
     date: '2026-05-25',
     entries: [
