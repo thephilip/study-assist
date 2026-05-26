@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.11.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'New ViewCatcher tool — try different aspect ratios with an interactive crop overlay; drag corners to resize, body to reposition, and save the crop as a new working image', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.10.0',
     date: '2026-05-26',
     entries: [
