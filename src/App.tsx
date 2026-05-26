@@ -16,6 +16,7 @@ import { Grid } from '@/tools/Grid'
 import { Composition } from '@/tools/Composition'
 import { Palette } from '@/tools/Palette'
 import { Sighting } from '@/tools/Sighting'
+import { ColorHarmonies } from '@/tools/Harmonies'
 import { Temperature } from '@/tools/Temperature'
 import { PaintMix } from '@/tools/PaintMix'
 import { Histogram } from '@/tools/Histogram'
@@ -35,6 +36,7 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
   if (tool === 'composition') return <Composition image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'palette') return <Palette image={image} />
   if (tool === 'sighting') return <Sighting image={image} />
+  if (tool === 'harmonies') return <ColorHarmonies image={image} />
   if (tool === 'temperature') return <Temperature image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'paint-mix') return <PaintMix image={image} />
   if (tool === 'histogram') return <Histogram image={image} />

@@ -1,0 +1,359 @@
+/* ── Base colour section ───────────────────────────────────────────── */
+
+.baseSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.basePreview {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.colorInput {
+  position: absolute;
+  inset: -4px;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.baseMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hexCopy {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  letter-spacing: 0.03em;
+}
+
+.hexCopy:hover {
+  color: var(--color-accent);
+}
+
+.baseHint {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.achromaticHint {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  font-style: italic;
+  line-height: var(--leading-normal);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sectionLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Harmony type selector ────────────────────────────────────────── */
+
+.typeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+}
+
+/* Complementary spans the full width on its own row */
+.typeBtn:first-child {
+  grid-column: 1 / -1;
+}
+
+.typeBtn {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.typeBtn:hover {
+  border-color: var(--color-text-faint);
+  color: var(--color-text);
+}
+
+.typeBtn.active {
+  background: var(--color-accent-muted);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ── Scheme swatches ──────────────────────────────────────────────── */
+
+.schemePreview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.swatchBar {
+  display: flex;
+  height: 44px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.swatch {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 var(--space-1) var(--space-1);
+  overflow: hidden;
+  min-width: 0;
+}
+
+.swatchLabel {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  pointer-events: auto;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.swatchLabel:hover {
+  color: #fff;
+}
+
+/* ── Pigment match toggle ─────────────────────────────────────────── */
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  padding: var(--space-1) 0;
+}
+
+.toggleCheckbox {
+  accent-color: var(--color-accent);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.toggleLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text);
+}
+
+/* ── Brand filter ─────────────────────────────────────────────────── */
+
+.brandRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.brandBtn {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.brandBtn:hover {
+  border-color: var(--color-text-faint);
+  color: var(--color-text);
+}
+
+.brandBtn.active {
+  background: var(--color-accent-muted);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.brandBtn.locked {
+  opacity: 0.5;
+}
+
+.lockIcon {
+  margin-left: 2px;
+  font-size: 10px;
+}
+
+/* ── Pigment match results ────────────────────────────────────────── */
+
+.matches {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.matchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 2px 0;
+}
+
+.matchDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.matchInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+
+.matchSwatchHex {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text);
+}
+
+.matchName {
+  font-size: var(--text-xs);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.matchMeta {
+  font-size: 10px;
+  color: var(--color-text-faint);
+}
+
+.matchNone {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  font-style: italic;
+}
+
+.matchDe {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+
+/* ── Upgrade modal ────────────────────────────────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 300px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.modalTitle {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modalBody {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+.modalClose {
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  background: var(--color-accent-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  align-self: flex-end;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.modalClose:hover {
+  background: rgba(124, 106, 247, 0.25);
+  border-color: var(--color-accent);
+}
+
+/* Touch targets */
+@media (hover: none) and (pointer: coarse) {
+  .hexCopy,
+  .typeBtn,
+  .brandBtn,
+  .modalClose {
+    min-height: 44px;
+  }
+
+  .swatchBar {
+    height: 56px;
+  }
+
+  .swatchLabel {
+    font-size: 10px;
+  }
+}
