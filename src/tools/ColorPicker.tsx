@@ -10,6 +10,7 @@ import { sampleRegion } from './color-picker'
 import type { LoadedImage } from '@/hooks/useImage'
 import styles from './ColorPicker.module.css'
 import { CanvasWrap, useZoom } from '@/components/CanvasWrap'
+import { useFlip } from '@/context/FlipContext'
 import toolStyles from './Tool.module.css'
 
 type Props = { image: LoadedImage }
@@ -32,6 +33,7 @@ export function ColorPicker({ image }: Props) {
   const [radius, setRadius] = useState(1)
   const [pick, setPick] = useState<PickState | null>(null)
   const { scale } = useZoom()
+  const { flipX, flipY } = useFlip()
 
   // Draw image once per source image
   useEffect(() => {
@@ -51,13 +53,17 @@ export function ColorPicker({ image }: Props) {
     const data = imageDataRef.current
     if (!canvas || !data) return
     const rect = canvas.getBoundingClientRect()
-    const scaleX = canvas.width / rect.width
-    const scaleY = canvas.height / rect.height
-    const ix = (clientX - rect.left) * scaleX
-    const iy = (clientY - rect.top) * scaleY
+    const pxScaleX = canvas.width / rect.width
+    const pxScaleY = canvas.height / rect.height
+    const dx = clientX - rect.left
+    const dy = clientY - rect.top
+    const ix = flipX ? canvas.width - dx * pxScaleX : dx * pxScaleX
+    const iy = flipY ? canvas.height - dy * pxScaleY : dy * pxScaleY
     const color = sampleRegion(data, ix, iy, radius)
-    setPick({ color, x: (clientX - rect.left) / scale, y: (clientY - rect.top) / scale, locked })
-  }, [radius, scale])
+    const dispX = flipX ? (rect.width - dx) / scale : dx / scale
+    const dispY = flipY ? (rect.height - dy) / scale : dy / scale
+    setPick({ color, x: dispX, y: dispY, locked })
+  }, [radius, scale, flipX, flipY])
 
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     sampleAt(e.clientX, e.clientY, false)

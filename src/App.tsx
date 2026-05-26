@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect, useMemo } from 'react'
 import { Welcome } from '@/components/Welcome'
 import { useImage, type LoadedImage } from '@/hooks/useImage'
 import { ActionsProvider } from '@/context/ActionsContext'
+import { FlipProvider } from '@/context/FlipContext'
+import { useFlip } from '@/context/FlipContext'
 import { ActionsMenu } from '@/components/ActionsMenu'
 import { ToolsMenu } from '@/components/ToolsMenu'
 import { TOOLS, TOOL_LABELS, type Tool } from '@/tools/index'
@@ -38,15 +40,21 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
 }
 
 
-export default function App({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
-  const { image, originalImage, error, load, clear, push, undo, canUndo, undoDepth } = useImage()
+function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
+  const { image, originalImage, error, load, clear, push, undo, canUndo, undoDepth, loadId } = useImage()
+  const { flipX, flipY, toggleFlipX, toggleFlipY, resetFlip } = useFlip()
   const [activeTool, setActiveTool] = useState<Tool>('value-map')
 
   const globalActions = useMemo(() => image ? [
+    { id: 'mirror', label: 'Mirror', checked: flipX, handler: toggleFlipX },
+    { id: 'flip-v', label: 'Flip vertical', checked: flipY, handler: toggleFlipY },
     { id: 'remove-image', label: 'Remove image', handler: clear, danger: true },
-  ] : [], [image, clear])
+  ] : [], [image, flipX, flipY, toggleFlipX, toggleFlipY, clear])
 
   useEffect(() => { onImageChange?.(!!image) }, [image, onImageChange])
+
+  // Reset flip when a new image is loaded (not on use-as-source)
+  useEffect(() => { resetFlip() }, [loadId, resetFlip])
 
   const handleApply = useCallback((canvas: HTMLCanvasElement) => {
     push(canvas)
@@ -97,5 +105,13 @@ export default function App({ onImageChange }: { onImageChange?: (has: boolean) 
       </main>
     </div>
     </ActionsProvider>
+  )
+}
+
+export default function App({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
+  return (
+    <FlipProvider>
+      <AppContent onImageChange={onImageChange} />
+    </FlipProvider>
   )
 }

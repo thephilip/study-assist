@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.7.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'Mirror and Flip vertical — one-tap toggles in the Actions menu to flip your reference horizontally or vertically', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.6.0',
     date: '2026-05-26',
     entries: [

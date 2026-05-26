@@ -11,6 +11,7 @@ type State = {
   image: LoadedImage | null
   stack: LoadedImage[]
   error: string | null
+  loadId: number
 }
 
 type Action =
@@ -25,7 +26,7 @@ function reducer(state: State, action: Action): State {
     case 'LOAD':
       state.image?.bitmap.close()
       state.stack.forEach(s => s.bitmap.close())
-      return { image: action.image, stack: [], error: null }
+      return { image: action.image, stack: [], error: null, loadId: state.loadId + 1 }
     case 'LOAD_ERROR':
       return { ...state, error: action.error }
     case 'PUSH': {
@@ -51,14 +52,14 @@ function reducer(state: State, action: Action): State {
     case 'CLEAR':
       state.image?.bitmap.close()
       state.stack.forEach(s => s.bitmap.close())
-      return { image: null, stack: [], error: null }
+      return { image: null, stack: [], error: null, loadId: state.loadId }
     default:
       return state
   }
 }
 
 export function useImage() {
-  const [state, dispatch] = useReducer(reducer, { image: null, stack: [], error: null })
+  const [state, dispatch] = useReducer(reducer, { image: null, stack: [], error: null, loadId: 0 })
 
   const load = useCallback(async (file: File) => {
     dispatch({ type: 'LOAD_ERROR', error: '' })
@@ -84,6 +85,7 @@ export function useImage() {
     error: state.error || null,
     canUndo: state.stack.length > 0,
     undoDepth: state.stack.length,
+    loadId: state.loadId,
     load,
     push,
     undo,

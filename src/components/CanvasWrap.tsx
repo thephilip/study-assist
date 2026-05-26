@@ -1,4 +1,5 @@
 import { useRef, useCallback, useEffect, useState, useReducer, createContext, useContext } from 'react'
+import { useFlip } from '@/context/FlipContext'
 import toolStyles from '@/tools/Tool.module.css'
 import styles from './CanvasWrap.module.css'
 
@@ -216,6 +217,9 @@ export function CanvasWrap({ children, compare, style }: Props) {
     }
   }, [hasNativeFullscreen]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const { flipX, flipY } = useFlip()
+  const flipStr = flipX && flipY ? 'scaleX(-1) scaleY(-1)' : flipX ? 'scaleX(-1)' : flipY ? 'scaleY(-1)' : ''
+
   const wrapClass = [
     toolStyles.canvasWrap,
     compare ? toolStyles.compareActive : '',
@@ -235,25 +239,34 @@ export function CanvasWrap({ children, compare, style }: Props) {
         onMouseLeave={() => setHovered(false)}
       >
         <div
-          style={compare ? {
+          style={{
             position: 'absolute',
             inset: 0,
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: 'var(--space-4)',
-            alignItems: 'center',
-            padding: 'var(--space-4)',
-          } : {
-            position: 'absolute',
-            inset: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
             transformOrigin: '0 0',
             transform: transformStr,
           }}
         >
-          {children}
+          <div
+            style={compare ? {
+              position: 'absolute',
+              inset: 0,
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 'var(--space-4)',
+              alignItems: 'center',
+              padding: 'var(--space-4)',
+              transform: flipStr || undefined,
+            } : {
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: flipStr || undefined,
+            }}
+          >
+            {children}
+          </div>
         </div>
         <button
           className={`${styles.fullscreenBtn} ${hovered || isFullscreen ? styles.visible : ''}`}
