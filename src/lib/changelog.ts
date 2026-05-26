@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.9.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'New Color Harmonies tool — pick a base colour and see complementary, analogous, triadic, split-complementary, and tetradic schemes, with optional pigment matching against your paint brands', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.7.0',
     date: '2026-05-26',
     entries: [
