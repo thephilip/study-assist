@@ -8,12 +8,15 @@ const TOOLS = [
   { name: 'Shape Simplify',  desc: 'Blur and posterize to isolate big shapes and lose fine detail.' },
   { name: 'Dither',          desc: 'Break tones into graphic patterns using error-diffusion or Bayer matrices.' },
   { name: 'Grid',            desc: 'Overlay a proportional grid to check angles and placement.' },
+  { name: 'Composition',     desc: 'Overlay rule-of-thirds, phi grid, diagonals, or golden spiral guides.' },
+  { name: 'Sighting',        desc: 'Measure angles, proportions, and alignment with draggable pins and plumb line.' },
+  { name: 'Harmonies',       desc: 'Generate and explore five harmonic colour schemes from any base colour.' },
   { name: 'Palette',         desc: 'Extract the dominant colors from your reference using K-means.' },
   { name: 'Temperature',     desc: 'Highlight warm and cool zones mapped across the image.' },
   { name: 'Paint Mix',       desc: 'Match reference colors to your paint brand with a 2-paint mix suggestion.' },
   { name: 'Histogram',       desc: 'Visualize the tonal distribution and spot clipping or low contrast.' },
   { name: 'Edges',           desc: 'Reveal edge types with Sobel detection — find lost and found edges.' },
-  { name: 'Composition',     desc: 'Overlay rule-of-thirds, phi grid, diagonals, or golden spiral guides.' },
+  { name: 'Sketch',          desc: 'Draw value thumbnails directly over the reference with stylus support.' },
 ]
 
 type Props = { onFile: (file: File) => void; error?: string }
@@ -24,7 +27,7 @@ export function Welcome({ onFile, error }: Props) {
       <div className={styles.hero}>
         <h2 className={styles.tagline}>Study your reference before you paint.</h2>
         <p className={styles.sub}>
-          Drop any photo to analyse it with twelve tools — all on-device, nothing uploaded.
+          Drop any photo to analyse it with fifteen tools — all on-device, nothing uploaded.
         </p>
       </div>
 

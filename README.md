@@ -20,18 +20,22 @@ Process reference photos entirely in your browser. No uploads, no accounts, no s
 ## Tools
 
 | Tool | Description |
-|---|---|
+|---|---|---|
 | **Value Map** | Posterizes to N tonal levels to reveal value structure |
 | **Notan** | Reduces to pure black and white to study shape and silhouette |
 | **Color Picker** | Hover to preview, click to lock; averages a sampled region; copies hex |
 | **Shape Simplify** | Box blur + posterize to flatten texture into readable flat shapes |
 | **Dither** | Floyd-Steinberg, Atkinson, Bayer 4×4/8×8 — grayscale and colour modes |
 | **Grid Overlay** | Configurable grid with presets, opacity, and line-colour controls |
+| **Composition** | Rule of thirds, phi grid, corner diagonals, golden spiral, centre crosshair |
+| **Sighting** | Angle finder, proportion ratios, and plumb line for measuring your reference |
+| **Color Harmonies** | Five HSL-based harmony schemes with optional pigment matching |
 | **Palette Extraction** | K-means++ colour clustering with a proportional swatch bar |
 | **Temperature Map** | Maps hue to warm/cool overlay while preserving luminance |
-| **Paint Mix** | Matches sampled colours to your paint brand; suggests a 2-paint mix ratio |
+| **Paint Mix** | Matches sampled colours to your paint brand; suggests a 2-paint mix ratio (Pro upgrade unlocks alternative mixes and 3-paint combos) |
 | **Histogram** | Luma histogram with log/linear scale; min, mean, and max tonal range stats |
 | **Edge Detection** | Sobel edge overlay with blur, threshold, and opacity controls |
+| **Sketch** | Draw value thumbnails directly over the reference with pressure-sensitive stylus support |
 
 All processed-canvas tools include a **side-by-side compare mode**, **Save PNG**, and **Use as source** (bake the output as the new working image). A full **undo stack** lets you step back through applied changes.
 

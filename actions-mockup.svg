@@ -1,0 +1,381 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 1020" font-family="'Inter', system-ui, -apple-system, sans-serif">
+  <defs>
+    <style>
+      /* Tokens matching study-assist design system */
+      .bg-page       { fill: #0e0e0f; }
+      .bg-surface    { fill: #161618; }
+      .bg-surface-2  { fill: #1e1e21; }
+      .bg-surface-3  { fill: #26262a; }
+      .bg-accent     { fill: #7c6af7; }
+      .bg-accent-hover  { fill: #9285f9; }
+      .bg-accent-muted  { fill: rgba(124,106,247,0.15); }
+      .bg-danger     { fill: #e05555; }
+      .bg-danger-bg  { fill: rgba(224,85,85,0.1); }
+
+      .text-color    { fill: #e8e8ec; }
+      .text-muted    { fill: #8a8a96; }
+      .text-faint    { fill: #56565e; }
+      .text-accent   { fill: #7c6af7; }
+
+      .border-color  { stroke: #2e2e33; }
+      .border-accent { stroke: #7c6af7; }
+
+      .shadow    { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
+      .shadow-lg { filter: drop-shadow(0 8px 32px rgba(0,0,0,0.6)); }
+    </style>
+  </defs>
+
+  <!-- ============================================================ -->
+  <!-- Background -->
+  <!-- ============================================================ -->
+  <rect class="bg-page" width="1060" height="1020" rx="12"/>
+
+  <!-- Section labels -->
+  <text x="40" y="36" fill="#56565e" font-size="11" font-weight="500" letter-spacing="0.08em" text-transform="uppercase">State 1 · Desktop header</text>
+  <text x="370" y="36" fill="#56565e" font-size="11" font-weight="500" letter-spacing="0.08em" text-transform="uppercase">State 2 · Desktop dropdown open</text>
+  <text x="40" y="280" fill="#56565e" font-size="11" font-weight="500" letter-spacing="0.08em" text-transform="uppercase">State 3 · Touch device (same header)</text>
+  <text x="370" y="280" fill="#56565e" font-size="11" font-weight="500" letter-spacing="0.08em" text-transform="uppercase">State 4 · Touch bottom sheet open</text>
+  <text x="370" y="296" fill="#56565e" font-size="10" font-weight="400" letter-spacing="0.04em" opacity="0.6">@media (hover: none) and (pointer: coarse)</text>
+
+  <!-- ============================================================ -->
+  <!-- STATE 1: Desktop header (unchanged from original) -->
+  <!-- ============================================================ -->
+  <g transform="translate(40, 55)">
+    <rect class="bg-surface" width="280" height="40" rx="4" stroke="#2e2e33" stroke-width="1"/>
+    <line x1="0" y1="40" x2="280" y2="40" stroke="#2e2e33" stroke-width="1"/>
+
+    <text x="14" y="26" class="text-color" font-size="15" font-weight="600" letter-spacing="-0.02em">study assist</text>
+
+    <!-- Actions button -->
+    <g transform="translate(122, 8)">
+      <rect width="68" height="24" rx="4" class="bg-accent-muted" stroke="#7c6af7" stroke-width="0.5"/>
+      <text x="10" y="16" class="text-accent" font-size="13" font-weight="500">Actions</text>
+      <polygon points="55,12 60,17 65,12" fill="#7c6af7" opacity="0.7"/>
+    </g>
+
+    <!-- Undo -->
+    <g transform="translate(198, 8)">
+      <rect width="38" height="24" rx="4" class="bg-surface-2" stroke="#2e2e33" stroke-width="1"/>
+      <text x="6" y="16" class="text-muted" font-size="13">Undo</text>
+    </g>
+
+    <!-- Remove -->
+    <g transform="translate(240, 8)">
+      <rect width="34" height="24" rx="4" fill="none"/>
+      <text x="3" y="16" class="text-muted" font-size="13">Remove</text>
+    </g>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- STATE 2: Desktop dropdown open (unchanged from original) -->
+  <!-- ============================================================ -->
+  <g transform="translate(370, 55)">
+    <rect class="bg-surface" width="280" height="40" rx="4" stroke="#2e2e33" stroke-width="1"/>
+    <text x="14" y="26" class="text-color" font-size="15" font-weight="600" letter-spacing="-0.02em">study assist</text>
+
+    <!-- Actions button (active state) -->
+    <g transform="translate(122, 8)">
+      <rect width="68" height="24" rx="4" class="bg-accent-muted"/>
+      <text x="10" y="16" class="text-accent" font-size="13" font-weight="500">Actions</text>
+      <polygon points="55,10 60,15 65,10" fill="#7c6af7" opacity="0.7"/>
+    </g>
+
+    <!-- Undo -->
+    <g transform="translate(198, 8)">
+      <rect width="38" height="24" rx="4" class="bg-surface-2" stroke="#2e2e33" stroke-width="1"/>
+      <text x="6" y="16" class="text-muted" font-size="13">Undo</text>
+    </g>
+
+    <!-- Remove -->
+    <g transform="translate(240, 8)">
+      <rect width="34" height="24" rx="4" fill="none"/>
+      <text x="3" y="16" class="text-muted" font-size="13">Remove</text>
+    </g>
+
+    <!-- Dropdown panel -->
+    <g transform="translate(90, 48)" class="shadow-lg">
+      <rect width="120" height="136" rx="6" class="bg-surface-3" stroke="#2e2e33" stroke-width="1"/>
+
+      <!-- Mirror (active / toggled on) -->
+      <g transform="translate(0, 0)">
+        <rect width="120" height="32" rx="4" fill="#1e1e21"/>
+        <rect width="120" height="32" rx="4" fill="rgba(124,106,247,0.08)"/>
+        <text x="14" y="21" class="text-color" font-size="13" font-weight="500">Mirror</text>
+        <polygon points="100,13 103,17 110,9" fill="none" stroke="#7c6af7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+
+      <!-- Flip Vertical -->
+      <g transform="translate(0, 32)">
+        <rect width="120" height="32" rx="2" class="bg-surface-3"/>
+        <text x="14" y="21" class="text-color" font-size="13">Flip Vertical</text>
+      </g>
+
+      <!-- Divider -->
+      <line x1="12" y1="66" x2="108" y2="66" stroke="#2e2e33" stroke-width="1.5"/>
+
+      <!-- Reset View -->
+      <g transform="translate(0, 70)">
+        <rect width="120" height="32" rx="2" class="bg-surface-3"/>
+        <text x="14" y="21" class="text-color" font-size="13">Reset View</text>
+      </g>
+
+      <!-- Reset Image -->
+      <g transform="translate(0, 102)">
+        <rect width="120" height="32" rx="4" class="bg-surface-3"/>
+        <text x="14" y="21" class="text-color" font-size="13">Reset Image</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Arrow from State 1 to State 2 -->
+  <g transform="translate(324, 75)">
+    <line x1="0" y1="0" x2="38" y2="0" stroke="#56565e" stroke-width="1" stroke-dasharray="3,3"/>
+    <polygon points="38,-4 46,0 38,4" fill="#56565e"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- STATE 3: Touch header (compact — same as desktop, no change) -->
+  <!-- ============================================================ -->
+  <g transform="translate(40, 300)">
+    <rect class="bg-surface" width="280" height="40" rx="4" stroke="#2e2e33" stroke-width="1"/>
+    <line x1="0" y1="40" x2="280" y2="40" stroke="#2e2e33" stroke-width="1"/>
+
+    <text x="14" y="26" class="text-color" font-size="15" font-weight="600" letter-spacing="-0.02em">study assist</text>
+
+    <!-- Actions button — identical to desktop -->
+    <g transform="translate(122, 8)">
+      <rect width="68" height="24" rx="4" class="bg-accent-muted" stroke="#7c6af7" stroke-width="0.5"/>
+      <text x="10" y="16" class="text-accent" font-size="13" font-weight="500">Actions</text>
+      <polygon points="55,12 60,17 65,12" fill="#7c6af7" opacity="0.7"/>
+    </g>
+
+    <g transform="translate(198, 8)">
+      <rect width="38" height="24" rx="4" class="bg-surface-2" stroke="#2e2e33" stroke-width="1"/>
+      <text x="6" y="16" class="text-muted" font-size="13">Undo</text>
+    </g>
+
+    <g transform="translate(240, 8)">
+      <rect width="34" height="24" rx="4" fill="none"/>
+      <text x="3" y="16" class="text-muted" font-size="13">Remove</text>
+    </g>
+
+    <!-- Compact description below header -->
+    <g transform="translate(0, 52)">
+      <rect y="0" width="280" height="44" rx="4" fill="#1e1e21" stroke="#2e2e33" stroke-width="1"/>
+      <text x="12" y="18" class="text-faint" font-size="11">Header is identical to desktop</text>
+      <text x="12" y="34" class="text-faint" font-size="11">No visual change on the button itself</text>
+    </g>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- STATE 4: Touch bottom sheet open  (★ the star) -->
+  <!-- ============================================================ -->
+  <g transform="translate(370, 310)">
+    <!-- App container ("screen") -->
+    <rect width="380" height="440" rx="8" class="bg-surface" stroke="#2e2e33" stroke-width="1"/>
+
+    <!-- Header -->
+    <rect width="380" height="40" class="bg-surface"/>
+    <line x1="0" y1="40" x2="380" y2="40" stroke="#2e2e33" stroke-width="1"/>
+    <text x="14" y="26" class="text-color" font-size="15" font-weight="600" letter-spacing="-0.02em">study assist</text>
+
+    <g transform="translate(222, 8)">
+      <rect width="68" height="24" rx="4" class="bg-accent-muted" stroke="#7c6af7" stroke-width="0.5"/>
+      <text x="10" y="16" class="text-accent" font-size="13" font-weight="500">Actions</text>
+      <polygon points="55,12 60,17 65,12" fill="#7c6af7" opacity="0.7"/>
+    </g>
+    <g transform="translate(298, 8)">
+      <rect width="38" height="24" rx="4" class="bg-surface-2" stroke="#2e2e33" stroke-width="1"/>
+      <text x="6" y="16" class="text-muted" font-size="13">Undo</text>
+    </g>
+    <g transform="translate(340, 8)">
+      <rect width="34" height="24" rx="4" fill="none"/>
+      <text x="3" y="16" class="text-muted" font-size="13">Remove</text>
+    </g>
+
+    <!-- Toolbar strip -->
+    <g transform="translate(0, 40)">
+      <rect width="380" height="32" class="bg-surface" stroke="#2e2e33" stroke-width="0.5"/>
+      <text x="10" y="21" class="text-muted" font-size="11">Value Map</text>
+      <text x="75" y="21" class="text-muted" font-size="11">Notan</text>
+      <text x="124" y="21" class="text-muted" font-size="11">Color Pick</text>
+      <text x="190" y="21" class="text-muted" font-size="11">Grid</text>
+      <text x="224" y="21" class="text-muted" font-size="11">...</text>
+    </g>
+
+    <!-- Canvas area -->
+    <g transform="translate(0, 72)">
+      <rect width="380" height="368" class="bg-page"/>
+
+      <!-- Reference image placeholder (flipped — Mirror is ON) -->
+      <g transform="translate(190, 184) scale(-1, 1)">
+        <path d="M-120,100 L-80,20 L-40,60 L0,-20 L40,30 L80,-10 L120,40 L120,100 Z" fill="#26262a"/>
+        <path d="M-120,100 L-90,60 L-50,80 L-10,40 L30,70 L70,30 L120,80 L120,100 Z" fill="#1e1e21" opacity="0.5"/>
+      </g>
+
+      <!-- Mirror ON badge -->
+      <g transform="translate(8, 8)">
+        <rect width="68" height="20" rx="4" class="bg-accent-muted" stroke="#7c6af7" stroke-width="0.5"/>
+        <text x="8" y="14" class="text-accent" font-size="10">Mirror ON</text>
+      </g>
+
+      <!-- Sidebar mockup -->
+      <g transform="translate(300, 0)">
+        <rect width="80" height="368" class="bg-surface" stroke="#2e2e33" stroke-width="0.5"/>
+        <text x="10" y="30" class="text-faint" font-size="10" text-transform="uppercase" letter-spacing="0.05em">Controls</text>
+        <line x1="8" y1="36" x2="72" y2="36" stroke="#2e2e33" stroke-width="1"/>
+      </g>
+
+      <!-- ======================================================== -->
+      <!-- Backdrop dim — covers the full app behind the sheet -->
+      <!-- ======================================================== -->
+      <!-- Full-app dim overlay (y=-72 reaches back to cover header + toolbar) -->
+      <rect x="0" y="-72" width="380" height="440" fill="#0e0e0f" opacity="0.55"/>
+    </g>
+
+    <!-- ======================================================== -->
+    <!-- Bottom sheet component                                      -->
+    <!-- Slides up from below: 250ms ease-out                      -->
+    <!-- Top corners: 16px radius. Safe-area padding at bottom.     -->
+    <!-- ======================================================== -->
+    <g transform="translate(0, 120)">
+      <!-- Sheet body — 16px radius on top corners only -->
+      <path d="M0,16 Q0,0 16,0 L364,0 Q380,0 380,16 L380,320 L0,320 Z" class="bg-surface"/>
+
+      <!-- Top highlight line (subtle edge) -->
+      <path d="M0,16 Q0,0 16,0 L364,0 Q380,0 380,16" fill="none" stroke="#3a3a40" stroke-width="0.5"/>
+
+      <!-- Grab handle — 36×4px, centered, pill shape -->
+      <rect x="172" y="10" width="36" height="4" rx="2" fill="#56565e"/>
+
+      <!-- Title -->
+      <text x="20" y="38" class="text-color" font-size="15" font-weight="600">Actions</text>
+
+      <!-- Row 1: Mirror (active / toggled on) — 56px tall -->
+      <g transform="translate(0, 52)">
+        <rect width="380" height="56" fill="#161618"/>
+        <!-- Active highlight -->
+        <rect width="380" height="56" fill="rgba(124,106,247,0.06)"/>
+        <!-- Left accent bar -->
+        <rect width="3" height="56" class="bg-accent" rx="1.5"/>
+        <text x="20" y="34" class="text-color" font-size="15" font-weight="500">Mirror</text>
+        <!-- Checkmark -->
+        <polygon points="350,27 354,32 363,21" fill="none" stroke="#7c6af7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+
+      <!-- Divider -->
+      <line x1="0" y1="108" x2="380" y2="108" stroke="#2e2e33" stroke-width="1"/>
+
+      <!-- Row 2: Flip Vertical — 56px tall -->
+      <g transform="translate(0, 109)">
+        <rect width="380" height="56" fill="#161618"/>
+        <text x="20" y="34" class="text-color" font-size="15">Flip Vertical</text>
+        <!-- Unchecked radio circle -->
+        <circle cx="356" cy="28" r="10" fill="none" stroke="#56565e" stroke-width="2"/>
+      </g>
+
+      <!-- Divider -->
+      <line x1="0" y1="166" x2="380" y2="166" stroke="#2e2e33" stroke-width="1"/>
+
+      <!-- Row 3: Reset View — 56px tall -->
+      <g transform="translate(0, 167)">
+        <rect width="380" height="56" fill="#161618"/>
+        <text x="20" y="34" class="text-color" font-size="15">Reset View</text>
+        <circle cx="356" cy="28" r="10" fill="none" stroke="#56565e" stroke-width="2"/>
+      </g>
+
+      <!-- Divider -->
+      <line x1="0" y1="224" x2="380" y2="224" stroke="#2e2e33" stroke-width="1"/>
+
+      <!-- Row 4: Reset Image — 56px tall -->
+      <g transform="translate(0, 225)">
+        <rect width="380" height="56" fill="#161618"/>
+        <text x="20" y="34" class="text-color" font-size="15">Reset Image</text>
+        <circle cx="356" cy="28" r="10" fill="none" stroke="#56565e" stroke-width="2"/>
+      </g>
+
+      <!-- Divider -->
+      <line x1="0" y1="282" x2="380" y2="282" stroke="#2e2e33" stroke-width="1"/>
+
+      <!-- Done / close button area -->
+      <g transform="translate(0, 283)">
+        <rect width="380" height="37" fill="#161618"/>
+        <rect x="150" y="4" width="80" height="28" rx="14" class="bg-surface-2" stroke="#2e2e33" stroke-width="1"/>
+        <text x="172" y="23" class="text-muted" font-size="13" font-weight="500">Done</text>
+      </g>
+
+      <!-- Safe area bottom padding -->
+      <rect y="320" width="380" height="16" fill="#161618" opacity="0"/>
+    </g>
+
+    <!-- ======================================================== -->
+    <!-- Slide-up motion indicator                                  -->
+    <!-- ======================================================== -->
+    <g transform="translate(190, 540)" opacity="0.4">
+      <path d="M0,-20 Q0,0 20,0" fill="none" stroke="#7c6af7" stroke-width="1.5" stroke-dasharray="3,3" marker-end="none"/>
+      <polygon points="22,-3 28,4 22,7" fill="#7c6af7"/>
+    </g>
+    <text x="174" y="564" class="text-faint" font-size="10">250ms ease-out slide-up</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Arrow from State 3 to State 4 -->
+  <!-- ============================================================ -->
+  <g transform="translate(324, 340)">
+    <line x1="0" y1="0" x2="38" y2="0" stroke="#56565e" stroke-width="1" stroke-dasharray="3,3"/>
+    <polygon points="38,-4 46,0 38,4" fill="#56565e"/>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Annotations -->
+  <!-- ============================================================ -->
+  <g transform="translate(40, 780)">
+    <text x="0" y="0" class="text-muted" font-size="11" font-weight="500">①</text>
+    <text x="16" y="0" class="text-faint" font-size="11">Actions button between wordmark and Undo. Compact 72×24px, fits flush with sibling buttons.</text>
+    <text x="16" y="16" class="text-faint" font-size="11">Header unchanged from original design.</text>
+
+    <text x="0" y="36" class="text-muted" font-size="11" font-weight="500">②</text>
+    <text x="16" y="36" class="text-faint" font-size="11">Dropdown (120×136px, 32px rows) for mouse precision. Mirror active with checkmark.</text>
+    <text x="16" y="52" class="text-faint" font-size="11">Divider separates view transforms (Mirror, Flip Vertical) from reset actions.</text>
+
+    <text x="0" y="76" class="text-muted" font-size="11" font-weight="500">③</text>
+    <text x="16" y="76" class="text-faint" font-size="11">Touch device detected via <tspan font-family="'JetBrains Mono','Fira Code',monospace" font-size="10">@media (hover: none) and (pointer: coarse)</tspan>.</text>
+    <text x="16" y="92" class="text-faint" font-size="11">Header is identical — same layout, same button size. The responsive switch only changes</text>
+    <text x="16" y="108" class="text-faint" font-size="11">the menu that appears, not the button that triggers it.</text>
+
+    <text x="0" y="132" class="text-muted" font-size="11" font-weight="500">④</text>
+    <text x="16" y="132" class="text-faint" font-size="11">Bottom sheet replaces dropdown on touch devices. Slides up 250ms ease-out from below</text>
+    <text x="16" y="148" class="text-faint" font-size="11">viewport. 56px rows — comfortable for thumbs on iPad/Android tablets (vs 32px desktop).</text>
+    <text x="16" y="164" class="text-faint" font-size="11">Grab handle at top for swipe-to-dismiss affordance. Backdrop dim (--color-bg at 55%)</text>
+    <text x="16" y="180" class="text-faint" font-size="11">covers canvas. Tap backdrop or Done to dismiss. Top corners 16px radius. Bottom safe-area</text>
+    <text x="16" y="196" class="text-faint" font-size="11">padding respects <tspan font-family="'JetBrains Mono','Fira Code',monospace" font-size="10">env(safe-area-inset-bottom)</tspan>. Mirror active state shown with accent bar + check.</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Design notes                                                 -->
+  <!-- ============================================================ -->
+  <g transform="translate(40, 960)">
+    <text class="text-faint" font-size="10" font-weight="600">Design &amp; implementation notes:</text>
+
+    <text class="text-faint" font-size="10" x="220">
+      Media query: <tspan font-family="'JetBrains Mono','Fira Code',monospace" font-size="9">@media (hover: none) and (pointer: coarse)</tspan> — same breakpoint used across the codebase
+    </text>
+    <text class="text-faint" font-size="10" x="220">
+      for touch-target bumping (Slider, ColorPicker, Palette, PaintMix, etc.)
+    </text>
+
+    <text class="text-faint" font-size="10" x="220">
+      Sheet background: <tspan font-family="'JetBrains Mono','Fira Code',monospace" font-size="9">--color-surface</tspan> (#161618). Rows: full-width, no precision targeting needed.
+    </text>
+    <text class="text-faint" font-size="10" x="220">
+      Active row (Mirror) gets 3px left accent bar (<tspan font-family="'JetBrains Mono','Fira Code',monospace" font-size="9">--color-accent</tspan>) + subtle tint.
+    </text>
+
+    <text class="text-faint" font-size="10" x="220">
+      Contrast: text-color (#e8e8ec) on surface (#161618) → ratio &gt; 11:1, well above WCAG AA.
+    </text>
+    <text class="text-faint" font-size="10" x="220">
+      <tspan font-family="'JetBrains Mono','Fira Code',monospace" font-size="9">prefers-reduced-motion</tspan>: respect by disabling slide animation, showing sheet instantly.
+    </text>
+  </g>
+</svg>

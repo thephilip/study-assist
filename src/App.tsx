@@ -22,6 +22,7 @@ import { PaintMix } from '@/tools/PaintMix'
 import { Histogram } from '@/tools/Histogram'
 import { Dither } from '@/tools/Dither'
 import { Edges } from '@/tools/Edges'
+import { Sketch } from '@/tools/Sketch'
 import styles from './App.module.css'
 
 type ApplyFn = (canvas: HTMLCanvasElement) => void
@@ -41,6 +42,7 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
   if (tool === 'paint-mix') return <PaintMix image={image} />
   if (tool === 'histogram') return <Histogram image={image} />
   if (tool === 'edges') return <Edges image={image} originalImage={originalImage} onApply={onApply} />
+  if (tool === 'sketch') return <Sketch image={image} />
   return <p className={styles.placeholder}>{tool} — coming soon</p>
 }
 
