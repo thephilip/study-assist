@@ -17,6 +17,7 @@ const TOOLS = [
   { name: 'Histogram',       desc: 'Visualize the tonal distribution and spot clipping or low contrast.' },
   { name: 'Edges',           desc: 'Reveal edge types with Sobel detection — find lost and found edges.' },
   { name: 'Sketch',          desc: 'Draw value thumbnails directly over the reference with stylus support.' },
+  { name: 'ViewCatcher',     desc: 'Frame your reference with an interactive crop overlay — try aspect ratios, drag to recompose, save as a new image.' },
 ]
 
 type Props = { onFile: (file: File) => void; error?: string }
@@ -27,7 +28,7 @@ export function Welcome({ onFile, error }: Props) {
       <div className={styles.hero}>
         <h2 className={styles.tagline}>Study your reference before you paint.</h2>
         <p className={styles.sub}>
-          Drop any photo to analyse it with fifteen tools — all on-device, nothing uploaded.
+          Drop any photo to analyse it with sixteen tools — all on-device, nothing uploaded.
         </p>
       </div>
 
