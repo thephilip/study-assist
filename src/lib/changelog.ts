@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.12.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'New Colour Studio tool — unified colour analysis combining palette extraction (K-means), paint matching (closest pigments + 2-paint mix), and harmonic colour schemes in one view', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.11.0',
     date: '2026-05-26',
     entries: [

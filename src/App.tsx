@@ -24,6 +24,7 @@ import { Dither } from '@/tools/Dither'
 import { Edges } from '@/tools/Edges'
 import { Sketch } from '@/tools/Sketch'
 import { ViewCatcher } from '@/tools/ViewCatcher'
+import { ColourStudio } from '@/tools/ColourStudio'
 import styles from './App.module.css'
 
 type ApplyFn = (canvas: HTMLCanvasElement) => void
@@ -45,6 +46,7 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
   if (tool === 'edges') return <Edges image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'sketch') return <Sketch image={image} />
   if (tool === 'view-catcher') return <ViewCatcher image={image} originalImage={originalImage} onApply={onApply} />
+  if (tool === 'colour-studio') return <ColourStudio image={image} />
   return <p className={styles.placeholder}>{tool} — coming soon</p>
 }
 

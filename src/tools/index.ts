@@ -15,6 +15,7 @@ export const TOOLS = [
   'edges',
   'sketch',
   'view-catcher',
+  'colour-studio',
 ] as const
 
 export type Tool = typeof TOOLS[number]
@@ -36,4 +37,5 @@ export const TOOL_LABELS: Record<Tool, string> = {
   'edges':          'Edges',
   'sketch':         'Sketch',
   'view-catcher':   'ViewCatcher',
+  'colour-studio':  'Colour Studio',
 }

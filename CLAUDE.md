@@ -180,8 +180,8 @@ Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pig
 |---|---|---|---|---|---|---|
 | **P1** | Thumbnail Sketch Overlay | Medium (~400 lines) | New tool | Free | ✅ Done |
 | **P2** | Multiple Mix Suggestions | Small (~100 lines) | Enhancement to Paint Mix | Gated (Pro) | ✅ Done |
-| **P3** | Cropping / Format Selector (ViewCatcher) | Medium (~300 lines) | New tool | Free | Planned |
-| **P4** | Colour Studio | Medium-large | New tool (unified view) | Free | Planned |
+| **P3** | Cropping / Format Selector (ViewCatcher) | Medium (~300 lines) | New tool | Free | ✅ Done |
+| **P4** | Colour Studio | Medium-large | New tool (unified view) | Free | ✅ Done |
 | **P5** | Controls Panel Collapse | Small | UX polish (all tools) | — | Planned |
 | **P6** | UI Overhaul | Medium-large | Design polish (all surfaces) | — | Planned |
 | **P7** | Automated Sketch Generator | Medium | New tool (composite) | Free | Planned |
@@ -198,13 +198,13 @@ Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pig
 | **Effort** | ~300 lines. Canvas overlay layer with drag handles at corners/edges. Aspect ratio constraints lock width/height proportionally. Dimmed area via composited canvas draw or `mix-blend-mode`. |
 | **Monetisation** | Free tier. |
 
-#### P4 — Colour Studio
+#### P4 — Colour Studio ✅
 
 | Field | Detail |
 |---|---|
 | **Why** | Palette extraction, paint mixing, and colour harmonies are three separate tools that all deal with colour analysis. A unified view lets artists see extracted palette swatches alongside their paint matches and harmony schemes without switching tools. Directly requested by user feedback. |
 | **What** | Combines the Palette (K-means swatches), Paint Mix (closest pigments per swatch), and Harmonies (harmonic schemes) into a single tool view. Click any extracted palette swatch → see closest paints + harmonies for that colour. Streamlined — shows what's relevant without the overhead of three separate tools. |
-| **Effort** | Medium-large. Heavy on UI/UX design, light on new algorithms (reuses existing modules). New tool component; may involve extracting shared sub-components from the existing tools. |
+| **Effort** | ~450 lines (component + CSS). Reuses K-means worker, pigment database, and harmony engine. No new pixel math. |
 | **Monetisation** | Free tier. |
 
 #### P5 — Controls Panel Collapse

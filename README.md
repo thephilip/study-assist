@@ -36,6 +36,8 @@ Process reference photos entirely in your browser. No uploads, no accounts, no s
 | **Histogram** | Luma histogram with log/linear scale; min, mean, and max tonal range stats |
 | **Edge Detection** | Sobel edge overlay with blur, threshold, and opacity controls |
 | **Sketch** | Draw value thumbnails directly over the reference with pressure-sensitive stylus support |
+| **ViewCatcher** | Interactive crop overlay with aspect ratio presets; drag to compose and save as new image |
+| **Colour Studio** | Unified colour analysis — extract palette swatches, find paint matches, and explore harmonic schemes in one view |
 
 All processed-canvas tools include a **side-by-side compare mode**, **Save PNG**, and **Use as source** (bake the output as the new working image). A full **undo stack** lets you step back through applied changes.
 
