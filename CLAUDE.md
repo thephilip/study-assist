@@ -182,8 +182,7 @@ Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pig
 | **P2** | Multiple Mix Suggestions | Small (~100 lines) | Enhancement to Paint Mix | Gated (Pro) | ✅ Done |
 | **P3** | Cropping / Format Selector (ViewCatcher) | Medium (~300 lines) | New tool | Free | ✅ Done |
 | **P4** | Colour Studio | Medium-large | New tool (unified view) | Free | ✅ Done |
-| **P5** | Controls Panel Collapse | Small | UX polish (all tools) | — | Planned |
-| **P6** | UI Overhaul | Medium-large | Design polish (all surfaces) | — | Planned |
+| **P5+P6** | UI Overhaul (incl. controls panel collapse) | Medium-large | Design polish (all surfaces + collapse toggle) | — | Planned |
 | **P7** | Automated Sketch Generator | Medium | New tool (composite) | Free | ✅ Done |
 | **P8** | Gamut Mask | Large (~500+ lines) | New tool | Free + paid pigment overlay | Planned |
 
@@ -207,22 +206,13 @@ Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pig
 | **Effort** | ~450 lines (component + CSS). Reuses K-means worker, pigment database, and harmony engine. No new pixel math. |
 | **Monetisation** | Free tier. |
 
-#### P5 — Controls Panel Collapse
+#### P5+P6 — UI Overhaul (incl. Controls Panel Collapse)
 
 | Field | Detail |
 |---|---|
-| **Why** | The fixed 220px sidebar has no hide toggle for narrow viewports. Enhancement request; benefits all tools on tablet browsers. |
-| **What** | A collapse toggle that hides the controls panel, giving the canvas full width. Remembered per-session. Design needs finalising (icon placement, animation). |
-| **Effort** | Small. CSS + a state toggle in `Tool.module.css` or a shared wrapper. |
-| **Monetisation** | — |
-
-#### P6 — UI Overhaul
-
-| Field | Detail |
-|---|---|
-| **Why** | The app uses design tokens and follows a consistent dark theme, but surfaces could use more polish — refined spacing, subtle micro-interactions, richer hover states, tighter component design. The goal is to move from "functional" to "purpose-built and refined." |
-| **What** | A pass over every surface: header, toolbar, controls panel, canvas area, modals, action menus. Review typography hierarchy, button styles, card/panel padding, colour contrast, transition animations, and focus states. May involve a design tokens audit. |
-| **Effort** | Medium-large. Mostly CSS and component refactoring — no new functionality. Could be broken into sub-tasks per surface. |
+| **Why** | The app uses design tokens and follows a consistent dark theme, but surfaces could use more polish — refined spacing, subtle micro-interactions, richer hover states, tighter component design. The fixed 220px sidebar also has no hide toggle, which is especially needed on narrow viewports. Folding the collapse toggle into the overhaul avoids redoing the panel layout twice. |
+| **What** | A pass over every surface: header, toolbar, controls panel, canvas area, modals, action menus. Review typography hierarchy, button styles, card/panel padding, colour contrast, transition animations, and focus states. Includes a collapse toggle for the controls panel (icon + animation). May involve a design tokens audit. |
+| **Effort** | Medium-large. Mostly CSS and component refactoring — no new functionality. Can be broken into sub-tasks per surface. |
 | **Monetisation** | — |
 
 #### P7 — Automated Sketch Generator ✅
