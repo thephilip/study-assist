@@ -20,7 +20,7 @@ Process reference photos entirely in your browser. No uploads, no accounts, no s
 ## Tools
 
 | Tool | Description |
-|---|---|---|
+|---|---|
 | **Value Map** | Posterizes to N tonal levels to reveal value structure |
 | **Notan** | Reduces to pure black and white to study shape and silhouette |
 | **Color Picker** | Hover to preview, click to lock; averages a sampled region; copies hex |
