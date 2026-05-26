@@ -1,9 +1,9 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
-import { SaveButton } from '@/components/SaveButton'
-import { ApplyButton } from '@/components/ApplyButton'
 import { drawImageToCanvas } from '@/lib/canvas'
+import { useRegisterToolActions } from '@/context/ActionsContext'
+import { downloadCanvas } from '@/lib/export'
 import { drawComposition, type Overlay, type SpiralOrient } from './composition'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
@@ -41,6 +41,13 @@ export function Composition({ image, originalImage, onApply }: Props) {
   const [lineColor, setLineColor] = useState<LineColor>('light')
   const [spiralOrient, setSpiralOrient] = useState<SpiralOrient>(0)
   const [compare, setCompare] = useState(false)
+  const toggleCompare = useCallback(() => setCompare(v => !v), [])
+
+  useRegisterToolActions('Composition', useMemo(() => [
+    { id: 'compare', label: 'Compare', checked: compare, handler: toggleCompare },
+    { id: 'save-png', label: 'Save PNG', handler: () => { const c = canvasRef.current; if (c) downloadCanvas(c, 'composition.png') } },
+    { id: 'use-as-source', label: 'Use as source', handler: () => { const c = canvasRef.current; if (c) onApply(c) } },
+  ], [compare, toggleCompare, canvasRef, onApply]))
 
   useEffect(() => {
     const canvas = originalRef.current
@@ -67,15 +74,6 @@ export function Composition({ image, originalImage, onApply }: Props) {
         <p className={toolStyles.description}>
           Overlay compositional guides to analyse structure and focal points.
         </p>
-
-        <button
-          type="button"
-          className={`${toolStyles.compareBtn} ${compare ? toolStyles.compareBtnActive : ''}`}
-          onClick={() => setCompare(v => !v)}
-          aria-pressed={compare}
-        >
-          {compare ? 'Exit compare' : 'Compare'}
-        </button>
 
         <div className={styles.section}>
           <span className={styles.sectionLabel}>Overlay</span>
@@ -133,8 +131,6 @@ export function Composition({ image, originalImage, onApply }: Props) {
           </div>
         </div>
 
-        <SaveButton canvasRef={canvasRef} filename="composition.png" />
-        <ApplyButton canvasRef={canvasRef} onApply={onApply} />
       </Panel>
     </div>
   )

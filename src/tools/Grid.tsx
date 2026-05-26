@@ -1,9 +1,9 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
-import { SaveButton } from '@/components/SaveButton'
-import { ApplyButton } from '@/components/ApplyButton'
 import { drawImageToCanvas } from '@/lib/canvas'
+import { useRegisterToolActions } from '@/context/ActionsContext'
+import { downloadCanvas } from '@/lib/export'
 import { drawGrid } from './grid'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
@@ -29,6 +29,13 @@ export function Grid({ image, originalImage, onApply }: Props) {
   const [opacity, setOpacity] = useState(50)
   const [lineColor, setLineColor] = useState<LineColor>('light')
   const [compare, setCompare] = useState(false)
+  const toggleCompare = useCallback(() => setCompare(v => !v), [])
+
+  useRegisterToolActions('Grid', useMemo(() => [
+    { id: 'compare', label: 'Compare', checked: compare, handler: toggleCompare },
+    { id: 'save-png', label: 'Save PNG', handler: () => { const c = canvasRef.current; if (c) downloadCanvas(c, 'grid.png') } },
+    { id: 'use-as-source', label: 'Use as source', handler: () => { const c = canvasRef.current; if (c) onApply(c) } },
+  ], [compare, toggleCompare, canvasRef, onApply]))
 
   // Keep original canvas showing the root original (before any Use as source)
   useEffect(() => {
@@ -56,14 +63,6 @@ export function Grid({ image, originalImage, onApply }: Props) {
         <p className={toolStyles.description}>
           Overlay a grid to check proportions and aid transfer to canvas.
         </p>
-
-        <button
-          className={`${toolStyles.compareBtn} ${compare ? toolStyles.compareBtnActive : ''}`}
-          onClick={() => setCompare(v => !v)}
-          aria-pressed={compare}
-        >
-          {compare ? 'Exit compare' : 'Compare'}
-        </button>
 
         <div className={styles.section}>
           <span className={styles.sectionLabel}>Presets</span>
@@ -99,8 +98,6 @@ export function Grid({ image, originalImage, onApply }: Props) {
             ))}
           </div>
         </div>
-        <SaveButton canvasRef={canvasRef} filename="grid.png" />
-        <ApplyButton canvasRef={canvasRef} onApply={onApply} />
       </Panel>
     </div>
   )
