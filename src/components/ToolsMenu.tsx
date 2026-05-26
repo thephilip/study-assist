@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { TOOLS, TOOL_LABELS, type Tool } from '@/tools/index'
 import { useIsTouch } from '@/hooks/useIsTouch'
 import styles from './ToolsMenu.module.css'
@@ -19,6 +19,7 @@ interface Props {
 export function ToolsMenu({ activeTool, onSelect }: Props) {
   const touch = useIsTouch()
   const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const close = useCallback(() => setOpen(false), [])
 
@@ -26,6 +27,18 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
     onSelect(tool)
     close()
   }, [onSelect, close])
+
+  // Close on outside click (desktop dropdown only)
+  useEffect(() => {
+    if (!open || touch) return
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        close()
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open, touch, close])
 
   // Close on Escape
   useEffect(() => {
@@ -35,20 +48,39 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
     return () => document.removeEventListener('keydown', handler)
   }, [open, close])
 
-  // Prevent body scroll when sheet is open
+  // Prevent body scroll when sheet is open (touch only)
   useEffect(() => {
-    if (!open) return
+    if (!open || !touch) return
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = '' }
-  }, [open])
+  }, [open, touch])
 
-  if (!touch) return null
+  const toolRows = TOOLS.map(tool => (
+    <button
+      key={tool}
+      id={`tool-${tool}`}
+      role="option"
+      aria-selected={tool === activeTool}
+      className={[
+        touch ? styles.toolRow : styles.toolRowDesktop,
+        tool === activeTool ? styles.toolRowActive : '',
+      ].filter(Boolean).join(' ')}
+      onClick={() => handleSelect(tool)}
+    >
+      {TOOL_LABELS[tool]}
+      {tool === activeTool && (
+        <span className={touch ? styles.toolRowCheck : styles.toolRowCheckDesktop} aria-hidden>
+          <CheckIcon />
+        </span>
+      )}
+    </button>
+  ))
 
   return (
-    <>
+    <div className={styles.container} ref={containerRef}>
       <button
         className={styles.trigger}
-        onClick={() => setOpen(true)}
+        onClick={() => setOpen(o => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Switch tool, current: ${TOOL_LABELS[activeTool]}`}
@@ -56,11 +88,17 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
         <span>Tool:</span>
         <span className={styles.triggerLabel}>{TOOL_LABELS[activeTool]}</span>
         <svg className={styles.triggerChevron} width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden>
-          <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d={open ? 'M1 5L5 1L9 5' : 'M1 1L5 5L9 1'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 
-      {open && (
+      {open && !touch && (
+        <div className={styles.dropdown} role="listbox" aria-label="Select tool" aria-activedescendant={`tool-${activeTool}`}>
+          {toolRows}
+        </div>
+      )}
+
+      {open && touch && (
         <>
           <div className={styles.backdrop} onClick={close} aria-hidden />
           <div className={styles.sheet} role="listbox" aria-label="Select tool" aria-activedescendant={`tool-${activeTool}`}>
@@ -69,23 +107,7 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
               <span className={styles.sheetHeaderText}>Select Tool</span>
             </div>
             <div className={styles.toolList}>
-              {TOOLS.map(tool => (
-                <button
-                  key={tool}
-                  id={`tool-${tool}`}
-                  role="option"
-                  aria-selected={tool === activeTool}
-                  className={[styles.toolRow, tool === activeTool ? styles.toolRowActive : ''].filter(Boolean).join(' ')}
-                  onClick={() => handleSelect(tool)}
-                >
-                  {TOOL_LABELS[tool]}
-                  {tool === activeTool && (
-                    <span className={styles.toolRowCheck} aria-hidden>
-                      <CheckIcon />
-                    </span>
-                  )}
-                </button>
-              ))}
+              {toolRows}
             </div>
             <div className={styles.doneRow}>
               <button className={styles.doneBtn} onClick={close}>Done</button>
@@ -93,6 +115,6 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
           </div>
         </>
       )}
-    </>
+    </div>
   )
 }

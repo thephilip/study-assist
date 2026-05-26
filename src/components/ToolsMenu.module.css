@@ -1,4 +1,10 @@
-/* ── Trigger button (header, touch only) ─────────────────────────────────── */
+/* ── Container ───────────────────────────────────────────────────────────── */
+
+.container {
+  position: relative;
+}
+
+/* ── Trigger button ──────────────────────────────────────────────────────── */
 
 .trigger {
   display: flex;
@@ -27,6 +33,58 @@
 .triggerChevron {
   opacity: 0.5;
   flex-shrink: 0;
+}
+
+/* ── Desktop dropdown ────────────────────────────────────────────────────── */
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.toolRowDesktop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 32px;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  position: relative;
+  transition: background var(--transition-fast);
+}
+
+.toolRowDesktop:hover {
+  background: var(--color-surface-2);
+}
+
+.toolRowDesktop.toolRowActive {
+  background: rgba(124, 106, 247, 0.08);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.toolRowCheckDesktop {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--color-accent);
+  pointer-events: none;
 }
 
 /* ── Backdrop ────────────────────────────────────────────────────────────── */
