@@ -1,8 +1,9 @@
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import { useRef, useEffect, useState, useMemo } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
 import { drawImageToCanvas } from '@/lib/canvas'
 import { useRegisterToolActions } from '@/context/ActionsContext'
+import { useCompareContext } from '@/context/CompareContext'
 import { downloadCanvas } from '@/lib/export'
 import { drawComposition, type Overlay, type SpiralOrient } from './composition'
 import type { LoadedImage } from '@/hooks/useImage'
@@ -40,8 +41,7 @@ export function Composition({ image, originalImage, onApply }: Props) {
   const [opacity, setOpacity] = useState(50)
   const [lineColor, setLineColor] = useState<LineColor>('light')
   const [spiralOrient, setSpiralOrient] = useState<SpiralOrient>(0)
-  const [compare, setCompare] = useState(false)
-  const toggleCompare = useCallback(() => setCompare(v => !v), [])
+  const { compare, toggleCompare } = useCompareContext()
 
   useRegisterToolActions('Composition', useMemo(() => [
     { id: 'compare', label: 'Compare', checked: compare, handler: toggleCompare },

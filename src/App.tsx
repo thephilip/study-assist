@@ -4,6 +4,7 @@ import { useImage, type LoadedImage } from '@/hooks/useImage'
 import { ActionsProvider } from '@/context/ActionsContext'
 import { FlipProvider } from '@/context/FlipContext'
 import { useFlip } from '@/context/FlipContext'
+import { CompareProvider, useCompareContext } from '@/context/CompareContext'
 import { ActionsMenu } from '@/components/ActionsMenu'
 import { ToolsMenu } from '@/components/ToolsMenu'
 import { TOOLS, TOOL_LABELS, type Tool } from '@/tools/index'
@@ -43,6 +44,7 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
 function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
   const { image, originalImage, error, load, clear, push, undo, canUndo, undoDepth, loadId } = useImage()
   const { flipX, flipY, toggleFlipX, toggleFlipY, resetFlip } = useFlip()
+  const { resetCompare } = useCompareContext()
   const [activeTool, setActiveTool] = useState<Tool>('value-map')
 
   const globalActions = useMemo(() => image ? [
@@ -53,8 +55,8 @@ function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void 
 
   useEffect(() => { onImageChange?.(!!image) }, [image, onImageChange])
 
-  // Reset flip when a new image is loaded (not on use-as-source)
-  useEffect(() => { resetFlip() }, [loadId, resetFlip])
+  // Reset view state when a new image is loaded (not on use-as-source)
+  useEffect(() => { resetFlip(); resetCompare() }, [loadId, resetFlip, resetCompare])
 
   const handleApply = useCallback((canvas: HTMLCanvasElement) => {
     push(canvas)
@@ -111,7 +113,9 @@ function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void 
 export default function App({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
   return (
     <FlipProvider>
-      <AppContent onImageChange={onImageChange} />
+      <CompareProvider>
+        <AppContent onImageChange={onImageChange} />
+      </CompareProvider>
     </FlipProvider>
   )
 }

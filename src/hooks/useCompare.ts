@@ -1,5 +1,6 @@
-import { useRef, useEffect, useState, useCallback, type RefObject } from 'react'
+import { useRef, useEffect, type RefObject } from 'react'
 import { drawImageToCanvas, getPixelData, putPixelData } from '@/lib/canvas'
+import { useCompareContext } from '@/context/CompareContext'
 import type { LoadedImage } from './useImage'
 
 export function useCompare(
@@ -14,7 +15,7 @@ export function useCompare(
 } {
   const processedRef = useRef<HTMLCanvasElement | null>(null)
   const originalRef = useRef<HTMLCanvasElement | null>(null)
-  const [compare, setCompare] = useState(false)
+  const { compare, toggleCompare } = useCompareContext()
 
   // Render the processed output whenever the source image or settings change
   useEffect(() => {
@@ -41,8 +42,6 @@ export function useCompare(
     original.height = src.height
     original.getContext('2d')!.drawImage(src.bitmap, 0, 0)
   }, [originalImage, image])
-
-  const toggleCompare = useCallback(() => setCompare(v => !v), [])
 
   return { processedRef, originalRef, compare, toggleCompare }
 }
