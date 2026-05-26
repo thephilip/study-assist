@@ -1,0 +1,122 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sectionLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+
+.presetGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.groupLabel {
+  font-size: 10px;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.presets {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.preset {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 3px var(--space-2);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.preset:hover {
+  color: var(--color-text);
+  border-color: var(--color-text-faint);
+}
+
+.preset.active {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-accent-muted);
+}
+
+.presetGroup + .presetGroup {
+  margin-top: var(--space-2);
+}
+
+/* Info readout */
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.infoValue {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--color-text);
+}
+
+/* Save button */
+
+.saveBtn {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  width: 100%;
+  transition: background var(--transition-fast), opacity var(--transition-fast);
+  cursor: pointer;
+}
+
+.saveBtn:hover {
+  background: var(--color-accent-hover);
+}
+
+.saveBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.saveBtn:disabled:hover {
+  background: var(--color-accent);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .preset {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .saveBtn {
+    min-height: 44px;
+  }
+}
