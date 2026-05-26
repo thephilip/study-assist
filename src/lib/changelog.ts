@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.8.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'New Sighting tool — measure angles, proportions, and alignment directly on your reference with draggable pin markers and a plumb line guide', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.7.0',
     date: '2026-05-26',
     entries: [
