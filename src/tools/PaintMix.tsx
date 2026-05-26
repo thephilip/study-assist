@@ -7,12 +7,13 @@ import {
   PIGMENTS,
   ALL_BRANDS,
   findTopSingles,
-  findBestMix,
+  findBestMixes,
   type Brand,
   type SingleMatch,
   type MixMatch,
+  type MixResults,
 } from '@/lib/pigments'
-import { isBrandUnlocked, getUnlockedBrands } from '@/lib/entitlements'
+import { isBrandUnlocked, getUnlockedBrands, isFeatureUnlocked } from '@/lib/entitlements'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap, useZoom } from '@/components/CanvasWrap'
 import toolStyles from './Tool.module.css'
@@ -31,6 +32,31 @@ const BRAND_SHORT: Record<Brand, string> = {
 
 function pct(n: number) { return `${Math.round(n * 100)}%` }
 function rgbToHexStr({ r, g, b }: RGB) { return rgbToHex({ r, g, b }) }
+function renderMixMatch(m: MixMatch) {
+  return (
+    <>
+      <div className={styles.mixSwatches}>
+        <div className={styles.mixSwatchA} style={{ background: rgbToHex(m.a.rgb), flex: m.aFraction }} />
+        <div className={styles.mixSwatchB} style={{ background: rgbToHex(m.b.rgb), flex: 1 - m.aFraction }} />
+      </div>
+      <div className={styles.mixPaint}>
+        <span className={styles.mixFraction}>{pct(m.aFraction)}</span>
+        <div className={styles.matchInfo}>
+          <div className={styles.matchName}>{m.a.name}</div>
+          <div className={styles.matchBrand}>{m.a.brand}</div>
+        </div>
+      </div>
+      <div className={styles.mixPaint}>
+        <span className={styles.mixFraction}>{pct(1 - m.aFraction)}</span>
+        <div className={styles.matchInfo}>
+          <div className={styles.matchName}>{m.b.name}</div>
+          <div className={styles.matchBrand}>{m.b.brand}</div>
+        </div>
+      </div>
+      <div className={styles.mixDe}>ΔE {m.dE.toFixed(1)}</div>
+    </>
+  )
+}
 
 export function PaintMix({ image }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -38,6 +64,7 @@ export function PaintMix({ image }: Props) {
   const [pick, setPick] = useState<{ color: RGB; x: number; y: number } | null>(null)
   const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(getUnlockedBrands()))
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [showMoreMixes, setShowMoreMixes] = useState(false)
   const { scale } = useZoom()
 
   useEffect(() => {
@@ -87,14 +114,18 @@ export function PaintMix({ image }: Props) {
     [activeBrands],
   )
 
-  const results = useMemo<{ singles: SingleMatch[]; mix: MixMatch | null } | null>(() => {
+  const results = useMemo<{ singles: SingleMatch[]; bestMix: MixMatch | null; allMixes: MixResults | null } | null>(() => {
     if (!pick) return null
     const target = rgbToLab(pick.color)
+    const all = findBestMixes(target, filteredPaints)
     return {
       singles: findTopSingles(target, filteredPaints, 3),
-      mix: findBestMix(target, filteredPaints),
+      bestMix: all?.twoPaint[0] ?? null,
+      allMixes: all,
     }
   }, [pick, filteredPaints])
+
+  const proMixUnlocked = useMemo(() => isFeatureUnlocked('pro-mix'), [])
 
   const hex = pick ? rgbToHexStr(pick.color) : null
 
@@ -133,7 +164,7 @@ export function PaintMix({ image }: Props) {
       <Panel className={toolStyles.controls}>
         <h2 className={toolStyles.toolName}>Paint Mix</h2>
         <p className={toolStyles.description}>
-          Tap or click the image to sample a color, then see the closest paints and a suggested 2-paint mix.
+          Tap or click the image to sample a color, then see the closest paints and a suggested 2-paint mix. Pro users can unlock alternative mixes and 3-paint combinations.
         </p>
 
         {/* Brand filter */}
@@ -160,9 +191,9 @@ export function PaintMix({ image }: Props) {
         {showUpgradeModal && (
           <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-labelledby="upgrade-title">
             <div className={styles.modal}>
-              <p className={styles.modalTitle} id="upgrade-title">Brand Packs</p>
+              <p className={styles.modalTitle} id="upgrade-title">Brand Packs &amp; Pro Features</p>
               <p className={styles.modalBody}>
-                Additional brand packs are coming with the native app. The free tier includes the full Gamblin range.
+                Additional brand packs and Pro features (alternative mixes, 3-paint combinations) are coming with the native app. The free tier includes the full Gamblin range and single best mix.
               </p>
               <button type="button" className={styles.modalClose} onClick={() => setShowUpgradeModal(false)}>
                 Got it
@@ -206,42 +237,97 @@ export function PaintMix({ image }: Props) {
             )}
 
             {/* Best 2-paint mix */}
-            {results.mix && (
+            {results.bestMix && (
               <>
                 <p className={styles.sectionLabel}>Nearest mix</p>
-                <div className={styles.mixResult}>
-                  <div className={styles.mixSwatches}>
-                    <div
-                      className={styles.mixSwatchA}
-                      style={{
-                        background: rgbToHex(results.mix.a.rgb),
-                        flex: results.mix.aFraction,
-                      }}
-                    />
-                    <div
-                      className={styles.mixSwatchB}
-                      style={{
-                        background: rgbToHex(results.mix.b.rgb),
-                        flex: 1 - results.mix.aFraction,
-                      }}
-                    />
-                  </div>
-                  <div className={styles.mixPaint}>
-                    <span className={styles.mixFraction}>{pct(results.mix.aFraction)}</span>
-                    <div className={styles.matchInfo}>
-                      <div className={styles.matchName}>{results.mix.a.name}</div>
-                      <div className={styles.matchBrand}>{results.mix.a.brand}</div>
-                    </div>
-                  </div>
-                  <div className={styles.mixPaint}>
-                    <span className={styles.mixFraction}>{pct(1 - results.mix.aFraction)}</span>
-                    <div className={styles.matchInfo}>
-                      <div className={styles.matchName}>{results.mix.b.name}</div>
-                      <div className={styles.matchBrand}>{results.mix.b.brand}</div>
-                    </div>
-                  </div>
-                  <div className={styles.mixDe}>ΔE {results.mix.dE.toFixed(1)}</div>
-                </div>
+                {renderMixMatch(results.bestMix)}
+
+                {/* More mixes (Pro feature) */}
+                {results.allMixes && (results.allMixes.twoPaint.length > 1 || results.allMixes.threePaint.length > 0) && (
+                  <>
+                    {proMixUnlocked ? (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.moreToggle}
+                          onClick={() => setShowMoreMixes(prev => !prev)}
+                          aria-expanded={showMoreMixes}
+                        >
+                          {showMoreMixes ? 'Hide' : 'Show'} more mixes
+                          <span className={`${styles.moreArrow} ${showMoreMixes ? styles.moreArrowUp : ''}`} aria-hidden>▸</span>
+                        </button>
+
+                        {showMoreMixes && (
+                          <div className={styles.moreMixes}>
+                            {/* Alternative 2-paint mixes (skip index 0 = best) */}
+                            {results.allMixes.twoPaint.length > 1 && (
+                              <>
+                                <p className={styles.sectionLabel}>Alternative 2-paint mixes</p>
+                                {results.allMixes.twoPaint.slice(1).map((m, i) => (
+                                  <div key={i} className={styles.mixResult}>
+                                    {renderMixMatch(m)}
+                                  </div>
+                                ))}
+                              </>
+                            )}
+
+                            {/* 3-paint mixes */}
+                            {results.allMixes.threePaint.length > 0 && (
+                              <>
+                                <p className={styles.sectionLabel}>3-paint mixes</p>
+                                {results.allMixes.threePaint.map((m, i) => (
+                                  <div key={i} className={styles.mixResult}>
+                                    <div className={styles.mixSwatches}>
+                                      <div className={styles.mixSwatchA} style={{ background: rgbToHex(m.a.rgb), flex: m.fractions[0] }} />
+                                      <div className={styles.mixSwatchB} style={{ background: rgbToHex(m.b.rgb), flex: m.fractions[1] }} />
+                                      <div className={styles.mixSwatchC} style={{ background: rgbToHex(m.c.rgb), flex: m.fractions[2] }} />
+                                    </div>
+                                    <div className={styles.mixPaint}>
+                                      <span className={styles.mixFraction}>{pct(m.fractions[0])}</span>
+                                      <div className={styles.matchInfo}>
+                                        <div className={styles.matchName}>{m.a.name}</div>
+                                        <div className={styles.matchBrand}>{m.a.brand}</div>
+                                      </div>
+                                    </div>
+                                    <div className={styles.mixPaint}>
+                                      <span className={styles.mixFraction}>{pct(m.fractions[1])}</span>
+                                      <div className={styles.matchInfo}>
+                                        <div className={styles.matchName}>{m.b.name}</div>
+                                        <div className={styles.matchBrand}>{m.b.brand}</div>
+                                      </div>
+                                    </div>
+                                    <div className={styles.mixPaint}>
+                                      <span className={styles.mixFraction}>{pct(m.fractions[2])}</span>
+                                      <div className={styles.matchInfo}>
+                                        <div className={styles.matchName}>{m.c.name}</div>
+                                        <div className={styles.matchBrand}>{m.c.brand}</div>
+                                      </div>
+                                    </div>
+                                    <div className={styles.mixDe}>ΔE {m.dE.toFixed(1)}</div>
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      /* Pro upsell */
+                      <div className={styles.proUpsell}>
+                        <p className={styles.proUpsellText}>
+                          Unlock alternative mixes and 3-paint combinations in the native app.
+                        </p>
+                        <button
+                          type="button"
+                          className={styles.modalClose}
+                          onClick={() => setShowUpgradeModal(true)}
+                        >
+                          Learn more
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
               </>
             )}
 

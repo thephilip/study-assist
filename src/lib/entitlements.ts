@@ -1,10 +1,17 @@
 import { FREE_BRANDS, type Brand } from '@/lib/pigments'
 
-const STORAGE_KEY = 'unlockedBrands'
+const BRAND_STORAGE_KEY = 'unlockedBrands'
+const FEATURE_STORAGE_KEY = 'unlockedFeatures'
 
-function getStoredUnlocks(): Brand[] {
+export type ProFeature = 'pro-mix'
+
+const ALL_PRO_FEATURES: ProFeature[] = ['pro-mix']
+
+// ── Brand gating ────────────────────────────────────────────────────────────
+
+function getStoredBrands(): Brand[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(BRAND_STORAGE_KEY)
     return raw ? (JSON.parse(raw) as Brand[]) : []
   } catch {
     return []
@@ -12,18 +19,57 @@ function getStoredUnlocks(): Brand[] {
 }
 
 export function isBrandUnlocked(brand: Brand): boolean {
-  return FREE_BRANDS.includes(brand) || getStoredUnlocks().includes(brand)
+  return FREE_BRANDS.includes(brand) || getStoredBrands().includes(brand)
 }
 
 export function unlockBrand(brand: Brand): void {
-  const current = getStoredUnlocks()
+  const current = getStoredBrands()
   if (!current.includes(brand)) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, brand]))
+    localStorage.setItem(BRAND_STORAGE_KEY, JSON.stringify([...current, brand]))
   }
 }
 
 export function getUnlockedBrands(): Brand[] {
-  const stored = getStoredUnlocks()
+  const stored = getStoredBrands()
   const extra = stored.filter(b => !FREE_BRANDS.includes(b))
   return [...FREE_BRANDS, ...extra]
+}
+
+// ── Feature gating (honest fence) ───────────────────────────────────────────
+// Uses the same localStorage pattern as brand gating. The unlock script
+// (docs/unlock-key.html) provides a convenient way to enable these.
+// Proper IAP verification will come with the native apps (Phase 2).
+
+function getStoredFeatures(): ProFeature[] {
+  try {
+    const raw = localStorage.getItem(FEATURE_STORAGE_KEY)
+    return raw ? (JSON.parse(raw) as ProFeature[]) : []
+  } catch {
+    return []
+  }
+}
+
+/** Returns true if the user has unlocked this Pro feature. */
+export function isFeatureUnlocked(feature: ProFeature): boolean {
+  return getStoredFeatures().includes(feature)
+}
+
+/** Unlocks a Pro feature via localStorage. Used by the unlock-key script. */
+export function unlockFeature(feature: ProFeature): void {
+  const current = getStoredFeatures()
+  if (!current.includes(feature)) {
+    localStorage.setItem(FEATURE_STORAGE_KEY, JSON.stringify([...current, feature]))
+  }
+}
+
+/** Unlocks all Pro features at once. Used by the unlock-key script. */
+export function unlockAllFeatures(): void {
+  localStorage.setItem(FEATURE_STORAGE_KEY, JSON.stringify(ALL_PRO_FEATURES))
+}
+
+/** Unlocks all brands + features at once. Used by the unlock-key script. */
+export function unlockAll(): void {
+  unlockAllFeatures()
+  const allBrands = ['W&N', 'Williamsburg', 'Rembrandt', 'Utrecht', 'Geneva'] as Brand[]
+  localStorage.setItem(BRAND_STORAGE_KEY, JSON.stringify(allBrands))
 }
