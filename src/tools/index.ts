@@ -16,6 +16,7 @@ export const TOOLS = [
   'sketch',
   'view-catcher',
   'colour-studio',
+  'automated-sketch',
 ] as const
 
 export type Tool = typeof TOOLS[number]
@@ -38,4 +39,5 @@ export const TOOL_LABELS: Record<Tool, string> = {
   'sketch':         'Sketch',
   'view-catcher':   'ViewCatcher',
   'colour-studio':  'Colour Studio',
+  'automated-sketch': 'Automated Sketch',
 }

@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.13.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'New Automated Sketch tool — composites Sobel edge-detection linework over posterised colour planes for a hand-drawn sketch look; controls for colour blur, levels, edge blur, edge strength, opacity, and line colour', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.12.0',
     date: '2026-05-26',
     entries: [

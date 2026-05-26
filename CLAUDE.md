@@ -184,7 +184,7 @@ Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pig
 | **P4** | Colour Studio | Medium-large | New tool (unified view) | Free | ✅ Done |
 | **P5** | Controls Panel Collapse | Small | UX polish (all tools) | — | Planned |
 | **P6** | UI Overhaul | Medium-large | Design polish (all surfaces) | — | Planned |
-| **P7** | Automated Sketch Generator | Medium | New tool (composite) | Free | Planned |
+| **P7** | Automated Sketch Generator | Medium | New tool (composite) | Free | ✅ Done |
 | **P8** | Gamut Mask | Large (~500+ lines) | New tool | Free + paid pigment overlay | Planned |
 
 ---
@@ -225,13 +225,13 @@ Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pig
 | **Effort** | Medium-large. Mostly CSS and component refactoring — no new functionality. Could be broken into sub-tasks per surface. |
 | **Monetisation** | — |
 
-#### P7 — Automated Sketch Generator
+#### P7 — Automated Sketch Generator ✅
 
 | Field | Detail |
 |---|---|
 | **Why** | Nice-to-have: a single tool that composites an edge-detection line drawing over simplified colour planes, producing a result that looks more like a hand-drawn sketch than any single existing tool. |
-| **What** | Combines the existing Shape Simplify (blur + posterize → flat colour background) and Edges (Sobel linework on top) into one rendered output. Controls for edge strength, colour levels, and blend mode. Lower priority than the manual sketch tool (P1) since the individual algorithms already exist across two separate tools. |
-| **Effort** | Medium. New processing pipeline that runs both algorithms in sequence + composite step. No new pixel math — just composition. |
+| **What** | Combines the existing Shape Simplify (blur + posterize → flat colour background) and Edges (Sobel linework on top) into one rendered output. Controls for colour blur radius, posterisation levels, edge blur, edge strength, edge opacity, and line colour (white/black). |
+| **Effort** | ~250 lines (processing pipeline + component + CSS). Reuses box blur and Sobel algorithms in a single composite pipeline. |
 | **Monetisation** | Free tier. |
 
 #### P8 — Gamut Mask

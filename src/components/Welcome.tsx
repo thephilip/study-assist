@@ -1,4 +1,5 @@
 import { ImageDrop } from './ImageDrop'
+import { TOOLS as TOOL_SLUGS } from '@/tools/index'
 import styles from './Welcome.module.css'
 
 const TOOLS = [
@@ -19,6 +20,7 @@ const TOOLS = [
   { name: 'Sketch',          desc: 'Draw value thumbnails directly over the reference with stylus support.' },
   { name: 'ViewCatcher',     desc: 'Frame your reference with an interactive crop overlay — try aspect ratios, drag to recompose, save as a new image.' },
   { name: 'Colour Studio',   desc: 'Extract palette swatches, find paint matches, and explore harmonies — unified colour analysis in one view.' },
+  { name: 'Automated Sketch', desc: 'Composites edge-detection linework over simplified colour planes for a hand-drawn sketch look.' },
 ]
 
 type Props = { onFile: (file: File) => void; error?: string }
@@ -29,7 +31,7 @@ export function Welcome({ onFile, error }: Props) {
       <div className={styles.hero}>
         <h2 className={styles.tagline}>Study your reference before you paint.</h2>
         <p className={styles.sub}>
-          Drop any photo to analyse it with seventeen tools — all on-device, nothing uploaded.
+          Drop any photo to analyse it with {TOOL_SLUGS.length} tools — all on-device, nothing uploaded.
         </p>
       </div>
 
