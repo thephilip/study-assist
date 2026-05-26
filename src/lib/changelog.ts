@@ -13,6 +13,15 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.10.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'New Sketch tool — draw value thumbnails directly over your reference with 2–8 greyscale levels, undo, eraser, and pressure-sensitive stylus support', visibility: 'public' },
+      { text: 'Multiple Mix Suggestions — Pro users can now see top-5 alternative 2-paint mixes and 3-paint combinations in the Paint Mix tool', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.9.0',
     date: '2026-05-26',
     entries: [
