@@ -13,6 +13,15 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.6.0',
+    date: '2026-05-26',
+    entries: [
+      { text: 'Actions menu — Compare, Save PNG, and Use as source are now in a single Actions menu consistent across all tools', visibility: 'public' },
+      { text: 'On mobile, a Tools button in the header lets you switch tools without the scrolling toolbar taking up screen space', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.5.0',
     date: '2026-05-25',
     entries: [
