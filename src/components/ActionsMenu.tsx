@@ -77,18 +77,9 @@ function MenuContent({
         <div className={[styles.divider, touch ? styles.dividerTouch : ''].filter(Boolean).join(' ')} aria-hidden />
       )}
 
-      {hasContextual && (
-        <>
-          {hasBoth && (
-            <div className={[styles.sectionLabel, touch ? styles.sectionLabelTouch : ''].filter(Boolean).join(' ')}>
-              {activeToolName}
-            </div>
-          )}
-          {contextualActions.map(action => (
-            <ActionRow key={action.id} action={action} onClose={onClose} touch={touch} />
-          ))}
-        </>
-      )}
+      {hasContextual && contextualActions.map(action => (
+        <ActionRow key={action.id} action={action} onClose={onClose} touch={touch} />
+      ))}
     </>
   )
 }
