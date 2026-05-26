@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
-import { SaveButton } from '@/components/SaveButton'
-import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyDither, type DitherAlgorithm, type DitherMode } from './dither'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
+import { useRegisterToolActions } from '@/context/ActionsContext'
+import { downloadCanvas } from '@/lib/export'
 import toolStyles from './Tool.module.css'
 import styles from './Dither.module.css'
 
@@ -31,6 +31,12 @@ export function Dither({ image, originalImage, onApply }: Props) {
 
   const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData, originalImage)
 
+  useRegisterToolActions('Dither', useMemo(() => [
+    { id: 'compare', label: 'Compare', checked: compare, handler: toggleCompare },
+    { id: 'save-png', label: 'Save PNG', handler: () => { const c = processedRef.current; if (c) downloadCanvas(c, 'dither.png') } },
+    { id: 'use-as-source', label: 'Use as source', handler: () => { const c = processedRef.current; if (c) onApply(c) } },
+  ], [compare, toggleCompare, processedRef, onApply]))
+
   return (
     <div className={toolStyles.root}>
       <CanvasWrap compare={compare}>
@@ -43,14 +49,6 @@ export function Dither({ image, originalImage, onApply }: Props) {
         <p className={toolStyles.description}>
           Quantizes tones using error-diffusion or ordered patterns — useful for studying flat value shapes and silhouettes.
         </p>
-
-        <button
-          className={`${toolStyles.compareBtn} ${compare ? toolStyles.compareBtnActive : ''}`}
-          onClick={toggleCompare}
-          aria-pressed={compare}
-        >
-          {compare ? 'Exit compare' : 'Compare'}
-        </button>
 
         <div className={styles.section}>
           <span className={styles.sectionLabel}>Algorithm</span>
@@ -92,8 +90,6 @@ export function Dither({ image, originalImage, onApply }: Props) {
           onChange={setLevels}
         />
 
-        <SaveButton canvasRef={processedRef} filename="dither.png" />
-        <ApplyButton canvasRef={processedRef} onApply={onApply} />
       </Panel>
     </div>
   )

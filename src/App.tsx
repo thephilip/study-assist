@@ -1,7 +1,10 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import { Welcome } from '@/components/Welcome'
 import { useImage, type LoadedImage } from '@/hooks/useImage'
-import { TOOLS, type Tool } from '@/tools/index'
+import { ActionsProvider } from '@/context/ActionsContext'
+import { ActionsMenu } from '@/components/ActionsMenu'
+import { ToolsMenu } from '@/components/ToolsMenu'
+import { TOOLS, TOOL_LABELS, type Tool } from '@/tools/index'
 import { ValueMap } from '@/tools/ValueMap'
 import { Notan } from '@/tools/Notan'
 import { ColorPicker } from '@/tools/ColorPicker'
@@ -34,24 +37,14 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
   return <p className={styles.placeholder}>{tool} — coming soon</p>
 }
 
-const TOOL_LABELS: Record<Tool, string> = {
-  'value-map':     'Value Map',
-  'notan':         'Notan',
-  'color-picker':  'Color Picker',
-  'shape-simplify':'Shape Simplify',
-  'dither':        'Dither',
-  'grid':          'Grid',
-  'composition':   'Composition',
-  'palette':       'Palette',
-  'temperature':   'Temperature',
-  'paint-mix':     'Paint Mix',
-  'histogram':     'Histogram',
-  'edges':         'Edges',
-}
 
 export default function App({ onImageChange }: { onImageChange?: (has: boolean) => void }) {
   const { image, originalImage, error, load, clear, push, undo, canUndo, undoDepth } = useImage()
   const [activeTool, setActiveTool] = useState<Tool>('value-map')
+
+  const globalActions = useMemo(() => image ? [
+    { id: 'remove-image', label: 'Remove image', handler: clear, danger: true },
+  ] : [], [image, clear])
 
   useEffect(() => { onImageChange?.(!!image) }, [image, onImageChange])
 
@@ -60,19 +53,19 @@ export default function App({ onImageChange }: { onImageChange?: (has: boolean) 
   }, [push])
 
   return (
+    <ActionsProvider globalActions={globalActions}>
     <div className={styles.root}>
       <header className={styles.header}>
         <h1 className={styles.wordmark}>study assist</h1>
         {image && (
           <div className={styles.headerActions}>
+            <ToolsMenu activeTool={activeTool} onSelect={setActiveTool} />
+            <ActionsMenu />
             {canUndo && (
               <button className={styles.undoBtn} onClick={undo} aria-label={`Undo — ${undoDepth} step${undoDepth !== 1 ? 's' : ''} back`}>
                 Undo{undoDepth > 1 ? ` (${undoDepth})` : ''}
               </button>
             )}
-            <button className={styles.clearBtn} onClick={clear} aria-label="Remove image">
-              Remove image
-            </button>
           </div>
         )}
       </header>
@@ -103,5 +96,6 @@ export default function App({ onImageChange }: { onImageChange?: (has: boolean) 
         )}
       </main>
     </div>
+    </ActionsProvider>
   )
 }

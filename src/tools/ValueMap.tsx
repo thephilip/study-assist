@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
-import { SaveButton } from '@/components/SaveButton'
-import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyValueMap } from './value-map'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
+import { useRegisterToolActions } from '@/context/ActionsContext'
+import { downloadCanvas } from '@/lib/export'
 import styles from './Tool.module.css'
 
 type Props = { image: LoadedImage; originalImage: LoadedImage; onApply: (canvas: HTMLCanvasElement) => void }
@@ -21,6 +21,20 @@ export function ValueMap({ image, originalImage, onApply }: Props) {
 
   const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData, originalImage)
 
+  useRegisterToolActions('Value Map', useMemo(() => [
+    { id: 'compare', label: 'Compare', checked: compare, handler: toggleCompare },
+    {
+      id: 'save-png',
+      label: 'Save PNG',
+      handler: () => { const c = processedRef.current; if (c) downloadCanvas(c, 'value-map.png') },
+    },
+    {
+      id: 'use-as-source',
+      label: 'Use as source',
+      handler: () => { const c = processedRef.current; if (c) onApply(c) },
+    },
+  ], [compare, toggleCompare, processedRef, onApply]))
+
   return (
     <div className={styles.root}>
       <CanvasWrap compare={compare}>
@@ -32,13 +46,6 @@ export function ValueMap({ image, originalImage, onApply }: Props) {
         <p className={styles.description}>
           Posterizes the image to a fixed number of tonal levels to reveal value structure.
         </p>
-        <button
-          className={`${styles.compareBtn} ${compare ? styles.compareBtnActive : ''}`}
-          onClick={toggleCompare}
-          aria-pressed={compare}
-        >
-          {compare ? 'Exit compare' : 'Compare'}
-        </button>
         <Slider
           label="Levels"
           value={levels}
@@ -46,8 +53,6 @@ export function ValueMap({ image, originalImage, onApply }: Props) {
           max={8}
           onChange={setLevels}
         />
-        <SaveButton canvasRef={processedRef} filename="value-map.png" />
-        <ApplyButton canvasRef={processedRef} onApply={onApply} />
         <div className={styles.swatches}>
           {Array.from({ length: levels }, (_, i) => {
             const v = Math.round((i / (levels - 1)) * 255)

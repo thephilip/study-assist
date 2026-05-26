@@ -151,6 +151,10 @@
     min-height: 44px;
     padding: var(--space-2) var(--space-4);
   }
+
+  .toolbar {
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {

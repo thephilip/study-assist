@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { Slider } from '@/components/Slider'
 import { Panel } from '@/components/Panel'
-import { SaveButton } from '@/components/SaveButton'
-import { ApplyButton } from '@/components/ApplyButton'
 import { useCompare } from '@/hooks/useCompare'
 import { applyEdges } from './edges'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
+import { useRegisterToolActions } from '@/context/ActionsContext'
+import { downloadCanvas } from '@/lib/export'
 import toolStyles from './Tool.module.css'
 import styles from './Edges.module.css'
 
@@ -26,6 +26,12 @@ export function Edges({ image, originalImage, onApply }: Props) {
 
   const { processedRef, originalRef, compare, toggleCompare } = useCompare(image, processData, originalImage)
 
+  useRegisterToolActions('Edges', useMemo(() => [
+    { id: 'compare', label: 'Compare', checked: compare, handler: toggleCompare },
+    { id: 'save-png', label: 'Save PNG', handler: () => { const c = processedRef.current; if (c) downloadCanvas(c, 'edges.png') } },
+    { id: 'use-as-source', label: 'Use as source', handler: () => { const c = processedRef.current; if (c) onApply(c) } },
+  ], [compare, toggleCompare, processedRef, onApply]))
+
   return (
     <div className={toolStyles.root}>
       <CanvasWrap compare={compare}>
@@ -39,14 +45,6 @@ export function Edges({ image, originalImage, onApply }: Props) {
           Sobel edge detection overlaid on the image. Increase blur to find
           large compositional edges; lower threshold to reveal more.
         </p>
-
-        <button
-          className={`${toolStyles.compareBtn} ${compare ? toolStyles.compareBtnActive : ''}`}
-          onClick={toggleCompare}
-          aria-pressed={compare}
-        >
-          {compare ? 'Exit compare' : 'Compare'}
-        </button>
 
         <Slider label="Blur"      value={blurRadius} min={0} max={20} onChange={setBlurRadius} />
         <Slider label="Threshold" value={threshold}  min={1} max={100} onChange={setThreshold} />
@@ -68,8 +66,6 @@ export function Edges({ image, originalImage, onApply }: Props) {
           </div>
         </div>
 
-        <SaveButton canvasRef={processedRef} filename="edges.png" />
-        <ApplyButton canvasRef={processedRef} onApply={onApply} />
       </Panel>
     </div>
   )

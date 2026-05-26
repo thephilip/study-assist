@@ -14,3 +14,18 @@ export const TOOLS = [
 ] as const
 
 export type Tool = typeof TOOLS[number]
+
+export const TOOL_LABELS: Record<Tool, string> = {
+  'value-map':      'Value Map',
+  'notan':          'Notan',
+  'color-picker':   'Color Picker',
+  'shape-simplify': 'Shape Simplify',
+  'dither':         'Dither',
+  'grid':           'Grid',
+  'composition':    'Composition',
+  'palette':        'Palette',
+  'temperature':    'Temperature',
+  'paint-mix':      'Paint Mix',
+  'histogram':      'Histogram',
+  'edges':          'Edges',
+}
