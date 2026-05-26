@@ -36,13 +36,10 @@ export function ViewCatcher({ image, originalImage, onApply }: Props) {
   const [drag, setDrag] = useState<DragMode>({ type: 'idle' })
   const [imgDims, setImgDims] = useState({ w: 0, h: 0 })
 
-  // Initialise crop when image or aspect changes
+  // Reset crop when a new image is loaded (e.g. after Save crop → onApply replaces the bitmap)
+  // The render effect below will re-initialise it to a fresh default for the new dimensions.
   useEffect(() => {
-    setCrop(prev => {
-      // If we already have a valid non-zero rect for this image, just return it
-      if (prev.w > 0 && prev.h > 0) return prev
-      return { x: 0, y: 0, w: 0, h: 0 } // will be set once canvas renders
-    })
+    setCrop({ x: 0, y: 0, w: 0, h: 0 })
   }, [image])
 
   // ── Drawing ─────────────────────────────────────────────────────────────────
@@ -74,15 +71,16 @@ export function ViewCatcher({ image, originalImage, onApply }: Props) {
 
     const ctx = canvas.getContext('2d')!
 
-    // 1. Draw dim overlay with a hole for the crop region
+    // 1. Draw dim overlay only outside the crop region using a clip path
     ctx.save()
+    ctx.beginPath()
+    // Outer rect (clockwise) — full canvas
+    ctx.rect(0, 0, w, h)
+    // Inner rect (counter-clockwise) — punches a hole for the crop region
+    ctx.rect(crop.x + crop.w, crop.y, -crop.w, crop.h)
+    ctx.clip()
     ctx.fillStyle = 'rgba(0, 0, 0, 0.55)'
     ctx.fillRect(0, 0, w, h)
-
-    // Punch a hole using destination-out compositing
-    ctx.globalCompositeOperation = 'destination-out'
-    ctx.fillStyle = '#000'
-    ctx.fillRect(crop.x, crop.y, crop.w, crop.h)
     ctx.restore()
 
     // 2. Draw crop rectangle outline
@@ -204,22 +202,24 @@ export function ViewCatcher({ image, originalImage, onApply }: Props) {
   const handleSaveCrop = useCallback(() => {
     const c = canvasRef.current
     if (!c || crop.w < MIN_CROP || crop.h < MIN_CROP) return
-    const out = document.createElement('canvas')
+
+    // Render the bitmap at canvas (display) resolution onto a clean temp canvas
+    // so we extract the exact visible region without overlay artifacts
+    const clean = document.createElement('canvas')
+    clean.width = c.width
+    clean.height = c.height
+    const cleanCtx = clean.getContext('2d')!
+    cleanCtx.drawImage(image.bitmap, 0, 0, c.width, c.height)
+
+    // Extract the crop region from the clean image
     const cw = Math.round(crop.w)
     const ch = Math.round(crop.h)
+    const out = document.createElement('canvas')
     out.width = cw
     out.height = ch
-    const ctx = out.getContext('2d')!
-    // Draw from the current image bitmap, offset by crop position
-    // The canvas may be downscaled from the bitmap, so we need to account for
-    // the scale ratio between bitmap and canvas dimensions.
-    const sx = image.bitmap.width / c.width
-    const sy = image.bitmap.height / c.height
-    ctx.drawImage(
-      image.bitmap,
-      crop.x * sx, crop.y * sy, crop.w * sx, crop.h * sy,
-      0, 0, cw, ch,
-    )
+    const outCtx = out.getContext('2d')!
+    outCtx.drawImage(clean, crop.x, crop.y, crop.w, crop.h, 0, 0, cw, ch)
+
     onApply(out)
   }, [crop, image.bitmap, onApply])
 
