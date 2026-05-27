@@ -40,7 +40,7 @@ export function AutomatedSketch({ image, originalImage, onApply }: Props) {
         <canvas ref={processedRef} className={toolStyles.canvas} role="img" aria-label="Automated sketch" />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="automated-sketch">
         <h2 className={toolStyles.toolName}>Automated Sketch</h2>
         <p className={toolStyles.description}>
           Composites edge-detection linework over simplified colour planes — produces a hand-drawn sketch look from any reference.

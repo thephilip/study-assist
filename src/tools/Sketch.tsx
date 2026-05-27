@@ -193,7 +193,7 @@ export function Sketch({ image }: Props) {
         </div>
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="sketch">
         <h2 className={toolStyles.toolName}>Sketch</h2>
         <p className={toolStyles.description}>
           Draw value thumbnails directly over the reference. Supports pressure-sensitive styluses.

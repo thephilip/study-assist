@@ -159,7 +159,7 @@ export function Sighting({ image }: Props) {
         />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="sighting">
         <h2 className={toolStyles.toolName}>Sighting</h2>
         <p className={toolStyles.description}>
           Measure angles, proportions, and alignment in your reference.

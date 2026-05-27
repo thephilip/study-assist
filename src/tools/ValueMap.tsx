@@ -41,7 +41,7 @@ export function ValueMap({ image, originalImage, onApply }: Props) {
         <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={processedRef} className={styles.canvas} role="img" aria-label="Value map" />
       </CanvasWrap>
-      <Panel className={styles.controls}>
+      <Panel className={styles.controls} toolSlug="value-map">
         <h2 className={styles.toolName}>Value Map</h2>
         <p className={styles.description}>
           Posterizes the image to a fixed number of tonal levels to reveal value structure.

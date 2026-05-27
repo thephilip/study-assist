@@ -226,7 +226,7 @@ export function ColourStudio({ image }: Props) {
       </CanvasWrap>
 
       {/* ── Controls Panel ──────────────────────────────────────── */}
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="colour-studio">
         {/* Header */}
         <h2 className={toolStyles.toolName}>Colour Studio</h2>
         <p className={toolStyles.description}>

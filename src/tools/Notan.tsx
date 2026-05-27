@@ -33,7 +33,7 @@ export function Notan({ image, originalImage, onApply }: Props) {
         <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={processedRef} className={styles.canvas} role="img" aria-label="Notan" />
       </CanvasWrap>
-      <Panel className={styles.controls}>
+      <Panel className={styles.controls} toolSlug="notan">
         <h2 className={styles.toolName}>Notan</h2>
         <p className={styles.description}>
           Reduces the image to two tones — dark and light — to study shape and silhouette.

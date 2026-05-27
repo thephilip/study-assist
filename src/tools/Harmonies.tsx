@@ -147,7 +147,7 @@ export function ColorHarmonies({ image }: Props) {
         />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="harmonies">
         <h2 className={toolStyles.toolName}>Color Harmonies</h2>
         <p className={toolStyles.description}>
           Pick a base colour to generate harmonic colour schemes. Click the image or use the colour picker.

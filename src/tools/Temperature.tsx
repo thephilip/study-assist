@@ -34,7 +34,7 @@ export function Temperature({ image, originalImage, onApply }: Props) {
         <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={processedRef} className={styles.canvas} role="img" aria-label="Temperature map" />
       </CanvasWrap>
-      <Panel className={styles.controls}>
+      <Panel className={styles.controls} toolSlug="temperature">
         <h2 className={styles.toolName}>Temperature Map</h2>
         <p className={styles.description}>
           Maps each pixel's hue to warm (orange) or cool (blue), preserving

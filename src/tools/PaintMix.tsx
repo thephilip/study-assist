@@ -161,7 +161,7 @@ export function PaintMix({ image }: Props) {
         </div>
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="paint-mix">
         <h2 className={toolStyles.toolName}>Paint Mix</h2>
         <p className={toolStyles.description}>
           Tap or click the image to sample a color, then see the closest paints and a suggested 2-paint mix. Pro users can unlock alternative mixes and 3-paint combinations.

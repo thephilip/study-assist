@@ -3,4 +3,104 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
+  position: relative; /* anchor for chevron positioning */
+}
+
+/* ── Collapsed state ───────────────────────────────────────────────────────────
+   Padding is removed; border removed so only the Tool.module.css border-left
+   (the seam) remains. The outer panel width collapse is handled by
+   Tool.module.css .controls — this just handles interior styling.
+   ──*/
+
+.collapsed {
+  padding: 0;
+  border: 0;
+  overflow: visible; /* keep chevron visible */
+}
+
+/* ── Content wrapper ───────────────────────────────────────────────────────────
+   Fades out on collapse, fades in on expand. Clipped so content doesn't
+   spill outside the collapsing panel.
+   ──*/
+
+.content {
+  overflow: hidden;
+  transition: opacity var(--duration-fast) var(--ease-smooth);
+}
+
+.collapsed .content {
+  opacity: 0;
+  transition: opacity calc(var(--duration-fast) + 20ms) var(--ease-smooth);
+}
+
+/* ── Chevron toggle button ────────────────────────────────────────────────────
+   Sits at the top of the right edge, half-overlapping the border seam.
+   Absolutely positioned so it stays accessible even when the panel is
+   collapsed to 0 width.
+   ──*/
+
+.chevron {
+  position: absolute;
+  top: var(--space-4);
+  right: -12px; /* half-overlaps the 1px border seam */
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-faint);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  transition: color var(--duration-fast) var(--ease-smooth),
+              background var(--duration-fast) var(--ease-smooth);
+}
+
+.chevron:hover,
+.chevron:focus-visible {
+  color: var(--color-accent);
+  background: rgba(124, 106, 247, 0.08);
+}
+
+.chevron:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* When panel is collapsed, the chevron sits against the border seam */
+.chevronCollapsed {
+  color: var(--color-text-faint);
+}
+
+.chevronCollapsed:hover,
+.chevronCollapsed:focus-visible {
+  color: var(--color-accent);
+}
+
+/* ── Touch target bump ──────────────────────────────────────────────────────── */
+
+@media (hover: none) and (pointer: coarse) {
+  .chevron {
+    width: 44px;
+    height: 44px;
+    right: -22px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .chevronCollapsed {
+    background: var(--color-surface);
+  }
+}
+
+/* ── Reduce motion ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    transition: none;
+  }
 }

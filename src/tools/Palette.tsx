@@ -54,7 +54,7 @@ export function Palette({ image }: Props) {
         <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Reference image" />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="palette">
         <h2 className={toolStyles.toolName}>Palette</h2>
         <p className={toolStyles.description}>
           K-means clustering finds the dominant colours in the image. Click a swatch to copy its hex value.

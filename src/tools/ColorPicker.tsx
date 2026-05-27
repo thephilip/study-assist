@@ -113,7 +113,7 @@ export function ColorPicker({ image }: Props) {
         </div>
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="color-picker">
         <h2 className={toolStyles.toolName}>Color Picker</h2>
         <p className={toolStyles.description}>
           Move or drag to preview — click or lift to lock. Increase radius to average a region.
