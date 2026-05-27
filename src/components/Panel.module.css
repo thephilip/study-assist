@@ -60,16 +60,15 @@
    Positioned relative to .wrapper (collapsible only). Rendered as a sibling of
    .scrollArea, so it's never clipped by overflow-y: auto.
    
-   Expanded state: sits at the top-right of the panel with a subtle background.
-   Collapsed state: sits at the border seam, extending into the canvas area so
-   it's clearly visible against the image, making it obvious the panel can be
-   restored.
+   Always sits at left: -16px (straddling the seam) so it never overlaps panel
+   content. When collapsed it slides right with the panel and shifts down below
+   the fullscreen button so the two don't conflict.
    ──*/
 
 .chevron {
   position: absolute;
   top: var(--space-4);
-  right: var(--space-3);
+  left: -16px;    /* straddles the left border seam — never overlaps panel content */
   width: 32px;
   height: 32px;
   display: flex;
@@ -83,7 +82,8 @@
   z-index: 2;
   transition: color var(--duration-fast) var(--ease-smooth),
               background var(--duration-fast) var(--ease-smooth),
-              border-color var(--duration-fast) var(--ease-smooth);
+              border-color var(--duration-fast) var(--ease-smooth),
+              top var(--duration-normal) var(--ease-smooth);
 }
 
 .chevron:hover,
@@ -98,12 +98,11 @@
   outline-offset: 1px;
 }
 
-/* Collapsed: chevron moves to the border seam, extending into the canvas area.
-   Uses a visible surface background + shadow so it stands out against the
-   image content behind it. */
+/* Collapsed: chevron shifts down so it clears the fullscreen button
+   (top: --space-3 + max-height 44px + --space-3 gap = ~60px).
+   Accent border makes it stand out against the canvas image. */
 .scrollAreaCollapsed + .chevron {
-  right: auto;
-  left: -16px;
+  top: calc(var(--space-3) + 44px + var(--space-3));
   background: var(--color-surface-2);
   border: 1px solid var(--color-accent);
   box-shadow: 0 0 0 1px rgba(124, 106, 247, 0.3), var(--shadow-lg);
@@ -130,7 +129,7 @@
   .chevron {
     width: 44px;
     height: 44px;
-    right: var(--space-2);
+    left: -22px;  /* half of 44px touch target, straddles seam */
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
@@ -138,8 +137,6 @@
   }
 
   .scrollAreaCollapsed + .chevron {
-    right: auto;
-    left: -22px;
     background: var(--color-surface-3);
   }
 }
