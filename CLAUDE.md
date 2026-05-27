@@ -328,11 +328,3 @@ A standalone HTML file is available at `docs/unlock-key.html`. Share it with col
 - Premium features on web are a taste of what the native app offers
 - The native app is the primary revenue vehicle (brand pack IAP + enhanced Pro features)
 
-## Known Bugs (Identified May 2026)
-
-### ViewCatcher (Crop Tool) — P3
-- **Min crop violated after aspect-ratio constraint** (`src/tools/view-catcher.ts:88-99`): drag a corner very small and the aspect-ratio re-clamp can shrink one dimension below the 24px minimum. Fix: re-enforce MIN_CROP after the ratio adjustment.
-- **Stale closure on drag start** (`src/tools/ViewCatcher.tsx:158-169`): first `pointermove` after `pointerdown` is swallowed because `handlePointerMove` has stale `drag` state. Fix: use `useRef` or `useReducer` for drag state.
-- **Compare mode size mismatch** (`src/tools/ViewCatcher.tsx:48-104`): after "Save crop as new image", the original and processed canvases have different pixel dimensions, causing mismatched display sizes in compare mode.
-- **No edge-midpoint drag handles**: only corner handles + body-drag implemented. Midpoints would allow single-axis adjustments.
-- **Zoom disables all interaction**: when zoomed past 1×, the crop overlay can't be repositioned or resized.
