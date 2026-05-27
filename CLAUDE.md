@@ -242,7 +242,7 @@ These decisions were made during planning (May 2026) and should not be revisited
 | **P2** | Multiple Mix Suggestions | Small (~100 lines) | Enhancement to Paint Mix | Gated (Pro) | ✅ Done |
 | **P3** | Cropping / Format Selector (ViewCatcher) | Medium (~300 lines) | New tool | Free | ✅ Done |
 | **P4** | Colour Studio | Medium-large | New tool (unified view) | Free | ✅ Done |
-| **P5+P6** | UI Overhaul (incl. controls panel collapse) | Medium-large | Design polish (all surfaces + collapse toggle) | — | 🔄 In progress — p5-tokens remaining |
+| **P5+P6** | UI Overhaul (incl. controls panel collapse) | Medium-large | Design polish (all surfaces + collapse toggle) | — | ✅ Done |
 | **P7** | Automated Sketch Generator | Medium | New tool (composite) | Free | ✅ Done |
 | **P8** | Gamut Mask | Large (~500+ lines) | New tool | Free + paid pigment overlay | Planned |
 
