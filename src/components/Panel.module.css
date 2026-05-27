@@ -117,13 +117,49 @@
   border-color: var(--color-accent);
 }
 
-/* Chevron icon rotation — expanded points left (→ collapse), collapsed points right (→ expand) */
+/* Chevron icon rotation — expanded points right (→ collapse), collapsed points left (→ expand)
+   On mobile (≤640px stacked layout), it points down when expanded and up when collapsed. */
 .chevronIcon {
   transition: transform var(--duration-normal) var(--ease-smooth);
 }
 
 .scrollAreaCollapsed + .chevron .chevronIcon {
   transform: rotate(180deg);
+}
+
+@media (max-width: 640px) {
+  .chevronIcon {
+    transform: rotate(90deg);
+  }
+
+  .scrollAreaCollapsed + .chevron .chevronIcon {
+    transform: rotate(-90deg);
+  }
+}
+
+/* ── Mobile: stacked layout ─────────────────────────────────────────────────────
+   On viewports ≤640px, .root switches to flex-direction: column (Tool.module.css).
+   The controls panel sits below the canvas with a border-top seam. The chevron
+   moves from the left edge to the top-centre of the panel, straddling the seam. */
+
+@media (max-width: 640px) {
+  .chevron {
+    top: -16px;                 /* half of 32px — straddles the top border seam */
+    left: calc(50% - 16px);    /* centre horizontally */
+  }
+
+  .scrollAreaCollapsed + .chevron {
+    top: -16px;                 /* stay on the seam when collapsed */
+    border: 1px solid var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent-muted-hover), var(--shadow-lg);
+  }
+
+  /* Also bump collapsed chevron hover to match */
+  .scrollAreaCollapsed + .chevron:hover,
+  .scrollAreaCollapsed + .chevron:focus-visible {
+    background: var(--color-accent-muted-hover);
+    border-color: var(--color-accent);
+  }
 }
 
 /* ── Touch target bump ──────────────────────────────────────────────────────── */
@@ -141,6 +177,14 @@
 
   .scrollAreaCollapsed + .chevron {
     background: var(--color-surface-3);
+  }
+}
+
+/* On mobile, the touch-target chevron needs to be centred on the top seam too */
+@media (hover: none) and (pointer: coarse) and (max-width: 640px) {
+  .chevron {
+    top: -22px;                 /* half of 44px — straddles the top seam */
+    left: calc(50% - 22px);    /* centre horizontally for 44px button */
   }
 }
 
