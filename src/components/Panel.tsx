@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, type ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import styles from './Panel.module.css'
 
 type Props = {
@@ -8,11 +8,12 @@ type Props = {
   toolSlug?: string
 }
 
-function ChevronIcon({ collapsed }: { collapsed: boolean }) {
+function ChevronIcon() {
   return (
     <svg
-      width="14"
-      height="14"
+      className={styles.chevronIcon}
+      width="16"
+      height="16"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -20,10 +21,6 @@ function ChevronIcon({ collapsed }: { collapsed: boolean }) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
-      style={{
-        transform: collapsed ? 'rotate(180deg)' : 'rotate(0deg)',
-        transition: 'transform 200ms ease',
-      }}
     >
       <polyline points="15 18 9 12 15 6" />
     </svg>
@@ -45,36 +42,41 @@ export function Panel({ children, className, toolSlug }: Props) {
   // Persist to localStorage
   useEffect(() => {
     if (storageKey) {
-      try { localStorage.setItem(storageKey, String(collapsed)) } catch { /* noop */ }
+      try { localStorage.setItem(storageKey, String(collapsed)) } catch { /* no-op */ }
     }
   }, [collapsed, storageKey])
 
-  const handleToggle = useCallback(() => {
+  function handleToggle() {
     setCollapsed(c => !c)
-  }, [])
+  }
 
+  // ── Collapsible panel ───────────────────────────────────────────────────
+  // The chevron is rendered OUTSIDE the scrollable panel so it's never
+  // clipped by overflow-y: auto. A wrapper div carries the .controls class
+  // (width, border, flex layout) while the inner panel handles scrolling.
   if (toolSlug) {
     return (
-      <div
-        className={`${styles.panel} ${className ?? ''} ${collapsed ? styles.collapsed : ''}`}
-        data-collapsed={collapsed || undefined}
-      >
+      <div className={`${styles.wrapper} ${className ?? ''}`} data-collapsed={collapsed || undefined}>
+        <div className={`${styles.scrollArea} ${collapsed ? styles.scrollAreaCollapsed : ''}`}>
+          <div className={styles.content} inert={collapsed ? true : undefined}>
+            {children}
+          </div>
+        </div>
         <button
-          className={`${styles.chevron} ${collapsed ? styles.chevronCollapsed : ''}`}
+          className={styles.chevron}
           onClick={handleToggle}
           aria-label={collapsed ? 'Expand controls panel' : 'Collapse controls panel'}
           title={collapsed ? 'Expand controls panel' : 'Collapse controls panel'}
           type="button"
         >
-          <ChevronIcon collapsed={collapsed} />
+          <ChevronIcon />
         </button>
-        <div className={styles.content}>
-          {children}
-        </div>
       </div>
     )
   }
 
+  // ── Non-collapsible panel ──────────────────────────────────────────────
+  // Exactly the same DOM structure as before: children go directly into .panel
   return (
     <div className={`${styles.panel} ${className ?? ''}`}>
       {children}

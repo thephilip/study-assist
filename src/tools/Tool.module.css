@@ -71,6 +71,8 @@
     max-height: 44vh;
     border-left: none;
     border-top: 1px solid var(--color-border);
+    transition: width var(--duration-normal) var(--ease-smooth),
+                max-height var(--duration-normal) var(--ease-smooth);
   }
 
   /* On mobile (stacked), collapsed means the panel slides down out of view.

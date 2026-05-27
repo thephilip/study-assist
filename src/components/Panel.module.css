@@ -1,67 +1,96 @@
+/* ── Wrapper (collapsible only) ────────────────────────────────────────────────
+   Carries .controls className from the tool (width, border, flex layout).
+   Overflow visible!important ensures the absolutely-positioned chevron is never
+   clipped by overflow-y: auto — which comes from .controls but must not apply
+   here since the chevron is a sibling, not a child, of the scrollable panel. */
+
+.wrapper {
+  position: relative;
+  overflow: visible !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Panel ────────────────────────────────────────────────────────────────────
+   Non-collapsible panels render children directly inside .panel (no wrapper).
+   Collapsible panels use .scrollArea inside .wrapper — distinct from the
+   floating-card styling here. */
+
 .panel {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
-  position: relative; /* anchor for chevron positioning */
+  overflow-y: auto;
 }
 
-/* ── Collapsed state ───────────────────────────────────────────────────────────
-   Padding is removed; border removed so only the Tool.module.css border-left
-   (the seam) remains. The outer panel width collapse is handled by
-   Tool.module.css .controls — this just handles interior styling.
-   ──*/
+/* ── Scroll area (collapsible inner div) ──────────────────────────────────────
+   Fills the wrapper's height. No border/radius/background — those come from
+   the .controls class applied to the wrapper. min-height:0 is required so a
+   flex child can actually scroll without overflowing its parent. */
 
-.collapsed {
+.scrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-4);
+  transition: padding var(--duration-normal) var(--ease-smooth);
+}
+
+.scrollAreaCollapsed {
   padding: 0;
-  border: 0;
-  overflow: visible; /* keep chevron visible */
+  overflow-y: hidden;
 }
 
 /* ── Content wrapper ───────────────────────────────────────────────────────────
-   Fades out on collapse, fades in on expand. Clipped so content doesn't
-   spill outside the collapsing panel.
-   ──*/
+   Handles fade + visibility on collapse/expand. */
 
 .content {
-  overflow: hidden;
   transition: opacity var(--duration-fast) var(--ease-smooth);
 }
 
-.collapsed .content {
+.scrollAreaCollapsed .content {
   opacity: 0;
-  transition: opacity calc(var(--duration-fast) + 20ms) var(--ease-smooth);
+  visibility: hidden;
+  transition: opacity calc(var(--duration-fast) + 20ms) var(--ease-smooth),
+              visibility 0ms var(--ease-smooth) calc(var(--duration-fast) + 20ms);
 }
 
 /* ── Chevron toggle button ────────────────────────────────────────────────────
-   Sits at the top of the right edge, half-overlapping the border seam.
-   Absolutely positioned so it stays accessible even when the panel is
-   collapsed to 0 width.
+   Positioned relative to .wrapper (collapsible only). Rendered as a sibling of
+   .scrollArea, so it's never clipped by overflow-y: auto.
+   
+   Expanded state: sits at the top-right of the panel with a subtle background.
+   Collapsed state: sits at the border seam, extending into the canvas area so
+   it's clearly visible against the image, making it obvious the panel can be
+   restored.
    ──*/
 
 .chevron {
   position: absolute;
   top: var(--space-4);
-  right: -12px; /* half-overlaps the 1px border seam */
-  width: 24px;
-  height: 24px;
+  right: var(--space-3);
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
-  color: var(--color-text-faint);
-  background: transparent;
-  border: none;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   z-index: 2;
   transition: color var(--duration-fast) var(--ease-smooth),
-              background var(--duration-fast) var(--ease-smooth);
+              background var(--duration-fast) var(--ease-smooth),
+              border-color var(--duration-fast) var(--ease-smooth);
 }
 
 .chevron:hover,
 .chevron:focus-visible {
   color: var(--color-accent);
-  background: rgba(124, 106, 247, 0.08);
+  background: rgba(124, 106, 247, 0.15);
+  border-color: var(--color-accent);
 }
 
 .chevron:focus-visible {
@@ -69,14 +98,30 @@
   outline-offset: 1px;
 }
 
-/* When panel is collapsed, the chevron sits against the border seam */
-.chevronCollapsed {
-  color: var(--color-text-faint);
+/* Collapsed: chevron moves to the border seam, extending into the canvas area.
+   Uses a visible surface background + shadow so it stands out against the
+   image content behind it. */
+.scrollAreaCollapsed + .chevron {
+  right: auto;
+  left: -16px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-accent);
+  box-shadow: 0 0 0 1px rgba(124, 106, 247, 0.3), var(--shadow-lg);
 }
 
-.chevronCollapsed:hover,
-.chevronCollapsed:focus-visible {
-  color: var(--color-accent);
+.scrollAreaCollapsed + .chevron:hover,
+.scrollAreaCollapsed + .chevron:focus-visible {
+  background: rgba(124, 106, 247, 0.2);
+  border-color: var(--color-accent);
+}
+
+/* Chevron icon rotation — expanded points left (→ collapse), collapsed points right (→ expand) */
+.chevronIcon {
+  transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+.scrollAreaCollapsed + .chevron .chevronIcon {
+  transform: rotate(180deg);
 }
 
 /* ── Touch target bump ──────────────────────────────────────────────────────── */
@@ -85,22 +130,25 @@
   .chevron {
     width: 44px;
     height: 44px;
-    right: -22px;
+    right: var(--space-2);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
   }
 
-  .chevronCollapsed {
-    background: var(--color-surface);
+  .scrollAreaCollapsed + .chevron {
+    right: auto;
+    left: -22px;
+    background: var(--color-surface-3);
   }
 }
 
 /* ── Reduce motion ──────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .content {
+  .content,
+  .chevronIcon {
     transition: none;
   }
 }

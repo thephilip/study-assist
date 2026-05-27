@@ -98,6 +98,8 @@ Tokens live in `src/tokens/index.css` and are consumed everywhere via CSS custom
 
 Key tokens: `--color-bg`, `--color-surface`, `--color-accent`, `--color-text`, `--color-text-muted`, `--space-*`, `--radius-*`, `--text-*`, `--font-sans`, `--font-mono`.
 
+Animation tokens (defined in `src/tokens/index.css`): `--ease-smooth`, `--ease-spring`, `--ease-emphasis` for easing curves; `--duration-fast`, `--duration-normal`, `--duration-slow` for durations. Shared `@keyframes` and utility classes live in `src/tokens/animations.css`. See "Animation System" in the Development SOP for usage patterns.
+
 Shared tool layout (`src/tools/Tool.module.css`): two-column — canvas fills left, 220px controls panel on right.
 
 ## Design Principles
@@ -116,6 +118,7 @@ Shared tool layout (`src/tools/Tool.module.css`): two-column — canvas fills le
 - `CanvasWrap` (`src/components/CanvasWrap.tsx`) wraps every tool's canvas area — it owns zoom state (pinch + wheel), fullscreen, and the compare layout. Fullscreen uses the native Fullscreen API where available; falls back to a CSS `position:fixed` overlay on iOS Safari. Use `useZoom()` in any tool that positions an overlay (indicator ring, crosshair dot) so coordinates stay accurate under zoom.
 - Design tokens should cover every value — no one-off style values
 - **Changelog:** whenever a feature ships, prepend a new release object to `CHANGELOG` in `src/lib/changelog.ts` and bump the version string. Each entry needs `text` and `visibility: 'public' | 'hidden'` — hidden entries render as "Bug fixes and improvements" in the modal. The modal is triggered automatically on next load when `CHANGELOG[0].version` differs from `localStorage.lastSeenVersion`.
+- **Animation System:** All UI animation uses CSS transitions or `@keyframes` — zero JS animation libraries. Easing curves and durations are design tokens in `src/tokens/index.css`. Shared utilities live in `src/tokens/animations.css`. See the "Animation System" section in Development SOP for patterns.
 
 ## Premium pigment data — `src/lib/pigments/premium.ts`
 
@@ -146,6 +149,63 @@ All locked brand entries (W&N, Williamsburg, Rembrandt, Utrecht, Geneva) live in
 | Geneva Artists' Oil | `gv-` | locked | 11 colors: TW, Bismuth Yellow (PY184), Cad Yellow, Cad Red, Pyrrole Rubine (PR264), Perm Alizarin (PR177), French Ultramarine, Phthalo Blue (PB15:4), Dioxazine Purple (PV23), Burnt Umber, Geneva Black (PB29+PBr7) |
 
 Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pigment codes are standard artist-grade formulations; hex values are reference approximations (D65, same basis as other brands).
+
+## Development SOP
+
+### Branch Strategy
+- Each phase of work gets its own feature branch: `ui/p1-collapse`, `ui/p2-header`, etc.
+- Merge to `main` via a PR after code review and user approval.
+- Branch naming convention: `<scope>/<phase-number>-<short-description>` (e.g., `ui/p1-collapse`, `fix/histogram-scale`).
+
+### Commit Conventions
+- Write contextual, descriptive messages in imperative present tense.
+- Format: `scope: brief description` (e.g., `panel: add collapse toggle with stagger animation`).
+- Keep commits atomic — one logical change per commit. No "wip" or "fixup" commits on branches destined for merge.
+- Reference the phase or feature area in the message prefix (`panel:`, `header:`, `animations:`, `tokens:`, etc.).
+
+### Code Style
+- **Styling:** CSS Modules + CSS custom properties. Never hardcode colour, spacing, radius, shadow, or font values — always use design tokens from `src/tokens/index.css`.
+- **TypeScript:** Strict mode, functional components with hooks, no classes.
+- **Image processing:** Use `mapPixels()` from `lib/canvas.ts` for per-pixel operations. Heavy algorithms go in `src/workers/`.
+- **Imports:** Use `@/` path alias for `src/`.
+- **Changelog:** Prepend new releases to `CHANGELOG` in `src/lib/changelog.ts` when shipping features; each entry needs `text` and `visibility`.
+
+### Animation System
+- **No JS animation libraries.** CSS transitions and `@keyframes` handle all UI animation. Zero extra dependencies.
+- **Tokens first:** Easing curves and durations are design tokens in `src/tokens/index.css`:
+  - `--ease-smooth`, `--ease-spring`, `--ease-emphasis` (easing curves)
+  - `--duration-fast`, `--duration-normal`, `--duration-slow` (durations)
+- **Utilities:** Shared `@keyframes` and animation classes live in `src/tokens/animations.css`. Components opt in by class name.
+- **Accessibility:** Always gate animations behind `@media (prefers-reduced-motion: reduce)`.
+- **Performance:** Prefer transitions on `transform` and `opacity` (compositor-thread properties) over `width`, `height`, or `top`/`left`.
+
+### Review Gating
+Before any code reaches `main`, routing must happen:
+- **@designer** — before @frontend-dev implements any UI work
+- **@code-reviewer** — after every implementation task
+- **@security-auditor** — for any code touching auth, payments, PII, external API calls, or dependency changes
+
+User approval required for:
+- `git push`, `git merge`, `git commit` to protected branches
+- `rm -rf` or destructive filesystem operations
+- Adding new dependencies (npm install, go get, cargo add, pip install, etc.)
+- Changes to CI/CD, Docker, infrastructure config
+- Environment variable or secret changes
+
+### UI Overhaul — Active Decisions (Memento)
+These decisions were made during planning (May 2026) and should not be revisited without discussion:
+
+| Decision | Choice |
+|---|---|
+| Collapsed panel width | **0px** (not 8px, not an icon rail) |
+| Visible affordance | 1px `--color-border` divider seam + 20×20 chevron at top edge |
+| Chevron colour | `--color-text-faint` default → `--color-accent` on hover/focus |
+| Touch target | 44×44 hit area with `--color-surface` bubble on `@media (hover: none) and (pointer: coarse)` |
+| Collapse animation | Content fades 120ms → panel slides 250ms `--ease-smooth`; reverse on expand |
+| Stagger | Control items fade in sequence with 30ms `--ease-spring` delay |
+| Remembered state | Per-tool collapse preference in `localStorage` |
+| Icon rail rejected | Inconsistent across tools, competes with reference image |
+| Phase execution order | collapse → header → controls → modals → tokens audit |
 
 ## Competitive Landscape
 
@@ -211,9 +271,10 @@ Geneva pigment codes confirmed from genevafineart.com product pages. Utrecht pig
 | Field | Detail |
 |---|---|
 | **Why** | The app uses design tokens and follows a consistent dark theme, but surfaces could use more polish — refined spacing, subtle micro-interactions, richer hover states, tighter component design. The fixed 220px sidebar also has no hide toggle, which is especially needed on narrow viewports. Folding the collapse toggle into the overhaul avoids redoing the panel layout twice. |
-| **What** | A pass over every surface: header, toolbar, controls panel, canvas area, modals, action menus. Review typography hierarchy, button styles, card/panel padding, colour contrast, transition animations, and focus states. Includes a collapse toggle for the controls panel (icon + animation). May involve a design tokens audit. |
-| **Effort** | Medium-large. Mostly CSS and component refactoring — no new functionality. Can be broken into sub-tasks per surface. |
+| **What** | A pass over every surface: header, toolbar, controls panel, canvas area, modals, action menus. Review typography hierarchy, button styles, card/panel padding, colour contrast, transition animations, and focus states. Includes a collapse toggle for the controls panel (animation tokens + 0px collapse + chevron + staggered children + per-tool remembered state). Establishes the animation token system for consistent motion across all surfaces. May involve a design tokens audit. |
+| **Effort** | Medium-large. Mostly CSS and component refactoring — no new functionality. Can be broken into sub-tasks per surface (collapse → header → controls → modals → tokens audit). |
 | **Monetisation** | — |
+| **Design decisions** | See "UI Overhaul — Active Decisions (Memento)" in the Development SOP section. |
 
 #### P7 — Automated Sketch Generator ✅
 
@@ -266,3 +327,12 @@ A standalone HTML file is available at `docs/unlock-key.html`. Share it with col
 - The web app remains a generous free tier / audience-builder for the native app
 - Premium features on web are a taste of what the native app offers
 - The native app is the primary revenue vehicle (brand pack IAP + enhanced Pro features)
+
+## Known Bugs (Identified May 2026)
+
+### ViewCatcher (Crop Tool) — P3
+- **Min crop violated after aspect-ratio constraint** (`src/tools/view-catcher.ts:88-99`): drag a corner very small and the aspect-ratio re-clamp can shrink one dimension below the 24px minimum. Fix: re-enforce MIN_CROP after the ratio adjustment.
+- **Stale closure on drag start** (`src/tools/ViewCatcher.tsx:158-169`): first `pointermove` after `pointerdown` is swallowed because `handlePointerMove` has stale `drag` state. Fix: use `useRef` or `useReducer` for drag state.
+- **Compare mode size mismatch** (`src/tools/ViewCatcher.tsx:48-104`): after "Save crop as new image", the original and processed canvases have different pixel dimensions, causing mismatched display sizes in compare mode.
+- **No edge-midpoint drag handles**: only corner handles + body-drag implemented. Midpoints would allow single-axis adjustments.
+- **Zoom disables all interaction**: when zoomed past 1×, the crop overlay can't be repositioned or resized.
