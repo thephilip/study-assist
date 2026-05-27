@@ -83,10 +83,9 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
         onClick={() => setOpen(o => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={`Switch tool, current: ${TOOL_LABELS[activeTool]}`}
+        aria-label={`Switch tool — current: ${TOOL_LABELS[activeTool]}`}
       >
-        <span>Tool:</span>
-        <span className={styles.triggerLabel}>{TOOL_LABELS[activeTool]}</span>
+        {TOOL_LABELS[activeTool]}
         <svg className={styles.triggerChevron} width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden>
           <path d={open ? 'M1 5L5 1L9 5' : 'M1 1L5 5L9 1'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
