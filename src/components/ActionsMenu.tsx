@@ -54,7 +54,7 @@ function MenuContent({
   onClose: () => void
   touch: boolean
 }) {
-  const { globalActions, contextualActions, activeToolName } = useActionsContext()
+  const { globalActions, contextualActions } = useActionsContext()
   const hasGlobal = globalActions.length > 0
   const hasContextual = contextualActions.length > 0
   const hasBoth = hasGlobal && hasContextual
@@ -64,7 +64,6 @@ function MenuContent({
     <>
       <div className={[styles.menuHeader, touch ? styles.menuHeaderTouch : ''].filter(Boolean).join(' ')}>
         <span className={styles.headerPrefix}>Actions</span>
-        {activeToolName && <span className={styles.headerTool}>: {activeToolName}</span>}
       </div>
 
       {!hasAny && <p className={styles.empty}>No actions available</p>}

@@ -58,7 +58,7 @@ export function Grid({ image, originalImage, onApply }: Props) {
         <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Grid overlay" />
       </CanvasWrap>
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="grid">
         <h2 className={toolStyles.toolName}>Grid</h2>
         <p className={toolStyles.description}>
           Overlay a grid to check proportions and aid transfer to canvas.

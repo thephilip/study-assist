@@ -1,4 +1,5 @@
 @import './tokens/index.css';
+@import './tokens/animations.css';
 
 *, *::before, *::after {
   box-sizing: border-box;

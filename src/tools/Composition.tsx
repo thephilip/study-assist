@@ -69,7 +69,7 @@ export function Composition({ image, originalImage, onApply }: Props) {
         <canvas ref={originalRef} className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Composition overlay" />
       </CanvasWrap>
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="composition">
         <h2 className={toolStyles.toolName}>Composition</h2>
         <p className={toolStyles.description}>
           Overlay compositional guides to analyse structure and focal points.

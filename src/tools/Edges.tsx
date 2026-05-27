@@ -39,7 +39,7 @@ export function Edges({ image, originalImage, onApply }: Props) {
         <canvas ref={processedRef} className={toolStyles.canvas} role="img" aria-label="Edge detection overlay" />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="edges">
         <h2 className={toolStyles.toolName}>Edges</h2>
         <p className={toolStyles.description}>
           Sobel edge detection overlaid on the image. Increase blur to find

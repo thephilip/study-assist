@@ -17,6 +17,7 @@ import { isBrandUnlocked, getUnlockedBrands } from '@/lib/entitlements'
 import { generateHarmonies, isAchromatic } from './harmonies'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap, useZoom } from '@/components/CanvasWrap'
+import { UpgradeModal } from '@/components/UpgradeModal'
 import toolStyles from './Tool.module.css'
 import styles from './ColourStudio.module.css'
 
@@ -226,7 +227,7 @@ export function ColourStudio({ image }: Props) {
       </CanvasWrap>
 
       {/* ── Controls Panel ──────────────────────────────────────── */}
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="colour-studio">
         {/* Header */}
         <h2 className={toolStyles.toolName}>Colour Studio</h2>
         <p className={toolStyles.description}>
@@ -474,19 +475,12 @@ export function ColourStudio({ image }: Props) {
           </>
         )}
 
-        {/* ── Upgrade Modal ────────────────────────────────────────── */}
         {showUpgradeModal && (
-          <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-labelledby="cs-upgrade-title">
-            <div className={styles.modal}>
-              <p className={styles.modalTitle} id="cs-upgrade-title">Brand Packs</p>
-              <p className={styles.modalBody}>
-                Additional brand packs are coming with the native app. The free tier includes the full Gamblin range.
-              </p>
-              <button type="button" className={styles.modalClose} onClick={() => setShowUpgradeModal(false)}>
-                Got it
-              </button>
-            </div>
-          </div>
+          <UpgradeModal
+            title="Brand Packs"
+            body="Additional brand packs are coming with the native app. The free tier includes the full Gamblin range."
+            onClose={() => setShowUpgradeModal(false)}
+          />
         )}
       </Panel>
     </div>

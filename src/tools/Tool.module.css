@@ -47,6 +47,18 @@
   border-bottom: none;
   border-right: none;
   background: var(--color-surface);
+  transition: width var(--duration-normal) var(--ease-smooth);
+}
+
+/* Collapsed — width goes to 0 but the border seam remains visible.
+   Uses data-collapsed attribute set by Panel component (avoids CSS Modules
+   cross-module scoping issues). */
+.controls[data-collapsed] {
+  width: 0;
+  min-width: 0;
+  flex-shrink: 1;
+  overflow: visible;
+  gap: 0;
 }
 
 @media (max-width: 640px) {
@@ -59,6 +71,21 @@
     max-height: 44vh;
     border-left: none;
     border-top: 1px solid var(--color-border);
+    transition: width var(--duration-normal) var(--ease-smooth),
+                max-height var(--duration-normal) var(--ease-smooth);
+  }
+
+  /* On mobile (stacked), collapsed means the panel slides down out of view.
+     Width stays 100% but height collapses to 0 + border seam. */
+  .controls[data-collapsed] {
+    width: 100%;
+    max-height: 0;
+    min-height: 0;
+    overflow: visible;
+    border-top: 1px solid var(--color-border);
+    border-left: none;
+    transition: max-height var(--duration-normal) var(--ease-smooth),
+                padding var(--duration-normal) var(--ease-smooth);
   }
 }
 
@@ -125,7 +152,7 @@
 }
 
 .compareBtnActive:hover {
-  background: rgba(124, 106, 247, 0.25);
+  background: var(--color-accent-muted-hover);
 }
 
 @media (hover: none) and (pointer: coarse) {

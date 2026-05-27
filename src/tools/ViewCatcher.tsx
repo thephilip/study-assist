@@ -254,7 +254,7 @@ export function ViewCatcher({ image, originalImage, onApply }: Props) {
         />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="view-catcher">
         <h2 className={toolStyles.toolName}>ViewCatcher</h2>
         <p className={toolStyles.description}>
           Try different aspect ratios before committing to a panel size. Drag the crop window to recompose.
