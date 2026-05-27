@@ -144,18 +144,8 @@
   color: var(--color-text-faint);
 }
 
-.headerTool {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--color-text-muted);
-}
-
-.menuHeaderTouch .headerPrefix,
-.menuHeaderTouch .headerTool {
+.menuHeaderTouch .headerPrefix {
   font-size: var(--text-sm);
-  letter-spacing: 0.02em;
-  text-transform: none;
 }
 
 /* ── Section divider & label ─────────────────────────────────────────────── */
