@@ -13,6 +13,17 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.14.0',
+    date: '2026-05-27',
+    entries: [
+      { text: 'Collapsible controls panel — collapse/expand with per-tool localStorage persistence, animated chevron, and staggered children (deferred follow-up)', visibility: 'public' },
+      { text: 'Refined header and wordmark — tightened spacing, hover states, consolidated Actions/Tools triggers', visibility: 'public' },
+      { text: 'Consolidated modals — shared UpgradeModal component, improved animation and dismiss behaviour', visibility: 'public' },
+      { text: 'Design tokens audit — new accent-subtle and accent-muted-hover tokens, animation system (easing curves + duration steps), eliminated hardcoded accent rgba values across all surfaces', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.13.0',
     date: '2026-05-26',
     entries: [
