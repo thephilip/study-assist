@@ -202,7 +202,7 @@ These decisions were made during planning (May 2026) and should not be revisited
 | Chevron colour | `--color-text-faint` default → `--color-accent` on hover/focus |
 | Touch target | 44×44 hit area with `--color-surface` bubble on `@media (hover: none) and (pointer: coarse)` |
 | Collapse animation | Content fades 120ms → panel slides 250ms `--ease-smooth`; reverse on expand |
-| Stagger | Control items fade in sequence with 30ms `--ease-spring` delay |
+| Stagger | Control items fade in sequence with 30ms `--ease-spring` delay — **deferred**: `staggerFadeIn` utility exists in `animations.css` but not wired into `Panel.tsx`; implement as a standalone follow-up |
 | Remembered state | Per-tool collapse preference in `localStorage` |
 | Icon rail rejected | Inconsistent across tools, competes with reference image |
 | Phase execution order | collapse → header → controls → modals → tokens audit |
