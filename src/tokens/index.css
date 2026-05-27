@@ -14,9 +14,11 @@
   --color-text-faint:   #56565e;
 
   /* Accent */
-  --color-accent:       #7c6af7;
-  --color-accent-hover: #9285f9;
-  --color-accent-muted: rgba(124, 106, 247, 0.15);
+  --color-accent:            #7c6af7;
+  --color-accent-hover:      #9285f9;
+  --color-accent-subtle:     rgba(124, 106, 247, 0.08);
+  --color-accent-muted:      rgba(124, 106, 247, 0.15);
+  --color-accent-muted-hover: rgba(124, 106, 247, 0.25);
 
   /* Status */
   --color-danger:       #e05555;

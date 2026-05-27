@@ -80,7 +80,7 @@
 }
 
 .rowActive {
-  background: rgba(124, 106, 247, 0.08);
+  background: var(--color-accent-subtle);
 }
 
 .rowLabel {
