@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.14.1',
+    date: '2026-05-27',
+    entries: [
+      { text: 'Fix mobile chevron — controls panel collapse toggle was off-screen on mobile (≤640px); now centred on the top border seam with correct down/up rotation', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.14.0',
     date: '2026-05-27',
     entries: [
