@@ -1,6 +1,151 @@
+/* ── Wrapper (collapsible only) ────────────────────────────────────────────────
+   Carries .controls className from the tool (width, border, flex layout).
+   Overflow visible!important ensures the absolutely-positioned chevron is never
+   clipped by overflow-y: auto — which comes from .controls but must not apply
+   here since the chevron is a sibling, not a child, of the scrollable panel. */
+
+.wrapper {
+  position: relative;
+  overflow: visible !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Panel ────────────────────────────────────────────────────────────────────
+   Non-collapsible panels render children directly inside .panel (no wrapper).
+   Collapsible panels use .scrollArea inside .wrapper — distinct from the
+   floating-card styling here. */
+
 .panel {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
+  overflow-y: auto;
+}
+
+/* ── Scroll area (collapsible inner div) ──────────────────────────────────────
+   Fills the wrapper's height. No border/radius/background — those come from
+   the .controls class applied to the wrapper. min-height:0 is required so a
+   flex child can actually scroll without overflowing its parent. */
+
+.scrollArea {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-4);
+  transition: padding var(--duration-normal) var(--ease-smooth);
+}
+
+.scrollAreaCollapsed {
+  padding: 0;
+  overflow-y: hidden;
+}
+
+/* ── Content wrapper ───────────────────────────────────────────────────────────
+   Handles fade + visibility on collapse/expand. */
+
+.content {
+  transition: opacity var(--duration-fast) var(--ease-smooth);
+}
+
+.scrollAreaCollapsed .content {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity calc(var(--duration-fast) + 20ms) var(--ease-smooth),
+              visibility 0ms var(--ease-smooth) calc(var(--duration-fast) + 20ms);
+}
+
+/* ── Chevron toggle button ────────────────────────────────────────────────────
+   Positioned relative to .wrapper (collapsible only). Rendered as a sibling of
+   .scrollArea, so it's never clipped by overflow-y: auto.
+   
+   Always sits at left: -16px (straddling the seam) so it never overlaps panel
+   content. When collapsed it slides right with the panel and shifts down below
+   the fullscreen button so the two don't conflict.
+   ──*/
+
+.chevron {
+  position: absolute;
+  top: var(--space-4);
+  left: -16px;    /* straddles the left border seam — never overlaps panel content */
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  z-index: 2;
+  transition: color var(--duration-fast) var(--ease-smooth),
+              background var(--duration-fast) var(--ease-smooth),
+              border-color var(--duration-fast) var(--ease-smooth),
+              top var(--duration-normal) var(--ease-smooth);
+}
+
+.chevron:hover,
+.chevron:focus-visible {
+  color: var(--color-accent);
+  background: rgba(124, 106, 247, 0.15);
+  border-color: var(--color-accent);
+}
+
+.chevron:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* Collapsed: chevron shifts down so it clears the fullscreen button
+   (top: --space-3 + max-height 44px + --space-3 gap = ~60px).
+   Accent border makes it stand out against the canvas image. */
+.scrollAreaCollapsed + .chevron {
+  top: calc(var(--space-3) + 44px + var(--space-3));
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-accent);
+  box-shadow: 0 0 0 1px rgba(124, 106, 247, 0.3), var(--shadow-lg);
+}
+
+.scrollAreaCollapsed + .chevron:hover,
+.scrollAreaCollapsed + .chevron:focus-visible {
+  background: rgba(124, 106, 247, 0.2);
+  border-color: var(--color-accent);
+}
+
+/* Chevron icon rotation — expanded points left (→ collapse), collapsed points right (→ expand) */
+.chevronIcon {
+  transition: transform var(--duration-normal) var(--ease-smooth);
+}
+
+.scrollAreaCollapsed + .chevron .chevronIcon {
+  transform: rotate(180deg);
+}
+
+/* ── Touch target bump ──────────────────────────────────────────────────────── */
+
+@media (hover: none) and (pointer: coarse) {
+  .chevron {
+    width: 44px;
+    height: 44px;
+    left: -22px;  /* half of 44px touch target, straddles seam */
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .scrollAreaCollapsed + .chevron {
+    background: var(--color-surface-3);
+  }
+}
+
+/* ── Reduce motion ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .content,
+  .chevronIcon {
+    transition: none;
+  }
 }

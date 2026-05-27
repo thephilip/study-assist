@@ -1,0 +1,83 @@
+/* ── Animation utilities ─────────────────────────────────────────────────────
+   Shared @keyframes and utility classes for UI animation.
+   Components opt in by class name. All durations and easings use token values
+   from index.css. Always gate behind prefers-reduced-motion.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Keyframes ─────────────────────────────────────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(6px); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Utility classes ───────────────────────────────────────────────────────── */
+
+.fadeIn {
+  animation: fadeIn var(--duration-normal) var(--ease-smooth);
+}
+
+.fadeOut {
+  animation: fadeOut var(--duration-normal) var(--ease-smooth);
+}
+
+.slideUp {
+  animation: slideUp var(--duration-normal) var(--ease-smooth);
+}
+
+.slideDown {
+  animation: slideDown var(--duration-normal) var(--ease-smooth);
+}
+
+.scaleIn {
+  animation: scaleIn var(--duration-normal) var(--ease-spring);
+}
+
+/* ── Staggered children ──────────────────────────────────────────────────────
+   Usage: add class to a parent; each direct child picks up --stagger-i.
+   Set via style prop: style={{ '--stagger-i': index } as React.CSSProperties}
+   ────────────────────────────────────────────────────────────────────────── */
+
+.staggerFadeIn > * {
+  animation: fadeIn var(--duration-normal) var(--ease-smooth) both;
+  animation-delay: calc(var(--stagger-i, 0) * 30ms);
+}
+
+.staggerSlideUp > * {
+  animation: slideUp var(--duration-normal) var(--ease-smooth) both;
+  animation-delay: calc(var(--stagger-i, 0) * 30ms);
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeIn,
+  .fadeOut,
+  .slideUp,
+  .slideDown,
+  .scaleIn,
+  .staggerFadeIn > *,
+  .staggerSlideUp > * {
+    animation: none;
+  }
+}

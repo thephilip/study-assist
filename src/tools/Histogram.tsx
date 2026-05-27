@@ -94,7 +94,7 @@ export function Histogram({ image }: Props) {
         <canvas ref={canvasRef} className={toolStyles.canvas} role="img" aria-label="Luminance histogram" />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="histogram">
         <h2 className={toolStyles.toolName}>Histogram</h2>
         <p className={toolStyles.description}>
           Tonal distribution by luminance. Left = shadows, right = highlights.

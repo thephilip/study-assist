@@ -44,7 +44,7 @@ export function Dither({ image, originalImage, onApply }: Props) {
         <canvas ref={processedRef} className={toolStyles.canvas} role="img" aria-label="Dithered image" />
       </CanvasWrap>
 
-      <Panel className={toolStyles.controls}>
+      <Panel className={toolStyles.controls} toolSlug="dither">
         <h2 className={toolStyles.toolName}>Dither</h2>
         <p className={toolStyles.description}>
           Quantizes tones using error-diffusion or ordered patterns — useful for studying flat value shapes and silhouettes.

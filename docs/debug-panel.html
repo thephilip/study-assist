@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Collapse Debug</title>
+<style>
+  /* ── Design tokens (copied from src/tokens/index.css) ── */
+  :root {
+    --color-bg: #111;
+    --color-surface: #1a1a1a;
+    --color-surface-2: #242424;
+    --color-surface-3: #2e2e2e;
+    --color-border: #333;
+    --color-accent: #7c6af7;
+    --color-text: #eee;
+    --color-text-muted: #999;
+    --duration-normal: 250ms;
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --space-3: 12px;
+    --space-4: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: system-ui, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── SIMULATION: exactly mirrors the app's layout ── */
+  .root {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .canvasWrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 16px;
+    position: relative;
+  }
+
+  .canvas {
+    width: 600px;
+    height: 400px;
+    background: linear-gradient(135deg, #2a2a4a, #1a1a3a);
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Wrapper: replicates Panel.module.css .wrapper + Tool.module.css .controls ── */
+  .wrapper-controls {
+    position: relative;
+    overflow: visible !important;
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    flex-shrink: 0;
+    gap: 16px;
+    overflow-y: auto;
+    border-left: 1px solid var(--color-border);
+    background: var(--color-surface);
+    transition: width 250ms var(--ease-smooth);
+  }
+
+  .wrapper-controls[data-collapsed] {
+    width: 0;
+    min-width: 0;
+    flex-shrink: 1;
+    overflow: visible;
+    gap: 0;
+  }
+
+  .panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-y: auto;
+    margin: 16px;
+  }
+
+  .collapsed {
+    padding: 0;
+    border: 0;
+    overflow-y: hidden;
+  }
+
+  .content {
+    transition: opacity 120ms var(--ease-smooth);
+  }
+
+  .collapsed .content {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 120ms var(--ease-smooth), visibility 0ms 140ms;
+  }
+
+  /* ── Chevron ── */
+  .chevron {
+    position: absolute;
+    top: 16px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    z-index: 10;
+    transition: color 120ms, background 120ms, border-color 120ms;
+  }
+
+  .collapsed + .chevron {
+    right: auto;
+    left: -16px;
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .chevronIcon {
+    transition: transform 250ms var(--ease-smooth);
+  }
+
+  .collapsed + .chevron .chevronIcon {
+    transform: rotate(180deg);
+  }
+
+  /* ── DEBUG markers ── */
+  .debug-border-seam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: #ff0;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .debug-chevron-area {
+    position: absolute;
+    top: 8px;
+    left: -20px;
+    width: 60px;
+    height: 48px;
+    border: 2px dashed rgba(255,0,0,0.5);
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .debug-label {
+    position: absolute;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  /* ── State buttons ── */
+  .controls-row {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: var(--color-surface-2);
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+
+  .controls-row button {
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .controls-row button.secondary {
+    background: var(--color-border);
+  }
+
+  /* ── Instructions ── */
+  .instructions {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    text-align: center;
+    z-index: 100;
+    border: 1px solid #444;
+  }
+
+  .instructions code {
+    background: #333;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="root" id="root">
+  <!-- Canvas area (flex: 1) -->
+  <div class="canvasWrap">
+    <div class="canvas">
+      📐 Canvas area
+    </div>
+    <!-- Debug label for canvas area bounds -->
+    <div class="debug-label" style="top:4px; left:4px;">Canvas area ← flex: 1</div>
+  </div>
+
+  <!-- Controls panel: replicates .wrapper + .controls -->
+  <div class="wrapper-controls" id="controlsPanel">
+    <!-- Yellow line marking the border seam (left edge of panel) -->
+    <div class="debug-border-seam"></div>
+
+    <!-- Dotted box showing expected chevron area (left: -20px relative to border seam) -->
+    <div class="debug-chevron-area"></div>
+
+    <!-- Debug label for the chevron zone -->
+    <div class="debug-label" style="top:-20px; left:-20px; background:rgba(200,0,0,0.9);">⬅ Chevron should be HERE (left: -16px from seam)</div>
+
+    <!-- The panel (scrollable content area) -->
+    <div class="panel collapsed" id="innerPanel">
+      <div class="content" inert>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="font-weight:600; font-size:14px;">Controls</div>
+          <div style="height:32px; background:var(--color-surface-2); border-radius:4px;"></div>
+          <div style="height:32px; background:var(--color-surface-2); border-radius:4px;"></div>
+          <div style="height:32px; background:var(--color-surface-2); border-radius:4px;"></div>
+          <div style="display:flex; gap:8px;">
+            <div style="flex:1; height:28px; background:var(--color-surface-2); border-radius:4px;"></div>
+            <div style="flex:1; height:28px; background:var(--color-surface-2); border-radius:4px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE CHEVRON BUTTON -->
+    <button class="chevron collapsed" id="chevronBtn" onclick="toggleCollapse()"
+      aria-label="Expand controls panel"
+      title="Expand controls panel"
+      type="button">
+      <svg class="chevronIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden>
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+
+    <!-- Non-React state toggle -->
+    <div style="position:absolute; bottom:4px; left:4px; z-index:20;">
+      <div class="controls-row" style="flex-direction:column;">
+        <div style="font-size:11px; opacity:0.6;">DEBUG CONTROLS</div>
+        <div style="display:flex; gap:8px;">
+          <button onclick="toggleCollapse()">Toggle collapse</button>
+          <button class="secondary" onclick="showDebugInfo()">Debug info</button>
+        </div>
+        <div id="stateDisplay" style="font-size:11px; font-family:monospace; color:var(--color-accent);"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="instructions">
+  <strong>🔍 Panel Debug Page</strong> — 
+  The controls panel is currently <span id="stateLabel">COLLAPSED</span>. 
+  The chevron button <span id="chevronStatus">SHOULD BE VISIBLE</span> at the red dotted box.
+  <br>
+  <strong>Can Claude see the chevron button?</strong> It should be a 32×32 gray square 
+  with a <code>◀</code> icon, sitting <strong>16px to the LEFT of the yellow border seam</strong> 
+  (i.e., overlapping the canvas area).
+</div>
+
+<script>
+  function toggleCollapse() {
+    const panel = document.getElementById('controlsPanel');
+    const innerPanel = document.getElementById('innerPanel');
+    const chevron = document.getElementById('chevronBtn');
+    const isCollapsed = panel.hasAttribute('data-collapsed');
+
+    if (isCollapsed) {
+      panel.removeAttribute('data-collapsed');
+      innerPanel.classList.remove('collapsed');
+      chevron.classList.add('collapsed'); // transition from collapsed → expanded
+      chevron.setAttribute('aria-label', 'Collapse controls panel');
+      chevron.setAttribute('title', 'Collapse controls panel');
+    } else {
+      panel.setAttribute('data-collapsed', '');
+      innerPanel.classList.add('collapsed');
+      chevron.classList.remove('collapsed'); // wait, that's wrong
+      // Actually the .collapsed class on chevron affects the icon — 
+      // but the selector is .collapsed + .chevron (sibling selector), not .chevron.collapsed
+      // So we need it on the .panel element, not the chevron.
+    }
+
+    // .collapsed class on .panel + .chevron is the sibling selector pattern
+    // The chevron does NOT get the .collapsed class (it responds to .panel.collapsed + .chevron)
+
+    updateDisplay(isCollapsed ? 'expanded' : 'collapsed');
+  }
+
+  function updateDisplay(state) {
+    document.getElementById('stateLabel').textContent = state.toUpperCase();
+    document.getElementById('chevronStatus').textContent =
+      state === 'collapsed' ? 'SHOULD BE VISIBLE' : 'INVISIBLE (behind panel)';
+    document.getElementById('stateDisplay').textContent =
+      `State: ${state} | panel.collapsed: ${state === 'collapsed'} | .collapsed + .chevron: active`;
+    document.getElementById('controlsPanel').style.borderLeftColor =
+      state === 'collapsed' ? '#ff0' : 'var(--color-border)';
+  }
+
+  function showDebugInfo() {
+    const panel = document.getElementById('controlsPanel');
+    const chevron = document.getElementById('chevronBtn');
+    const rect = chevron.getBoundingClientRect();
+
+    alert(
+      `Chevron bounding rect:\n` +
+      `  left: ${rect.left.toFixed(1)}px\n` +
+      `  top: ${rect.top.toFixed(1)}px\n` +
+      `  width: ${rect.width.toFixed(1)}px\n` +
+      `  height: ${rect.height.toFixed(1)}px\n` +
+      `  right: ${rect.right.toFixed(1)}px\n` +
+      `  bottom: ${rect.bottom.toFixed(1)}px\n` +
+      `\nPanel collapsed: ${panel.hasAttribute('data-collapsed')}\n` +
+      `Panel width: ${panel.getBoundingClientRect().width.toFixed(1)}px\n` +
+      `\nViewport: ${window.innerWidth}×${window.innerHeight}`
+    );
+  }
+
+  // Initial state: collapsed
+  document.getElementById('controlsPanel').setAttribute('data-collapsed', '');
+  document.getElementById('innerPanel').classList.add('collapsed');
+  updateDisplay('collapsed');
+</script>
+
+</body>
+</html>

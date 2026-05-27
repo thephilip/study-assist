@@ -34,7 +34,7 @@ export function ShapeSimplify({ image, originalImage, onApply }: Props) {
         <canvas ref={originalRef} className={`${styles.canvas} ${!compare ? styles.hidden : ''}`} role="img" aria-label="Original image" />
         <canvas ref={processedRef} className={styles.canvas} role="img" aria-label="Simplified shapes" />
       </CanvasWrap>
-      <Panel className={styles.controls}>
+      <Panel className={styles.controls} toolSlug="shape-simplify">
         <h2 className={styles.toolName}>Shape Simplify</h2>
         <p className={styles.description}>
           Blur flattens texture; posterize snaps colours to flat planes. Together they reveal the big shapes of the composition.
