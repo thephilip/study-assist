@@ -78,7 +78,7 @@ function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void 
     <ActionsProvider globalActions={globalActions}>
     <div className={styles.root}>
       <header className={styles.header}>
-        <h1 className={styles.wordmark}>study assist</h1>
+        <h1 className={styles.wordmark}>study <span className={styles.wordmarkName}>assist</span></h1>
         {image && (
           <div className={styles.headerActions}>
             <ToolsMenu activeTool={activeTool} onSelect={setActiveTool} />
