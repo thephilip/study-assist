@@ -15,7 +15,7 @@
   color: var(--color-text);
   z-index: 1000;
   white-space: nowrap;
-  animation: slideUp 200ms ease-out;
+  animation: slideUp var(--duration-normal) var(--ease-emphasis);
 }
 
 @keyframes slideUp {

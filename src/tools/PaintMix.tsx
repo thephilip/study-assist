@@ -16,6 +16,7 @@ import {
 import { isBrandUnlocked, getUnlockedBrands, isFeatureUnlocked } from '@/lib/entitlements'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap, useZoom } from '@/components/CanvasWrap'
+import { UpgradeModal } from '@/components/UpgradeModal'
 import toolStyles from './Tool.module.css'
 import styles from './PaintMix.module.css'
 
@@ -187,19 +188,12 @@ export function PaintMix({ image }: Props) {
           })}
         </div>
 
-        {/* Upgrade modal */}
         {showUpgradeModal && (
-          <div className={styles.modalOverlay} role="dialog" aria-modal="true" aria-labelledby="upgrade-title">
-            <div className={styles.modal}>
-              <p className={styles.modalTitle} id="upgrade-title">Brand Packs &amp; Pro Features</p>
-              <p className={styles.modalBody}>
-                Additional brand packs and Pro features (alternative mixes, 3-paint combinations) are coming with the native app. The free tier includes the full Gamblin range and single best mix.
-              </p>
-              <button type="button" className={styles.modalClose} onClick={() => setShowUpgradeModal(false)}>
-                Got it
-              </button>
-            </div>
-          </div>
+          <UpgradeModal
+            title="Brand Packs & Pro Features"
+            body="Additional brand packs and Pro features (alternative mixes, 3-paint combinations) are coming with the native app. The free tier includes the full Gamblin range and single best mix."
+            onClose={() => setShowUpgradeModal(false)}
+          />
         )}
 
 
