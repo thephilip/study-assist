@@ -34,7 +34,7 @@
 }
 
 .rerun:hover:not(:disabled) {
-  background: rgba(124, 106, 247, 0.25);
+  background: var(--color-accent-muted-hover);
   border-color: var(--color-accent);
 }
 

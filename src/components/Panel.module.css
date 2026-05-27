@@ -92,7 +92,7 @@
 .chevron:hover,
 .chevron:focus-visible {
   color: var(--color-accent);
-  background: rgba(124, 106, 247, 0.15);
+  background: var(--color-accent-muted);
   border-color: var(--color-accent);
 }
 
