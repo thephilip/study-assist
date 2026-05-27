@@ -98,6 +98,21 @@ export function resizeCorner(
     h = w / target
   }
 
+  // Re-enforce minimum after aspect-ratio clamping (#2)
+  // The aspect-ratio step above can undo the bare minimum check,
+  // e.g. target=1.78, w=24, h=24 → w/h=1 < 1.78 → h=24/1.78=13.5 < 24.
+  // Walk both axes until minimum is satisfied while preserving ratio.
+  if (w < 24 || h < 24) {
+    if (w < 24) {
+      w = 24
+      h = w / target
+    }
+    if (h < 24) {
+      h = 24
+      w = h * target
+    }
+  }
+
   // Recompute left/right/top/bottom so anchor stays fixed
   if (ax <= toX) {
     right = ax + w
@@ -111,6 +126,63 @@ export function resizeCorner(
   }
 
   return clampToImage({ x: left, y: top, w: right - left, h: bottom - top }, imgW, imgH)
+}
+
+/**
+ * Resize the rect by dragging one of its edge midpoints (0=top, 1=right, 2=bottom, 3=left).
+ * The opposite edge stays fixed; the adjacent edges shift symmetrically to maintain
+ * the target aspect ratio. Clamped to image bounds.
+ */
+export function resizeEdge(
+  rect: Rect,
+  edge: number,
+  toX: number,
+  toY: number,
+  ratio: AspectRatio,
+  imgW: number,
+  imgH: number,
+): Rect {
+  const target = ratio.w / ratio.h
+  const MIN = 24
+  let { x, y, w, h } = rect
+
+  switch (edge) {
+    case 0: { // top — drag vertically, bottom stays fixed
+      const newH = Math.max(MIN, (rect.y + rect.h) - toY)
+      const newW = newH * target
+      y = rect.y + rect.h - newH
+      x = rect.x + (rect.w - newW) / 2
+      w = newW
+      h = newH
+      break
+    }
+    case 1: { // right — drag horizontally, left stays fixed
+      const newW = Math.max(MIN, toX - rect.x)
+      const newH = newW / target
+      y = rect.y + (rect.h - newH) / 2
+      w = newW
+      h = newH
+      break
+    }
+    case 2: { // bottom — drag vertically, top stays fixed
+      const newH = Math.max(MIN, toY - rect.y)
+      const newW = newH * target
+      x = rect.x + (rect.w - newW) / 2
+      w = newW
+      h = newH
+      break
+    }
+    case 3: { // left — drag horizontally, right stays fixed
+      const newW = Math.max(MIN, (rect.x + rect.w) - toX)
+      const newH = newW / target
+      y = rect.y + (rect.h - newH) / 2
+      w = newW
+      h = newH
+      break
+    }
+  }
+
+  return clampToImage({ x, y, w, h }, imgW, imgH)
 }
 
 /** Translate the rect by (dx, dy), keeping it within image bounds */
