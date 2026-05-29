@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode } from 'react'
+import React, { useState, useEffect, Children, cloneElement, isValidElement, type ReactNode, type CSSProperties } from 'react'
 import styles from './Panel.module.css'
 
 type Props = {
@@ -25,6 +25,14 @@ function ChevronIcon() {
       <polyline points="9 18 15 12 9 6" />
     </svg>
   )
+}
+
+function withStaggerIndex(children: ReactNode) {
+  return Children.map(children, (child, i) => {
+    if (!isValidElement(child)) return child
+    const el = child as React.ReactElement<{ style?: CSSProperties }>
+    return cloneElement(el, { style: { '--stagger-i': i, ...(el.props.style ?? {}) } as CSSProperties })
+  })
 }
 
 export function Panel({ children, className, toolSlug }: Props) {
@@ -58,8 +66,8 @@ export function Panel({ children, className, toolSlug }: Props) {
     return (
       <div className={`${styles.wrapper} ${className ?? ''}`} data-collapsed={collapsed || undefined}>
         <div className={`${styles.scrollArea} ${collapsed ? styles.scrollAreaCollapsed : ''}`}>
-          <div className={styles.content} inert={collapsed ? true : undefined}>
-            {children}
+          <div className={`${styles.content} staggerFadeIn`} inert={collapsed ? true : undefined}>
+            {withStaggerIndex(children)}
           </div>
         </div>
         <button
@@ -78,8 +86,8 @@ export function Panel({ children, className, toolSlug }: Props) {
   // ── Non-collapsible panel ──────────────────────────────────────────────
   // Exactly the same DOM structure as before: children go directly into .panel
   return (
-    <div className={`${styles.panel} ${className ?? ''}`}>
-      {children}
+    <div className={`${styles.panel} staggerFadeIn ${className ?? ''}`}>
+      {withStaggerIndex(children)}
     </div>
   )
 }
