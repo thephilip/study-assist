@@ -87,7 +87,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(14, 14, 15, 0.55);
+  background: var(--color-backdrop);
   z-index: 200;
 }
 
@@ -101,7 +101,7 @@
   background: var(--color-surface);
   border-top-left-radius: var(--radius-xl);
   border-top-right-radius: var(--radius-xl);
-  border-top: 0.5px solid #3a3a40;
+  border-top: 0.5px solid var(--color-border-elevated);
   z-index: 201;
   display: flex;
   flex-direction: column;
