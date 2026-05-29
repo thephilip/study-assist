@@ -13,6 +13,15 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.14.2',
+    date: '2026-05-28',
+    entries: [
+      { text: 'Controls panel now fades in items with a gentle stagger on load', visibility: 'public' },
+      { text: 'Modals now animate in with a subtle scale + fade entrance', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.14.1',
     date: '2026-05-27',
     entries: [

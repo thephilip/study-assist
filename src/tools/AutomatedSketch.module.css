@@ -24,7 +24,7 @@
   padding: var(--space-1) 0;
   background: var(--color-surface-2);
   cursor: pointer;
-  transition: color var(--transition-fast), background var(--transition-fast);
+  transition: color var(--duration-fast) var(--ease-smooth), background var(--duration-fast) var(--ease-smooth);
 }
 
 .toggleBtn + .toggleBtn {

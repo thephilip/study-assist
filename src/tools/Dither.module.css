@@ -23,7 +23,7 @@
   color: var(--color-text-muted);
   padding: var(--space-1) 0;
   background: var(--color-surface-2);
-  transition: color var(--transition-fast), background var(--transition-fast);
+  transition: color var(--duration-fast) var(--ease-smooth), background var(--duration-fast) var(--ease-smooth);
 }
 
 .toggleBtn + .toggleBtn {
@@ -50,7 +50,7 @@
   padding: var(--space-2) 0;
   background: var(--color-surface-2);
   text-align: center;
-  transition: color var(--transition-fast), background var(--transition-fast);
+  transition: color var(--duration-fast) var(--ease-smooth), background var(--duration-fast) var(--ease-smooth);
 }
 
 .algoBtn:nth-child(odd) {

@@ -14,9 +14,34 @@
   color: var(--color-text);
 }
 
+.dialog[open] {
+  animation: dialogIn var(--duration-normal) var(--ease-spring);
+}
+
 .dialog::backdrop {
-  background: rgba(14, 14, 15, 0.7);
+  background: var(--color-backdrop-strong);
   backdrop-filter: blur(2px);
+}
+
+.dialog[open]::backdrop {
+  animation: backdropIn var(--duration-normal) var(--ease-smooth);
+}
+
+@keyframes dialogIn {
+  from { opacity: 0; scale: 0.97; }
+  to   { opacity: 1; scale: 1; }
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open],
+  .dialog[open]::backdrop {
+    animation: none;
+  }
 }
 
 .panel {
@@ -48,7 +73,7 @@
   border-radius: var(--radius-sm);
   background: var(--color-accent);
   color: var(--color-bg);
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--duration-fast) var(--ease-smooth);
 }
 
 .closeBtn:hover {
