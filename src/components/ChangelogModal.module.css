@@ -49,7 +49,7 @@
   font-size: var(--text-sm);
   color: var(--color-text-faint);
   padding: var(--space-2) var(--space-3);
-  transition: color var(--transition-fast);
+  transition: color var(--duration-fast) var(--ease-smooth);
 }
 
 .closeBtn:hover {
@@ -111,7 +111,7 @@
   font-weight: 500;
   border-radius: var(--radius-sm);
   align-self: flex-end;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--duration-fast) var(--ease-smooth);
   flex-shrink: 0;
 }
 

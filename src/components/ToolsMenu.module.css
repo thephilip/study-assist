@@ -17,7 +17,7 @@
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   background: var(--color-surface-2);
-  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+  transition: color var(--duration-fast) var(--ease-smooth), background var(--duration-fast) var(--ease-smooth), border-color var(--duration-fast) var(--ease-smooth);
 }
 
 .trigger:hover {
@@ -58,7 +58,7 @@
   padding: 0 var(--space-3);
   border-radius: var(--radius-sm);
   position: relative;
-  transition: background var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth);
 }
 
 .toolRowDesktop:hover {
@@ -164,7 +164,7 @@
   padding: 0 var(--space-5);
   border-bottom: 1px solid var(--color-border);
   position: relative;
-  transition: background var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth);
 }
 
 .toolRow:last-child {

@@ -28,7 +28,7 @@
   color: var(--color-text-muted);
   cursor: pointer;
   text-align: center;
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth), border-color var(--duration-fast) var(--ease-smooth), color var(--duration-fast) var(--ease-smooth);
 }
 
 .modeBtn:hover,
@@ -83,7 +83,7 @@
   background: transparent;
   cursor: pointer;
   align-self: flex-start;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth), border-color var(--duration-fast) var(--ease-smooth);
 }
 
 .clearBtn:hover {

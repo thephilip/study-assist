@@ -22,7 +22,7 @@
   background: transparent;
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth), color var(--duration-fast) var(--ease-smooth), border-color var(--duration-fast) var(--ease-smooth);
 }
 
 .brandBtn.active {
@@ -205,7 +205,7 @@
 
 .moreArrow {
   display: inline-block;
-  transition: transform var(--transition-fast);
+  transition: transform var(--duration-fast) var(--ease-smooth);
   font-size: 10px;
 }
 

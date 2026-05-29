@@ -29,7 +29,7 @@
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   padding: var(--space-1) var(--space-3);
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth), border-color var(--duration-fast) var(--ease-smooth);
   align-self: flex-start;
 }
 
@@ -62,7 +62,7 @@
   padding: 0 var(--space-1) var(--space-1);
   overflow: hidden;
   cursor: pointer;
-  transition: filter var(--transition-fast);
+  transition: filter var(--duration-fast) var(--ease-smooth);
   border: none;
   background: none;
 }
@@ -106,7 +106,7 @@
   background: none;
   width: 100%;
   text-align: left;
-  transition: background var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth);
 }
 
 .row:hover {
@@ -174,7 +174,7 @@
 
 .selectedHex {
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: color var(--duration-fast) var(--ease-smooth);
   background: none;
   border: none;
   padding: 0;
@@ -333,7 +333,7 @@
   background: transparent;
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--duration-fast) var(--ease-smooth), color var(--duration-fast) var(--ease-smooth), border-color var(--duration-fast) var(--ease-smooth);
 }
 
 .brandBtn:hover {
@@ -401,7 +401,7 @@
 .schemeSwatch {
   min-width: 0;
   cursor: pointer;
-  transition: filter var(--transition-fast);
+  transition: filter var(--duration-fast) var(--ease-smooth);
   border: none;
   background: none;
 }
