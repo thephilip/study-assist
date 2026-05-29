@@ -480,6 +480,7 @@ export function ColourStudio({ image }: Props) {
             title="Brand Packs"
             body="Additional brand packs are coming with the native app. The free tier includes the full Gamblin range."
             onClose={() => setShowUpgradeModal(false)}
+            onUnlock={() => setActiveBrands(new Set(getUnlockedBrands()))}
           />
         )}
       </Panel>

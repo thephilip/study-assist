@@ -67,6 +67,16 @@ export function unlockAllFeatures(): void {
   localStorage.setItem(FEATURE_STORAGE_KEY, JSON.stringify(ALL_PRO_FEATURES))
 }
 
+// Change these to whatever codes you want to distribute.
+const VALID_CODES = new Set(['STUDYPRO'])
+
+/** Validates and redeems an unlock code. Returns true if the code was valid. */
+export function redeemCode(raw: string): boolean {
+  if (!VALID_CODES.has(raw.trim().toUpperCase())) return false
+  unlockAll()
+  return true
+}
+
 /** Unlocks all brands + features at once. Used by the unlock-key script. */
 export function unlockAll(): void {
   unlockAllFeatures()

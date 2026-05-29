@@ -193,6 +193,7 @@ export function PaintMix({ image }: Props) {
             title="Brand Packs & Pro Features"
             body="Additional brand packs and Pro features (alternative mixes, 3-paint combinations) are coming with the native app. The free tier includes the full Gamblin range and single best mix."
             onClose={() => setShowUpgradeModal(false)}
+            onUnlock={() => setActiveBrands(new Set(getUnlockedBrands()))}
           />
         )}
 
