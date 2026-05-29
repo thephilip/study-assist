@@ -17,6 +17,7 @@ export const TOOLS = [
   'view-catcher',
   'colour-studio',
   'automated-sketch',
+  'gamut-mask',
 ] as const
 
 export type Tool = typeof TOOLS[number]
@@ -40,4 +41,5 @@ export const TOOL_LABELS: Record<Tool, string> = {
   'view-catcher':   'ViewCatcher',
   'colour-studio':  'Colour Studio',
   'automated-sketch': 'Automated Sketch',
+  'gamut-mask':       'Gamut Map',
 }

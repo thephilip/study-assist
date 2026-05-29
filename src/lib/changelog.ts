@@ -13,6 +13,13 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.15.0',
+    date: '2026-05-28',
+    entries: [
+      { text: 'New tool: Gamut Map — plots every colour in your reference on the LAB a*–b* plane so you can see your image\'s colour strategy at a glance. Includes pigment overlay showing where your paints fall in the same space.', visibility: 'public' },
+    ],
+  },
+  {
     version: '1.14.2',
     date: '2026-05-28',
     entries: [
