@@ -64,6 +64,7 @@ export function PaintMix({ image }: Props) {
   const imageDataRef = useRef<ImageData | null>(null)
   const [pick, setPick] = useState<{ color: RGB; x: number; y: number } | null>(null)
   const [activeBrands, setActiveBrands] = useState<Set<Brand>>(new Set(getUnlockedBrands()))
+  const [proMixUnlocked, setProMixUnlocked] = useState(() => isFeatureUnlocked('pro-mix'))
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [showMoreMixes, setShowMoreMixes] = useState(false)
   const { scale } = useZoom()
@@ -125,8 +126,6 @@ export function PaintMix({ image }: Props) {
       allMixes: all,
     }
   }, [pick, filteredPaints])
-
-  const proMixUnlocked = useMemo(() => isFeatureUnlocked('pro-mix'), [])
 
   const hex = pick ? rgbToHexStr(pick.color) : null
 
@@ -193,7 +192,7 @@ export function PaintMix({ image }: Props) {
             title="Brand Packs & Pro Features"
             body="Additional brand packs and Pro features (alternative mixes, 3-paint combinations) are coming with the native app. The free tier includes the full Gamblin range and single best mix."
             onClose={() => setShowUpgradeModal(false)}
-            onUnlock={() => setActiveBrands(new Set(getUnlockedBrands()))}
+            onUnlock={() => { setActiveBrands(new Set(getUnlockedBrands())); setProMixUnlocked(isFeatureUnlocked('pro-mix')) }}
           />
         )}
 
