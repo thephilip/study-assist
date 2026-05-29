@@ -38,6 +38,8 @@ Process reference photos entirely in your browser. No uploads, no accounts, no s
 | **Sketch** | Draw value thumbnails directly over the reference with pressure-sensitive stylus support |
 | **ViewCatcher** | Interactive crop overlay with aspect ratio presets; drag to compose and save as new image |
 | **Colour Studio** | Unified colour analysis — extract palette swatches, find paint matches, and explore harmonic schemes in one view |
+| **Automated Sketch** | Composites Sobel edge linework over simplified colour planes for a hand-drawn sketch look |
+| **Gamut Map** | Plots every sampled colour on the LAB a*–b* plane — reveals colour temperature bias, chroma spread, and where your specific paints fall relative to the image |
 
 All processed-canvas tools include a **side-by-side compare mode**, **Save PNG**, and **Use as source** (bake the output as the new working image). A full **undo stack** lets you step back through applied changes.
 
@@ -81,7 +83,7 @@ pnpm build
 - **Vite 8 + React 19 + TypeScript** (strict mode)
 - **CSS Modules** + CSS custom properties — design tokens in `src/tokens/index.css`
 - **Canvas API** + `getImageData` pixel manipulation — no image processing libraries
-- **Web Workers** for heavy algorithms (K-means palette extraction)
+- **Web Workers** for heavy algorithms (K-means palette extraction, gamut density analysis)
 - **PWA** — installable, offline-capable, update notifications via service worker
 - **No backend** — all processing is client-side; no data ever leaves the device
 
@@ -104,6 +106,7 @@ src/
   tools/            # One .ts (logic) + .tsx (component) per tool
   workers/
     kmeans.worker.ts
+    gamut.worker.ts
 ```
 
 ---

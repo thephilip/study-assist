@@ -21,6 +21,7 @@ const TOOLS = [
   { name: 'ViewCatcher',     desc: 'Frame your reference with an interactive crop overlay — try aspect ratios, drag to recompose, save as a new image.' },
   { name: 'Colour Studio',   desc: 'Extract palette swatches, find paint matches, and explore harmonies — unified colour analysis in one view.' },
   { name: 'Automated Sketch', desc: 'Composites edge-detection linework over simplified colour planes for a hand-drawn sketch look.' },
+  { name: 'Gamut Map',       desc: 'Plot every colour in your reference on the LAB colour wheel — see temperature bias, chroma spread, and where your paints sit.' },
 ]
 
 type Props = { onFile: (file: File) => void; error?: string }
