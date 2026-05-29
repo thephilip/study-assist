@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Panel } from '@/components/Panel'
 import { drawImageToCanvas, getPixelData } from '@/lib/canvas'
 import { PIGMENTS, type Brand, type Pigment } from '@/lib/pigments'
+import { PIGMENT_STUBS, type PigmentStub } from '@/lib/pigments/stubs'
 import { isBrandUnlocked } from '@/lib/entitlements'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
@@ -63,13 +64,21 @@ function computeStats(grid: Uint32Array): GamutStats {
   }
 }
 
-// ── Pigment canvas position ───────────────────────────────────────────────────
+// ── Canvas position from LAB a/b ─────────────────────────────────────────────
+
+function labCanvasPos(a: number, b: number): { px: number; py: number } {
+  return {
+    px: (a - LAB_MIN) / LAB_RANGE * DIAGRAM_SIZE,
+    py: DIAGRAM_SIZE - (b - LAB_MIN) / LAB_RANGE * DIAGRAM_SIZE,
+  }
+}
 
 function pigmentCanvasPos(pig: Pigment): { px: number; py: number } {
-  return {
-    px: (pig.lab.a - LAB_MIN) / LAB_RANGE * DIAGRAM_SIZE,
-    py: DIAGRAM_SIZE - (pig.lab.b - LAB_MIN) / LAB_RANGE * DIAGRAM_SIZE,
-  }
+  return labCanvasPos(pig.lab.a, pig.lab.b)
+}
+
+function stubCanvasPos(stub: PigmentStub): { px: number; py: number } {
+  return labCanvasPos(stub.lab.a, stub.lab.b)
 }
 
 // ── Diagram renderer ─────────────────────────────────────────────────────────
@@ -79,6 +88,7 @@ function drawDiagram(
   grid: Uint32Array | null,
   maxCount: number,
   showPigments: boolean,
+  stubs: PigmentStub[],
 ) {
   const S = DIAGRAM_SIZE
   canvas.width = S
@@ -164,12 +174,26 @@ function drawDiagram(
     ctx.lineWidth = 1.5
     ctx.stroke()
   }
+
+  // ── Stub dots (locked brands absent from this build) ───────────────────────
+  for (const stub of stubs) {
+    const { px, py } = stubCanvasPos(stub)
+    ctx.beginPath()
+    ctx.arc(px, py, DOT_RADIUS, 0, Math.PI * 2)
+    ctx.fillStyle = 'rgba(255,255,255,0.07)'
+    ctx.strokeStyle = 'rgba(255,255,255,0.20)'
+    ctx.fill()
+    ctx.lineWidth = 1.5
+    ctx.stroke()
+  }
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
 type GamutWorkerResult = { grid: ArrayBuffer; maxCount: number }
-type TooltipState = { clientX: number; clientY: number; pig: Pigment }
+type TooltipState =
+  | { kind: 'pigment'; clientX: number; clientY: number; pig: Pigment }
+  | { kind: 'stub'; clientX: number; clientY: number; brand: string }
 
 type Props = { image: LoadedImage }
 
@@ -182,10 +206,16 @@ export function GamutMask({ image }: Props) {
   const [stats, setStats] = useState<GamutStats | null>(null)
   const [tooltip, setTooltip] = useState<TooltipState | null>(null)
 
+  // Stubs for locked brands that have no real PIGMENTS entries in this build
+  const activeStubs = useMemo(() => {
+    const brandsInPigments = new Set(PIGMENTS.map(p => p.brand))
+    return PIGMENT_STUBS.filter(s => !brandsInPigments.has(s.brand as Brand))
+  }, [])
+
   // ── Send image to worker; draw empty frame immediately so no black box ──────
   useEffect(() => {
     const canvas = diagramRef.current
-    if (canvas) drawDiagram(canvas, null, 0, false)
+    if (canvas) drawDiagram(canvas, null, 0, false, [])
 
     const tmp = document.createElement('canvas')
     drawImageToCanvas(tmp, image.bitmap)
@@ -217,8 +247,8 @@ export function GamutMask({ image }: Props) {
   useEffect(() => {
     const canvas = diagramRef.current
     if (!canvas || !grid) return
-    drawDiagram(canvas, grid, maxCount, showPigments)
-  }, [grid, maxCount, showPigments])
+    drawDiagram(canvas, grid, maxCount, showPigments, activeStubs)
+  }, [grid, maxCount, showPigments, activeStubs])
 
   // ── Pigment dot hit-testing ───────────────────────────────────────────────
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -240,13 +270,24 @@ export function GamutMask({ image }: Props) {
       const dx = canvasX - px, dy = canvasY - py
       if (dx * dx + dy * dy <= hitR2) {
         canvas.style.cursor = 'pointer'
-        setTooltip({ clientX: e.clientX, clientY: e.clientY, pig })
+        setTooltip({ kind: 'pigment', clientX: e.clientX, clientY: e.clientY, pig })
         return
       }
     }
+
+    for (const stub of activeStubs) {
+      const { px, py } = stubCanvasPos(stub)
+      const dx = canvasX - px, dy = canvasY - py
+      if (dx * dx + dy * dy <= hitR2) {
+        canvas.style.cursor = 'pointer'
+        setTooltip({ kind: 'stub', clientX: e.clientX, clientY: e.clientY, brand: stub.brand })
+        return
+      }
+    }
+
     canvas.style.cursor = ''
     setTooltip(null)
-  }, [grid, showPigments])
+  }, [grid, showPigments, activeStubs])
 
   const handleMouseLeave = useCallback(() => {
     const canvas = diagramRef.current
@@ -280,17 +321,29 @@ export function GamutMask({ image }: Props) {
           style={{ left: tooltip.clientX + 14, top: tooltip.clientY - 48 }}
           role="tooltip"
         >
-          <div
-            className={styles.tooltipSwatch}
-            style={{ background: `rgb(${tooltip.pig.rgb.r},${tooltip.pig.rgb.g},${tooltip.pig.rgb.b})` }}
-          />
-          <div className={styles.tooltipBody}>
-            <span className={styles.tooltipName}>{tooltip.pig.name}</span>
-            <span className={styles.tooltipMeta}>
-              {tooltip.pig.brand} · {tooltip.pig.pigmentCode}
-              {!isBrandUnlocked(tooltip.pig.brand as Brand) && ' · Locked'}
-            </span>
-          </div>
+          {tooltip.kind === 'pigment' ? (
+            <>
+              <div
+                className={styles.tooltipSwatch}
+                style={{ background: `rgb(${tooltip.pig.rgb.r},${tooltip.pig.rgb.g},${tooltip.pig.rgb.b})` }}
+              />
+              <div className={styles.tooltipBody}>
+                <span className={styles.tooltipName}>{tooltip.pig.name}</span>
+                <span className={styles.tooltipMeta}>
+                  {tooltip.pig.brand} · {tooltip.pig.pigmentCode}
+                  {!isBrandUnlocked(tooltip.pig.brand as Brand) && ' · Locked'}
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.tooltipSwatch} style={{ background: 'rgba(255,255,255,0.12)' }} />
+              <div className={styles.tooltipBody}>
+                <span className={styles.tooltipName}>Unlock {tooltip.brand}</span>
+                <span className={styles.tooltipMeta}>Upgrade to see this paint</span>
+              </div>
+            </>
+          )}
         </div>
       )}
 
