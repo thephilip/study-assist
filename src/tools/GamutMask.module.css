@@ -159,6 +159,49 @@
   line-height: var(--leading-normal);
 }
 
+/* ── Pigment tooltip ───────────────────────────────────────────────────────── */
+
+.tooltip {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+  animation: fadeIn var(--duration-fast) var(--ease-smooth);
+}
+
+.tooltipSwatch {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.tooltipBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.tooltipName {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.tooltipMeta {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
 /* ── Reduced motion ────────────────────────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Panel } from '@/components/Panel'
 import { drawImageToCanvas, getPixelData } from '@/lib/canvas'
-import { PIGMENTS, type Brand } from '@/lib/pigments'
+import { PIGMENTS, type Brand, type Pigment } from '@/lib/pigments'
 import { isBrandUnlocked } from '@/lib/entitlements'
 import type { LoadedImage } from '@/hooks/useImage'
 import { CanvasWrap } from '@/components/CanvasWrap'
@@ -14,6 +14,7 @@ const DIAGRAM_SIZE = 720
 const GRID = 200
 const LAB_MIN = -100
 const LAB_RANGE = 200
+const DOT_RADIUS = 5  // canvas pixels
 
 // ── Inline HSL→RGB for ImageData pixel filling ───────────────────────────────
 
@@ -62,6 +63,15 @@ function computeStats(grid: Uint32Array): GamutStats {
   }
 }
 
+// ── Pigment canvas position ───────────────────────────────────────────────────
+
+function pigmentCanvasPos(pig: Pigment): { px: number; py: number } {
+  return {
+    px: (pig.lab.a - LAB_MIN) / LAB_RANGE * DIAGRAM_SIZE,
+    py: DIAGRAM_SIZE - (pig.lab.b - LAB_MIN) / LAB_RANGE * DIAGRAM_SIZE,
+  }
+}
+
 // ── Diagram renderer ─────────────────────────────────────────────────────────
 
 function drawDiagram(
@@ -86,7 +96,7 @@ function drawDiagram(
     for (let py = 0; py < S; py++) {
       for (let px = 0; px < S; px++) {
         const a = (px / S) * LAB_RANGE + LAB_MIN
-        const b = LAB_MIN + LAB_RANGE - (py / S) * LAB_RANGE  // flip y: top = +b
+        const b = LAB_MIN + LAB_RANGE - (py / S) * LAB_RANGE
 
         const gi = Math.min(GRID - 1, Math.max(0, Math.floor((a - LAB_MIN) / LAB_RANGE * GRID)))
         const gj = Math.min(GRID - 1, Math.max(0, Math.floor((b - LAB_MIN) / LAB_RANGE * GRID)))
@@ -101,9 +111,7 @@ function drawDiagram(
 
         const [pr, pg, pb] = hslToRgbChannels(hue, sat, lit)
         const idx = (py * S + px) * 4
-        d[idx] = pr
-        d[idx + 1] = pg
-        d[idx + 2] = pb
+        d[idx] = pr; d[idx + 1] = pg; d[idx + 2] = pb
         d[idx + 3] = Math.round(alpha * 255)
       }
     }
@@ -114,13 +122,13 @@ function drawDiagram(
   const center = S / 2
   const scale = S / LAB_RANGE
 
-  ctx.strokeStyle = 'rgba(255,255,255,0.10)'
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'
   ctx.lineWidth = 1
   ctx.beginPath()
   ctx.arc(center, center, 80 * scale, 0, Math.PI * 2)
   ctx.stroke()
 
-  ctx.strokeStyle = 'rgba(255,255,255,0.06)'
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)'
   ctx.setLineDash([3, 5])
   ctx.beginPath()
   ctx.moveTo(0, center); ctx.lineTo(S, center)
@@ -129,33 +137,29 @@ function drawDiagram(
   ctx.setLineDash([])
 
   // ── Axis labels ────────────────────────────────────────────────────────────
-  ctx.font = '10px system-ui, -apple-system, sans-serif'
-  ctx.fillStyle = 'rgba(255,255,255,0.22)'
+  ctx.font = '11px system-ui, -apple-system, sans-serif'
+  ctx.fillStyle = 'rgba(255,255,255,0.45)'
   ctx.textAlign = 'center'
-  ctx.fillText('+b yellow', center, 14)
-  ctx.fillText('−b blue', center, S - 5)
+  ctx.fillText('+b  yellow', center, 16)
+  ctx.fillText('−b  blue', center, S - 6)
   ctx.textAlign = 'left'
-  ctx.fillText('+a red', S - 56, center - 5)
+  ctx.fillText('+a  red', S - 62, center - 6)
   ctx.textAlign = 'right'
-  ctx.fillText('−a green', 56, center - 5)
+  ctx.fillText('−a  green', 62, center - 6)
 
   // ── Pigment dots ───────────────────────────────────────────────────────────
   if (!showPigments || !grid) return
 
   for (const pig of PIGMENTS) {
-    const px = (pig.lab.a - LAB_MIN) / LAB_RANGE * S
-    const py = S - (pig.lab.b - LAB_MIN) / LAB_RANGE * S  // flip y
+    const { px, py } = pigmentCanvasPos(pig)
     const unlocked = isBrandUnlocked(pig.brand as Brand)
 
     ctx.beginPath()
-    ctx.arc(px, py, 4, 0, Math.PI * 2)
-    if (unlocked) {
-      ctx.fillStyle = `rgb(${pig.rgb.r},${pig.rgb.g},${pig.rgb.b})`
-      ctx.strokeStyle = 'rgba(255,255,255,0.75)'
-    } else {
-      ctx.fillStyle = 'rgba(255,255,255,0.06)'
-      ctx.strokeStyle = 'rgba(255,255,255,0.18)'
-    }
+    ctx.arc(px, py, DOT_RADIUS, 0, Math.PI * 2)
+    ctx.fillStyle = unlocked
+      ? `rgb(${pig.rgb.r},${pig.rgb.g},${pig.rgb.b})`
+      : 'rgba(255,255,255,0.07)'
+    ctx.strokeStyle = unlocked ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.20)'
     ctx.fill()
     ctx.lineWidth = 1.5
     ctx.stroke()
@@ -165,6 +169,7 @@ function drawDiagram(
 // ── Component ─────────────────────────────────────────────────────────────────
 
 type GamutWorkerResult = { grid: ArrayBuffer; maxCount: number }
+type TooltipState = { clientX: number; clientY: number; pig: Pigment }
 
 type Props = { image: LoadedImage }
 
@@ -175,6 +180,7 @@ export function GamutMask({ image }: Props) {
   const [running, setRunning] = useState(false)
   const [showPigments, setShowPigments] = useState(true)
   const [stats, setStats] = useState<GamutStats | null>(null)
+  const [tooltip, setTooltip] = useState<TooltipState | null>(null)
 
   // ── Send image to worker; draw empty frame immediately so no black box ──────
   useEffect(() => {
@@ -188,6 +194,7 @@ export function GamutMask({ image }: Props) {
 
     setGrid(null)
     setStats(null)
+    setTooltip(null)
     setRunning(true)
 
     const worker = new Worker(
@@ -213,6 +220,40 @@ export function GamutMask({ image }: Props) {
     drawDiagram(canvas, grid, maxCount, showPigments)
   }, [grid, maxCount, showPigments])
 
+  // ── Pigment dot hit-testing ───────────────────────────────────────────────
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = diagramRef.current
+    if (!canvas || !grid || !showPigments) { setTooltip(null); return }
+
+    // getBoundingClientRect accounts for any CSS transform (CanvasWrap zoom)
+    const rect = canvas.getBoundingClientRect()
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    const canvasX = (e.clientX - rect.left) * scaleX
+    const canvasY = (e.clientY - rect.top) * scaleY
+
+    // Hit radius: 8 CSS pixels converted to canvas pixels
+    const hitR2 = (8 * Math.max(scaleX, scaleY)) ** 2
+
+    for (const pig of PIGMENTS) {
+      const { px, py } = pigmentCanvasPos(pig)
+      const dx = canvasX - px, dy = canvasY - py
+      if (dx * dx + dy * dy <= hitR2) {
+        canvas.style.cursor = 'pointer'
+        setTooltip({ clientX: e.clientX, clientY: e.clientY, pig })
+        return
+      }
+    }
+    canvas.style.cursor = ''
+    setTooltip(null)
+  }, [grid, showPigments])
+
+  const handleMouseLeave = useCallback(() => {
+    const canvas = diagramRef.current
+    if (canvas) canvas.style.cursor = ''
+    setTooltip(null)
+  }, [])
+
   const coolPercent = stats ? 100 - stats.warmPercent : 50
 
   return (
@@ -223,6 +264,8 @@ export function GamutMask({ image }: Props) {
           className={styles.diagram}
           role="img"
           aria-label="LAB a*–b* gamut map"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
         />
         {running && (
           <div className={styles.spinnerOverlay} aria-live="polite">
@@ -231,11 +274,32 @@ export function GamutMask({ image }: Props) {
         )}
       </CanvasWrap>
 
+      {tooltip && (
+        <div
+          className={styles.tooltip}
+          style={{ left: tooltip.clientX + 14, top: tooltip.clientY - 48 }}
+          role="tooltip"
+        >
+          <div
+            className={styles.tooltipSwatch}
+            style={{ background: `rgb(${tooltip.pig.rgb.r},${tooltip.pig.rgb.g},${tooltip.pig.rgb.b})` }}
+          />
+          <div className={styles.tooltipBody}>
+            <span className={styles.tooltipName}>{tooltip.pig.name}</span>
+            <span className={styles.tooltipMeta}>
+              {tooltip.pig.brand} · {tooltip.pig.pigmentCode}
+              {!isBrandUnlocked(tooltip.pig.brand as Brand) && ' · Locked'}
+            </span>
+          </div>
+        </div>
+      )}
+
       <Panel className={toolStyles.controls} toolSlug="gamut-mask">
         <h2 className={toolStyles.toolName}>Gamut Map</h2>
         <p className={toolStyles.description}>
           Plots every sampled colour on the LAB a*–b* plane. The centre is
-          neutral grey; distance from centre is chroma.
+          neutral grey; distance from centre is chroma. Hover pigment dots to
+          see paint names.
         </p>
 
         <button
@@ -253,14 +317,8 @@ export function GamutMask({ image }: Props) {
             <div className={styles.statRow}>
               <span className={styles.statLabel}>Temperature</span>
               <div className={styles.tempBar}>
-                <div
-                  className={styles.tempCool}
-                  style={{ width: `${coolPercent}%` }}
-                />
-                <div
-                  className={styles.tempWarm}
-                  style={{ width: `${stats.warmPercent}%` }}
-                />
+                <div className={styles.tempCool} style={{ width: `${coolPercent}%` }} />
+                <div className={styles.tempWarm} style={{ width: `${stats.warmPercent}%` }} />
               </div>
               <span className={styles.statValue}>
                 {stats.warmPercent > 55 ? 'Warm' : stats.warmPercent < 45 ? 'Cool' : 'Neutral'}
@@ -285,6 +343,7 @@ export function GamutMask({ image }: Props) {
             <span className={styles.legendTitle}>Pigments</span>
             <p className={styles.legendNote}>
               Coloured dots = unlocked brands. Dim dots = locked brands.
+              Hover any dot to see the paint name.
             </p>
           </div>
         )}
