@@ -10,7 +10,7 @@ import styles from './GamutMask.module.css'
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const DIAGRAM_SIZE = 360
+const DIAGRAM_SIZE = 720
 const GRID = 200
 const LAB_MIN = -100
 const LAB_RANGE = 200
@@ -66,45 +66,49 @@ function computeStats(grid: Uint32Array): GamutStats {
 
 function drawDiagram(
   canvas: HTMLCanvasElement,
-  grid: Uint32Array,
+  grid: Uint32Array | null,
   maxCount: number,
   showPigments: boolean,
 ) {
   const S = DIAGRAM_SIZE
+  canvas.width = S
+  canvas.height = S
   const ctx = canvas.getContext('2d')!
 
   ctx.fillStyle = '#0e0e0f'
   ctx.fillRect(0, 0, S, S)
 
-  // ── Heatmap via ImageData ──────────────────────────────────────────────────
-  const imgData = ctx.createImageData(S, S)
-  const d = imgData.data
+  // ── Heatmap via ImageData (skipped while worker is still running) ──────────
+  if (grid) {
+    const imgData = ctx.createImageData(S, S)
+    const d = imgData.data
 
-  for (let py = 0; py < S; py++) {
-    for (let px = 0; px < S; px++) {
-      const a = (px / S) * LAB_RANGE + LAB_MIN     // -100 → +100
-      const b = LAB_MIN + LAB_RANGE - (py / S) * LAB_RANGE  // +100 → -100 (flip y)
+    for (let py = 0; py < S; py++) {
+      for (let px = 0; px < S; px++) {
+        const a = (px / S) * LAB_RANGE + LAB_MIN
+        const b = LAB_MIN + LAB_RANGE - (py / S) * LAB_RANGE  // flip y: top = +b
 
-      const gi = Math.min(GRID - 1, Math.max(0, Math.floor((a - LAB_MIN) / LAB_RANGE * GRID)))
-      const gj = Math.min(GRID - 1, Math.max(0, Math.floor((b - LAB_MIN) / LAB_RANGE * GRID)))
-      const count = grid[gj * GRID + gi]
-      if (count === 0) continue
+        const gi = Math.min(GRID - 1, Math.max(0, Math.floor((a - LAB_MIN) / LAB_RANGE * GRID)))
+        const gj = Math.min(GRID - 1, Math.max(0, Math.floor((b - LAB_MIN) / LAB_RANGE * GRID)))
+        const count = grid[gj * GRID + gi]
+        if (count === 0) continue
 
-      const hue = (Math.atan2(b, a) / (2 * Math.PI) + 1) % 1
-      const chroma = Math.sqrt(a * a + b * b)
-      const sat = Math.min(chroma / 65, 1) * 0.82 + 0.12
-      const lit = 0.52 + Math.min(chroma / 100, 1) * 0.08
-      const alpha = Math.min(1, 0.18 + Math.sqrt(count / maxCount) * 0.82)
+        const hue = (Math.atan2(b, a) / (2 * Math.PI) + 1) % 1
+        const chroma = Math.sqrt(a * a + b * b)
+        const sat = Math.min(chroma / 65, 1) * 0.82 + 0.12
+        const lit = 0.52 + Math.min(chroma / 100, 1) * 0.08
+        const alpha = Math.min(1, 0.18 + Math.sqrt(count / maxCount) * 0.82)
 
-      const [pr, pg, pb] = hslToRgbChannels(hue, sat, lit)
-      const idx = (py * S + px) * 4
-      d[idx] = pr
-      d[idx + 1] = pg
-      d[idx + 2] = pb
-      d[idx + 3] = Math.round(alpha * 255)
+        const [pr, pg, pb] = hslToRgbChannels(hue, sat, lit)
+        const idx = (py * S + px) * 4
+        d[idx] = pr
+        d[idx + 1] = pg
+        d[idx + 2] = pb
+        d[idx + 3] = Math.round(alpha * 255)
+      }
     }
+    ctx.putImageData(imgData, 0, 0)
   }
-  ctx.putImageData(imgData, 0, 0)
 
   // ── Reference circle (chroma 80) and axis lines ───────────────────────────
   const center = S / 2
@@ -136,7 +140,7 @@ function drawDiagram(
   ctx.fillText('−a green', 56, center - 5)
 
   // ── Pigment dots ───────────────────────────────────────────────────────────
-  if (!showPigments) return
+  if (!showPigments || !grid) return
 
   for (const pig of PIGMENTS) {
     const px = (pig.lab.a - LAB_MIN) / LAB_RANGE * S
@@ -172,8 +176,11 @@ export function GamutMask({ image }: Props) {
   const [showPigments, setShowPigments] = useState(true)
   const [stats, setStats] = useState<GamutStats | null>(null)
 
-  // ── Send image to worker ───────────────────────────────────────────────────
+  // ── Send image to worker; draw empty frame immediately so no black box ──────
   useEffect(() => {
+    const canvas = diagramRef.current
+    if (canvas) drawDiagram(canvas, null, 0, false)
+
     const tmp = document.createElement('canvas')
     drawImageToCanvas(tmp, image.bitmap)
     const data = getPixelData(tmp)
@@ -199,12 +206,10 @@ export function GamutMask({ image }: Props) {
     return () => { worker.terminate() }
   }, [image])
 
-  // ── Redraw diagram when data or overlay changes ────────────────────────────
+  // ── Redraw full diagram when worker data or overlay toggle changes ──────────
   useEffect(() => {
     const canvas = diagramRef.current
     if (!canvas || !grid) return
-    canvas.width = DIAGRAM_SIZE
-    canvas.height = DIAGRAM_SIZE
     drawDiagram(canvas, grid, maxCount, showPigments)
   }, [grid, maxCount, showPigments])
 
