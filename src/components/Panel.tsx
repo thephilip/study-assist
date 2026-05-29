@@ -47,6 +47,8 @@ export function Panel({ children, className, toolSlug }: Props) {
     return false
   })
 
+  const [expandKey, setExpandKey] = useState(0)
+
   // Persist to localStorage
   useEffect(() => {
     if (storageKey) {
@@ -55,6 +57,7 @@ export function Panel({ children, className, toolSlug }: Props) {
   }, [collapsed, storageKey])
 
   function handleToggle() {
+    if (collapsed) setExpandKey(k => k + 1)
     setCollapsed(c => !c)
   }
 
@@ -66,7 +69,7 @@ export function Panel({ children, className, toolSlug }: Props) {
     return (
       <div className={`${styles.wrapper} ${className ?? ''}`} data-collapsed={collapsed || undefined}>
         <div className={`${styles.scrollArea} ${collapsed ? styles.scrollAreaCollapsed : ''}`}>
-          <div className={`${styles.content} staggerFadeIn`} inert={collapsed ? true : undefined}>
+          <div key={expandKey} className={`${styles.content} staggerFadeIn`} inert={collapsed ? true : undefined}>
             {withStaggerIndex(children)}
           </div>
         </div>
