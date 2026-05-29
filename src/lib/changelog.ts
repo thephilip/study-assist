@@ -13,6 +13,14 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.15.1',
+    date: '2026-05-28',
+    entries: [
+      { text: 'You can now redeem an unlock code directly from the upgrade prompt — no need to visit a separate page', visibility: 'public' },
+      { text: 'Controls panel stagger animation now replays each time the panel is expanded', visibility: 'hidden' },
+    ],
+  },
+  {
     version: '1.15.0',
     date: '2026-05-28',
     entries: [
