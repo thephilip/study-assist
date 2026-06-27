@@ -1,4 +1,4 @@
-import { FREE_BRANDS, type Brand } from '@/lib/pigments'
+import { FREE_BRANDS, ALL_BRANDS, type Brand } from '@/lib/pigments'
 
 const BRAND_STORAGE_KEY = 'unlockedBrands'
 const FEATURE_STORAGE_KEY = 'unlockedFeatures'
@@ -19,6 +19,7 @@ function getStoredBrands(): Brand[] {
 }
 
 export function isBrandUnlocked(brand: Brand): boolean {
+  if (import.meta.env.VITE_PAID_BUILD === 'true') return true
   return FREE_BRANDS.includes(brand) || getStoredBrands().includes(brand)
 }
 
@@ -30,6 +31,7 @@ export function unlockBrand(brand: Brand): void {
 }
 
 export function getUnlockedBrands(): Brand[] {
+  if (import.meta.env.VITE_PAID_BUILD === 'true') return [...ALL_BRANDS]
   const stored = getStoredBrands()
   const extra = stored.filter(b => !FREE_BRANDS.includes(b))
   return [...FREE_BRANDS, ...extra]
@@ -51,6 +53,7 @@ function getStoredFeatures(): ProFeature[] {
 
 /** Returns true if the user has unlocked this Pro feature. */
 export function isFeatureUnlocked(feature: ProFeature): boolean {
+  if (import.meta.env.VITE_PAID_BUILD === 'true') return true
   return getStoredFeatures().includes(feature)
 }
 

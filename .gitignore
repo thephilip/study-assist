@@ -9,3 +9,7 @@ opencode.json
 src/lib/pigments/premium.ts
 docs/unlock-key.html
 dist-studio/
+
+# Capacitor native projects
+android/
+ios/
