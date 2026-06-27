@@ -15,6 +15,8 @@ A painting reference tool for artists — value maps, notan, colour picking, pai
 
 Process reference photos entirely in your browser. No uploads, no accounts, no server — everything runs locally on your device.
 
+**→ Try it at [thephilip.github.io/study-assist](https://thephilip.github.io/study-assist/)**
+
 ---
 
 ## Tools
@@ -75,6 +77,18 @@ Open [http://localhost:5173](http://localhost:5173), drop in a reference photo, 
 # Production build
 pnpm build
 ```
+
+---
+
+## PWA install
+
+You can install Study Assist as a standalone app on any device:
+
+- **Desktop (Chrome/Edge/Samsung):** click the install icon in the address bar or the "Install Study Assist" button in the app header
+- **iOS Safari:** tap the Share button → **Add to Home Screen**
+- **Android Chrome:** tap the menu → **Add to Home Screen** (or the install banner)
+
+Once installed, it launches full-screen with offline support and automatic update notifications.
 
 ---
 
