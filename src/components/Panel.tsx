@@ -29,7 +29,7 @@ function ChevronIcon() {
 
 function withStaggerIndex(children: ReactNode) {
   return Children.map(children, (child, i) => {
-    if (!isValidElement(child)) return child
+    if (!isValidElement(child) || child.type === React.Fragment) return child
     const el = child as React.ReactElement<{ style?: CSSProperties }>
     return cloneElement(el, { style: { '--stagger-i': i, ...(el.props.style ?? {}) } as CSSProperties })
   })
