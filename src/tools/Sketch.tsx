@@ -11,7 +11,7 @@ import type { LoadedImage } from '@/hooks/useImage'
 import toolStyles from './Tool.module.css'
 import styles from './Sketch.module.css'
 
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; originalImage: LoadedImage }
 
 /** Generates evenly-spaced greyscale swatches for N levels (black → white). */
 function generateSwatches(levels: number): string[] {
@@ -25,8 +25,9 @@ function generateSwatches(levels: number): string[] {
   return swatches
 }
 
-export function Sketch({ image }: Props) {
+export function Sketch({ image, originalImage }: Props) {
   const imageCanvasRef = useRef<HTMLCanvasElement>(null)
+  const originalCanvasRef = useRef<HTMLCanvasElement>(null)
   const sketchCanvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<SketchEngine | null>(null)
   const drawingRef = useRef(false)
@@ -68,8 +69,12 @@ export function Sketch({ image }: Props) {
     engineRef.current = new SketchEngine(skCanvas)
   }, [image])
 
-  // Keep original-image canvas showing the root original
-  // (not needed — we render the current working image as the reference)
+  // Compare shows the root original beside the sketch, like every other tool
+  useEffect(() => {
+    const canvas = originalCanvasRef.current
+    if (!canvas) return
+    drawImageToCanvas(canvas, originalImage.bitmap)
+  }, [originalImage])
 
   // ── Coordinate helpers ───────────────────────────────────────────────────
 
@@ -173,6 +178,12 @@ export function Sketch({ image }: Props) {
   return (
     <div className={toolStyles.root}>
       <CanvasWrap compare={compare}>
+        <canvas
+          ref={originalCanvasRef}
+          className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`}
+          role="img"
+          aria-label="Original image"
+        />
         <div className={toolStyles.overlayFrame}>
           <canvas
             ref={imageCanvasRef}

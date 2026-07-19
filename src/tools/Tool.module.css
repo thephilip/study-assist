@@ -49,6 +49,12 @@
   max-height: 100cqh;
 }
 
+/* In compare's two-column grid the cq cap must shrink to one column,
+   or the frame's min-content width starves the original's 1fr track. */
+.compareActive .overlayFrame .canvas {
+  max-width: calc(50cqw - var(--space-2));
+}
+
 .controls {
   width: 220px;
   flex-shrink: 0;
