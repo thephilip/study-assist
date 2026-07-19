@@ -10,15 +10,43 @@
   justify-content: space-between;
   padding: var(--space-3) var(--space-6);
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: var(--color-header-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   flex-shrink: 0;
+  z-index: 40;
 }
 
 .wordmark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   font-size: var(--text-base);
-  font-weight: 600;
-  letter-spacing: -0.04em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--color-text-muted);
+}
+
+.logoMark {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  position: relative;
+  flex: none;
+}
+
+.logoMark::after {
+  content: '';
+  position: absolute;
+  inset: 4px 4px 4px 10px;
+  background: var(--color-accent);
+  border-radius: 1px;
+  transition: inset var(--duration-normal) var(--ease-smooth);
+}
+
+.wordmark:hover .logoMark::after {
+  inset: 4px 10px 4px 4px;
 }
 
 .wordmarkName {

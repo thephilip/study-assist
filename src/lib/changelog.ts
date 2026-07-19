@@ -13,6 +13,13 @@ export interface ChangelogRelease {
 
 export const CHANGELOG: ChangelogRelease[] = [
   {
+    version: '1.16.0',
+    date: '2026-07-19',
+    entries: [
+      { text: 'Fresh coat of paint: a refined dark theme with a deeper background, crisper text, tighter corners, and a new indigo accent — plus an updated app icon', visibility: 'public' },
+    ],
+  },
+  {
     version: '1.15.1',
     date: '2026-05-28',
     entries: [

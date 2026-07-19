@@ -95,7 +95,7 @@ function drawDiagram(
   canvas.height = S
   const ctx = canvas.getContext('2d')!
 
-  ctx.fillStyle = '#0e0e0f'
+  ctx.fillStyle = '#0B0B0F'
   ctx.fillRect(0, 0, S, S)
 
   // ── Heatmap via ImageData (skipped while worker is still running) ──────────

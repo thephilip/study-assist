@@ -1,13 +1,16 @@
 :root {
   color-scheme: dark;
 
-  /* Surface */
-  --color-bg:           #0e0e0f;
-  --color-surface:      #161618;
-  --color-surface-2:    #1e1e21;
-  --color-surface-3:    #26262a;
-  --color-border:          #2e2e33;
-  --color-border-elevated: #3a3a40;
+  /* Surface (VividLedger palette) */
+  --color-bg:           #0B0B0F;
+  --color-surface:      #16161E;
+  --color-surface-2:    #1C1C26;
+  --color-surface-3:    #22222E;
+  --color-border:          #262631;
+  --color-border-elevated: #3A3A48;
+
+  /* Header (sticky blurred bar — pair with backdrop-filter: blur(12px)) */
+  --color-header-bg:    rgba(11, 11, 15, 0.85);
 
   /* Canvas overlay buttons (fullscreen, reset-zoom — dark bg, light fg) */
   --color-overlay-bg:         rgba(0, 0, 0, 0.55);
@@ -16,25 +19,25 @@
   --color-overlay-text-hover: #fff;
 
   /* Backdrop (menus 0.55, modals 0.7) */
-  --color-backdrop:        rgba(14, 14, 15, 0.55);
-  --color-backdrop-strong: rgba(14, 14, 15, 0.7);
+  --color-backdrop:        rgba(11, 11, 15, 0.55);
+  --color-backdrop-strong: rgba(11, 11, 15, 0.7);
 
   /* Text */
-  --color-text:         #e8e8ec;
-  --color-text-muted:   #8a8a96;
-  --color-text-faint:   #56565e;
+  --color-text:         #F9F9FB;
+  --color-text-muted:   #9B9BAB;
+  --color-text-faint:   #8A8A9E;
 
   /* Accent */
-  --color-accent:            #7c6af7;
-  --color-accent-hover:      #9285f9;
-  --color-accent-subtle:     rgba(124, 106, 247, 0.08);
-  --color-accent-muted:      rgba(124, 106, 247, 0.15);
-  --color-accent-muted-hover: rgba(124, 106, 247, 0.25);
+  --color-accent:            #6366F1;
+  --color-accent-hover:      #818CF8;
+  --color-accent-subtle:     rgba(99, 102, 241, 0.12);
+  --color-accent-muted:      rgba(99, 102, 241, 0.15);
+  --color-accent-muted-hover: rgba(99, 102, 241, 0.25);
 
   /* Status */
   --color-danger:       #e05555;
-  --color-warn:         #d4873a;
-  --color-ok:           #4caf82;
+  --color-warn:         #FBBF24;
+  --color-ok:           #34D399;
 
   /* Type scale */
   --font-sans:   'Inter', system-ui, -apple-system, sans-serif;
@@ -60,11 +63,11 @@
   --space-12: 3rem;
   --space-16: 4rem;
 
-  /* Radii */
+  /* Radii (tightened to the VividLedger 4–6px register; lg/xl reserved for modals) */
   --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
 
   /* Shadows */
   --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.4);
