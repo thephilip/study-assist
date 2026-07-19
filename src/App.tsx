@@ -46,7 +46,7 @@ function ActiveTool({ tool, image, originalImage, onApply }: { tool: Tool; image
   if (tool === 'paint-mix') return <PaintMix image={image} />
   if (tool === 'histogram') return <Histogram image={image} />
   if (tool === 'edges') return <Edges image={image} originalImage={originalImage} onApply={onApply} />
-  if (tool === 'sketch') return <Sketch image={image} />
+  if (tool === 'sketch') return <Sketch image={image} originalImage={originalImage} />
   if (tool === 'view-catcher') return <ViewCatcher image={image} originalImage={originalImage} onApply={onApply} />
   if (tool === 'colour-studio') return <ColourStudio image={image} />
   if (tool === 'automated-sketch') return <AutomatedSketch image={image} originalImage={originalImage} onApply={onApply} />

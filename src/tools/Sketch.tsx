@@ -11,7 +11,7 @@ import type { LoadedImage } from '@/hooks/useImage'
 import toolStyles from './Tool.module.css'
 import styles from './Sketch.module.css'
 
-type Props = { image: LoadedImage }
+type Props = { image: LoadedImage; originalImage: LoadedImage }
 
 /** Generates evenly-spaced greyscale swatches for N levels (black → white). */
 function generateSwatches(levels: number): string[] {
@@ -25,8 +25,12 @@ function generateSwatches(levels: number): string[] {
   return swatches
 }
 
-export function Sketch({ image }: Props) {
+export function Sketch({ image, originalImage }: Props) {
+  // Mirrors engine.strokeCount so Undo/Clear enablement re-renders (the engine
+  // itself lives in a ref and mutations there don't trigger React updates)
+  const [strokeCount, setStrokeCount] = useState(0)
   const imageCanvasRef = useRef<HTMLCanvasElement>(null)
+  const originalCanvasRef = useRef<HTMLCanvasElement>(null)
   const sketchCanvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<SketchEngine | null>(null)
   const drawingRef = useRef(false)
@@ -66,10 +70,15 @@ export function Sketch({ image }: Props) {
     skCanvas.height = h
 
     engineRef.current = new SketchEngine(skCanvas)
+    setStrokeCount(0)
   }, [image])
 
-  // Keep original-image canvas showing the root original
-  // (not needed — we render the current working image as the reference)
+  // Compare shows the root original beside the sketch, like every other tool
+  useEffect(() => {
+    const canvas = originalCanvasRef.current
+    if (!canvas) return
+    drawImageToCanvas(canvas, originalImage.bitmap)
+  }, [originalImage])
 
   // ── Coordinate helpers ───────────────────────────────────────────────────
 
@@ -117,6 +126,7 @@ export function Sketch({ image }: Props) {
     const engine = engineRef.current
     if (!engine) return
     engine.endStroke()
+    setStrokeCount(engine.strokeCount)
     ;(e.target as HTMLCanvasElement).releasePointerCapture(e.pointerId)
   }, [])
 
@@ -126,16 +136,23 @@ export function Sketch({ image }: Props) {
     const engine = engineRef.current
     if (!engine) return
     engine.endStroke()
+    setStrokeCount(engine.strokeCount)
   }, [])
 
   // ── Toolbar actions ─────────────────────────────────────────────────────
 
   const handleUndo = useCallback(() => {
-    engineRef.current?.undo()
+    const engine = engineRef.current
+    if (!engine) return
+    engine.undo()
+    setStrokeCount(engine.strokeCount)
   }, [])
 
   const handleClear = useCallback(() => {
-    engineRef.current?.clear()
+    const engine = engineRef.current
+    if (!engine) return
+    engine.clear()
+    setStrokeCount(engine.strokeCount)
   }, [])
 
   const handleSaveComposite = useCallback(() => {
@@ -168,11 +185,17 @@ export function Sketch({ image }: Props) {
 
   // ── Render ───────────────────────────────────────────────────────────────
 
-  const hasStrokes = engineRef.current ? engineRef.current.strokeCount > 0 : false
+  const hasStrokes = strokeCount > 0
 
   return (
     <div className={toolStyles.root}>
       <CanvasWrap compare={compare}>
+        <canvas
+          ref={originalCanvasRef}
+          className={`${toolStyles.canvas} ${!compare ? toolStyles.hidden : ''}`}
+          role="img"
+          aria-label="Original image"
+        />
         <div className={toolStyles.overlayFrame}>
           <canvas
             ref={imageCanvasRef}
@@ -269,25 +292,6 @@ export function Sketch({ image }: Props) {
             disabled={!hasStrokes}
           >
             Clear
-          </button>
-        </div>
-
-        <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.actionBtn}
-            onClick={handleSaveComposite}
-            disabled={!hasStrokes}
-          >
-            Save composite
-          </button>
-          <button
-            type="button"
-            className={styles.actionBtn}
-            onClick={handleSaveSketch}
-            disabled={!hasStrokes}
-          >
-            Save sketch
           </button>
         </div>
       </Panel>
