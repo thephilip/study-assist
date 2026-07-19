@@ -17,6 +17,8 @@ export const CHANGELOG: ChangelogRelease[] = [
     date: '2026-07-19',
     entries: [
       { text: 'Fresh coat of paint: a refined dark theme with a deeper background, crisper text, tighter corners, and a new indigo accent — plus an updated app icon', visibility: 'public' },
+      { text: 'Sketch: Undo and Clear now enable the moment you finish a stroke, and Compare shows the original beside your sketch', visibility: 'public' },
+      { text: 'Bug fixes and improvements', visibility: 'hidden' },
     ],
   },
   {

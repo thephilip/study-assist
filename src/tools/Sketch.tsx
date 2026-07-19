@@ -26,6 +26,9 @@ function generateSwatches(levels: number): string[] {
 }
 
 export function Sketch({ image, originalImage }: Props) {
+  // Mirrors engine.strokeCount so Undo/Clear enablement re-renders (the engine
+  // itself lives in a ref and mutations there don't trigger React updates)
+  const [strokeCount, setStrokeCount] = useState(0)
   const imageCanvasRef = useRef<HTMLCanvasElement>(null)
   const originalCanvasRef = useRef<HTMLCanvasElement>(null)
   const sketchCanvasRef = useRef<HTMLCanvasElement>(null)
@@ -67,6 +70,7 @@ export function Sketch({ image, originalImage }: Props) {
     skCanvas.height = h
 
     engineRef.current = new SketchEngine(skCanvas)
+    setStrokeCount(0)
   }, [image])
 
   // Compare shows the root original beside the sketch, like every other tool
@@ -122,6 +126,7 @@ export function Sketch({ image, originalImage }: Props) {
     const engine = engineRef.current
     if (!engine) return
     engine.endStroke()
+    setStrokeCount(engine.strokeCount)
     ;(e.target as HTMLCanvasElement).releasePointerCapture(e.pointerId)
   }, [])
 
@@ -131,16 +136,23 @@ export function Sketch({ image, originalImage }: Props) {
     const engine = engineRef.current
     if (!engine) return
     engine.endStroke()
+    setStrokeCount(engine.strokeCount)
   }, [])
 
   // ── Toolbar actions ─────────────────────────────────────────────────────
 
   const handleUndo = useCallback(() => {
-    engineRef.current?.undo()
+    const engine = engineRef.current
+    if (!engine) return
+    engine.undo()
+    setStrokeCount(engine.strokeCount)
   }, [])
 
   const handleClear = useCallback(() => {
-    engineRef.current?.clear()
+    const engine = engineRef.current
+    if (!engine) return
+    engine.clear()
+    setStrokeCount(engine.strokeCount)
   }, [])
 
   const handleSaveComposite = useCallback(() => {
@@ -173,7 +185,7 @@ export function Sketch({ image, originalImage }: Props) {
 
   // ── Render ───────────────────────────────────────────────────────────────
 
-  const hasStrokes = engineRef.current ? engineRef.current.strokeCount > 0 : false
+  const hasStrokes = strokeCount > 0
 
   return (
     <div className={toolStyles.root}>
@@ -280,25 +292,6 @@ export function Sketch({ image, originalImage }: Props) {
             disabled={!hasStrokes}
           >
             Clear
-          </button>
-        </div>
-
-        <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.actionBtn}
-            onClick={handleSaveComposite}
-            disabled={!hasStrokes}
-          >
-            Save composite
-          </button>
-          <button
-            type="button"
-            className={styles.actionBtn}
-            onClick={handleSaveSketch}
-            disabled={!hasStrokes}
-          >
-            Save sketch
           </button>
         </div>
       </Panel>
