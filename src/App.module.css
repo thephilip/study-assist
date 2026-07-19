@@ -17,6 +17,27 @@
   z-index: 40;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Exit back to the host site — rendered only in the VividLedger build */
+.backToVL {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  padding: var(--space-1) var(--space-4) var(--space-1) var(--space-2);
+  margin-left: calc(-1 * var(--space-2));
+  border-right: 1px solid var(--color-border);
+  transition: color var(--duration-fast) var(--ease-smooth);
+}
+
+.backToVL:hover {
+  color: var(--color-text);
+}
+
 .wordmark {
   display: flex;
   align-items: center;

@@ -8,6 +8,7 @@ import { CompareProvider, useCompareContext } from '@/context/CompareContext'
 import { ActionsMenu } from '@/components/ActionsMenu'
 import { ToolsMenu } from '@/components/ToolsMenu'
 import { TOOLS, TOOL_LABELS, type Tool } from '@/tools/index'
+import { isVividLedgerBuild } from '@/lib/vl-bridge'
 import { ValueMap } from '@/tools/ValueMap'
 import { Notan } from '@/tools/Notan'
 import { ColorPicker } from '@/tools/ColorPicker'
@@ -80,7 +81,14 @@ function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void 
     <ActionsProvider globalActions={globalActions}>
     <div className={styles.root}>
       <header className={styles.header}>
-        <h1 className={styles.wordmark}><span className={styles.logoMark} aria-hidden="true" />study <span className={styles.wordmarkName}>assist</span></h1>
+        <div className={styles.brand}>
+          {isVividLedgerBuild() && (
+            <a className={styles.backToVL} href="/dashboard" aria-label="Back to VividLedger">
+              ‹ VividLedger
+            </a>
+          )}
+          <h1 className={styles.wordmark}><span className={styles.logoMark} aria-hidden="true" />study <span className={styles.wordmarkName}>assist</span></h1>
+        </div>
         {image && (
           <div className={styles.headerActions}>
             <ToolsMenu activeTool={activeTool} onSelect={setActiveTool} />
