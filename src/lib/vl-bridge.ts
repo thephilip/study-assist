@@ -1,9 +1,12 @@
 // VividLedger entitlement bridge.
 //
-// When the app is served from vividledger.art (the /studio deployment), a
-// signed-in VividLedger artist gets Pro unlocked automatically: we read the
+// When this is the studio build (base /studio/, deployed inside VividLedger),
+// a signed-in VividLedger artist gets Pro unlocked automatically: we read the
 // VL session token (same-origin localStorage) and ask the VL backend to
-// confirm membership. On every other host this module does nothing.
+// confirm membership. In every other build this module does nothing.
+//
+// The build-time base is the activation signal (not the hostname) so the
+// bridge works identically under VL's dev proxy, staging, and production.
 //
 // ponytail: unlocks persist in localStorage after a successful check — no
 // re-validation or lapse handling until VL ships subscription billing.
@@ -12,13 +15,13 @@ import { unlockAll } from '@/lib/entitlements'
 
 const VL_TOKEN_KEY = 'vl.session.token'
 
-export function isVividLedgerHost(): boolean {
-  return location.hostname === 'vividledger.art' || location.hostname === 'www.vividledger.art'
+export function isVividLedgerBuild(): boolean {
+  return import.meta.env.BASE_URL === '/studio/'
 }
 
 /** Resolves once membership has been checked (or immediately off-VL). */
 export async function applyVividLedgerEntitlements(): Promise<void> {
-  if (!isVividLedgerHost()) return
+  if (!isVividLedgerBuild()) return
   const token = localStorage.getItem(VL_TOKEN_KEY)
   if (!token) return
   try {
