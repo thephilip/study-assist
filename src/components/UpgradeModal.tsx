@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { redeemCode } from '@/lib/entitlements'
+import { isVividLedgerHost } from '@/lib/vl-bridge'
 import styles from './UpgradeModal.module.css'
 
 interface Props {
@@ -51,7 +52,15 @@ export function UpgradeModal({ title, body, onClose, onUnlock }: Props) {
     >
       <div className={styles.panel}>
         <p className={styles.title} id="upgrade-modal-title">{title}</p>
-        <p className={styles.body}>{body}</p>
+        {isVividLedgerHost() ? (
+          <p className={styles.body}>
+            Pro features and all brand packs are included with a VividLedger
+            artist account — <a href="/login">sign in</a> and reload to unlock
+            them here.
+          </p>
+        ) : (
+          <p className={styles.body}>{body}</p>
+        )}
         <button type="button" className={styles.closeBtn} onClick={close}>
           Got it
         </button>
