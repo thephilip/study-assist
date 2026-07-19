@@ -6,8 +6,14 @@ import App from './App'
 import { UpdateToast } from './components/UpdateToast'
 import { ChangelogModal } from './components/ChangelogModal'
 import { CURRENT_VERSION } from './lib/changelog'
+import { applyVividLedgerEntitlements } from './lib/vl-bridge'
 
 const SEEN_VERSION_KEY = 'lastSeenVersion'
+
+// Fire-and-forget: on vividledger.art this unlocks Pro for signed-in members;
+// everywhere else it returns immediately. Gated UIs mount after image load,
+// well past this resolving, and the upgrade modal re-reads on unlock anyway.
+applyVividLedgerEntitlements()
 
 // Called once at module load — outside any React component
 let _notifyUpdate: (() => void) | undefined
