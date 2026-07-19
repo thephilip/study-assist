@@ -6,8 +6,8 @@
   "scope": "/study-assist/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#0e0e0f",
-  "theme_color": "#0e0e0f",
+  "background_color": "#0B0B0F",
+  "theme_color": "#0B0B0F",
   "icons": [
     {
       "src": "/study-assist/icons/icon-192.png",
