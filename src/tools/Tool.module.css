@@ -15,6 +15,7 @@
   position: relative;
   touch-action: none;
   user-select: none;
+  container-type: size;
 }
 
 .canvasWrap:fullscreen,
@@ -32,6 +33,20 @@
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-lg);
   touch-action: none;
+}
+
+/* Anchor box for tools that layer DOM overlays (picker ring, drawing layer)
+   over the canvas. It shrink-wraps the canvas so overlay coordinates align;
+   the cq units cap the canvas against the canvasWrap's visible box, which
+   percentage max-sizes can't reach through an auto-sized wrapper. */
+.overlayFrame {
+  position: relative;
+  line-height: 0;
+}
+
+.overlayFrame .canvas {
+  max-width: 100cqw;
+  max-height: 100cqh;
 }
 
 .controls {
