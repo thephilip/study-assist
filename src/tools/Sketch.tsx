@@ -173,7 +173,7 @@ export function Sketch({ image }: Props) {
   return (
     <div className={toolStyles.root}>
       <CanvasWrap compare={compare}>
-        <div style={{ position: 'relative', display: 'inline-block', lineHeight: 0 }}>
+        <div className={toolStyles.overlayFrame}>
           <canvas
             ref={imageCanvasRef}
             className={toolStyles.canvas}

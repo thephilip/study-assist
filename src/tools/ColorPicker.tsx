@@ -92,7 +92,7 @@ export function ColorPicker({ image }: Props) {
   return (
     <div className={toolStyles.root}>
       <CanvasWrap>
-        <div className={styles.canvasFrame}>
+        <div className={`${toolStyles.overlayFrame} ${styles.canvasFrame}`}>
           <canvas
             ref={canvasRef}
             className={`${toolStyles.canvas} ${styles.canvas}`}

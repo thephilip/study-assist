@@ -197,7 +197,7 @@ export function ColourStudio({ image }: Props) {
     <div className={toolStyles.root}>
       {/* ── Canvas (reference image, clickable) ─────────────────── */}
       <CanvasWrap>
-        <div style={{ position: 'relative', display: 'inline-block', lineHeight: 0 }}>
+        <div className={toolStyles.overlayFrame}>
           <canvas
             ref={canvasRef}
             className={toolStyles.canvas}
