@@ -1,54 +1,73 @@
+// The landing page has one job: get an image in. Everything else is secondary
+// until that happens, so the drop zone is the hero and the tool catalogue sits
+// below it — grouped into four families, every name a real button.
+
+import { useEffect } from 'react'
 import { ImageDrop } from './ImageDrop'
-import { TOOLS as TOOL_SLUGS } from '@/tools/index'
+import { TOOLS, TOOL_GROUPS, TOOL_LABELS, TOOL_DESCRIPTIONS, type Tool } from '@/tools/index'
 import styles from './Welcome.module.css'
 
-const TOOLS = [
-  { name: 'Value Map',       desc: 'Posterize to N tonal values to study light and shadow structure.' },
-  { name: 'Notan',           desc: 'Reduce to pure black and white shapes for compositional clarity.' },
-  { name: 'Color Picker',    desc: 'Sample any point on your reference and copy the hex to clipboard.' },
-  { name: 'Shape Simplify',  desc: 'Blur and posterize to isolate big shapes and lose fine detail.' },
-  { name: 'Dither',          desc: 'Break tones into graphic patterns using error-diffusion or Bayer matrices.' },
-  { name: 'Grid',            desc: 'Overlay a proportional grid to check angles and placement.' },
-  { name: 'Composition',     desc: 'Overlay rule-of-thirds, phi grid, diagonals, or golden spiral guides.' },
-  { name: 'Sighting',        desc: 'Measure angles, proportions, and alignment with draggable pins and plumb line.' },
-  { name: 'Harmonies',       desc: 'Generate and explore five harmonic colour schemes from any base colour.' },
-  { name: 'Palette',         desc: 'Extract the dominant colors from your reference using K-means.' },
-  { name: 'Temperature',     desc: 'Highlight warm and cool zones mapped across the image.' },
-  { name: 'Paint Mix',       desc: 'Match reference colors to your paint brand with a 2-paint mix suggestion.' },
-  { name: 'Histogram',       desc: 'Visualize the tonal distribution and spot clipping or low contrast.' },
-  { name: 'Edges',           desc: 'Reveal edge types with Sobel detection — find lost and found edges.' },
-  { name: 'Sketch',          desc: 'Draw value thumbnails directly over the reference with stylus support.' },
-  { name: 'ViewCatcher',     desc: 'Frame your reference with an interactive crop overlay — try aspect ratios, drag to recompose, save as a new image.' },
-  { name: 'Colour Studio',   desc: 'Extract palette swatches, find paint matches, and explore harmonies — unified colour analysis in one view.' },
-  { name: 'Automated Sketch', desc: 'Composites edge-detection linework over simplified colour planes for a hand-drawn sketch look.' },
-  { name: 'Gamut Map',       desc: 'Plot every colour in your reference on the LAB colour wheel — see temperature bias, chroma spread, and where your paints sit.' },
-]
+type Props = {
+  onFile: (file: File) => void
+  /** Load the bundled sample photo, optionally opening straight into one tool. */
+  onSample: (tool?: Tool) => void
+  error?: string
+}
 
-type Props = { onFile: (file: File) => void; error?: string }
+export function Welcome({ onFile, onSample, error }: Props) {
+  // a screenshot already in the clipboard is the fastest reference of all
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const file = [...(e.clipboardData?.files ?? [])].find(f => f.type.startsWith('image/'))
+      if (file) onFile(file)
+    }
+    document.addEventListener('paste', onPaste)
+    return () => document.removeEventListener('paste', onPaste)
+  }, [onFile])
 
-export function Welcome({ onFile, error }: Props) {
   return (
     <div className={styles.root}>
-      <div className={styles.hero}>
+      <section className={styles.hero}>
+        <p className={styles.eyebrow}>The studio</p>
         <h2 className={styles.tagline}>Study your reference before you paint.</h2>
         <p className={styles.sub}>
-          Drop any photo to analyse it with {TOOL_SLUGS.length} tools — all on-device, nothing uploaded.
+          A workbench of {TOOLS.length} tools that read a photo the way a painter does —
+          value, colour, edges, proportion. Everything runs on your device; nothing is uploaded.
         </p>
-      </div>
 
-      <div className={styles.grid}>
-        {TOOLS.map(tool => (
-          <div key={tool.name} className={styles.card}>
-            <span className={styles.toolName}>{tool.name}</span>
-            <span className={styles.toolDesc}>{tool.desc}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.dropArea}>
         <ImageDrop onFile={onFile} />
         {error && <p className={styles.error}>{error}</p>}
-      </div>
+
+        <p className={styles.sampleLine}>
+          No photo handy?{' '}
+          <button type="button" className={styles.sampleBtn} onClick={() => onSample()}>
+            Start with a sample still life
+          </button>
+        </p>
+      </section>
+
+      <section className={styles.catalogue} aria-labelledby="catalogue-head">
+        <h3 className={styles.catalogueHead} id="catalogue-head">What you can do with it</h3>
+        <div className={styles.groups}>
+          {TOOL_GROUPS.map(group => (
+            <div key={group.name} className={styles.group}>
+              <h4 className={styles.groupName}>{group.name}</h4>
+              <p className={styles.groupPurpose}>{group.purpose}</p>
+              <ul className={styles.toolList}>
+                {group.tools.map(tool => (
+                  <li key={tool}>
+                    {/* a click always does something: with no image yet, load the sample */}
+                    <button type="button" className={styles.tool} onClick={() => onSample(tool)}>
+                      <span className={styles.toolName}>{TOOL_LABELS[tool]}</span>
+                      <span className={styles.toolDesc}>{TOOL_DESCRIPTIONS[tool]}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }

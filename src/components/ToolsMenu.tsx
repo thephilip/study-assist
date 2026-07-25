@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { TOOLS, TOOL_LABELS, type Tool } from '@/tools/index'
+import { TOOL_GROUPS, TOOL_LABELS, type Tool } from '@/tools/index'
 import { useIsTouch } from '@/hooks/useIsTouch'
 import styles from './ToolsMenu.module.css'
 
@@ -55,25 +55,31 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
     return () => { document.body.style.overflow = '' }
   }, [open, touch])
 
-  const toolRows = TOOLS.map(tool => (
-    <button
-      key={tool}
-      id={`tool-${tool}`}
-      role="option"
-      aria-selected={tool === activeTool}
-      className={[
-        touch ? styles.toolRow : styles.toolRowDesktop,
-        tool === activeTool ? styles.toolRowActive : '',
-      ].filter(Boolean).join(' ')}
-      onClick={() => handleSelect(tool)}
-    >
-      {TOOL_LABELS[tool]}
-      {tool === activeTool && (
-        <span className={touch ? styles.toolRowCheck : styles.toolRowCheckDesktop} aria-hidden>
-          <CheckIcon />
-        </span>
-      )}
-    </button>
+  // grouped, same four families as the landing page — a flat 19 is unreadable
+  const toolRows = TOOL_GROUPS.map(group => (
+    <div key={group.name} className={styles.group} role="group" aria-label={group.name}>
+      <span className={styles.groupLabel}>{group.name}</span>
+      {group.tools.map(tool => (
+        <button
+          key={tool}
+          id={`tool-${tool}`}
+          role="option"
+          aria-selected={tool === activeTool}
+          className={[
+            touch ? styles.toolRow : styles.toolRowDesktop,
+            tool === activeTool ? styles.toolRowActive : '',
+          ].filter(Boolean).join(' ')}
+          onClick={() => handleSelect(tool)}
+        >
+          {TOOL_LABELS[tool]}
+          {tool === activeTool && (
+            <span className={touch ? styles.toolRowCheck : styles.toolRowCheckDesktop} aria-hidden>
+              <CheckIcon />
+            </span>
+          )}
+        </button>
+      ))}
+    </div>
   ))
 
   return (

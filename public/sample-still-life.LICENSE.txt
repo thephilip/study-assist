@@ -1,0 +1,12 @@
+sample-still-life.webp — basil and lemons on white linen.
+
+Source: Pexels photo 1585849 (https://www.pexels.com/photo/1585849/), resized to
+1200px and re-encoded as WebP.
+
+Pexels License: free to use, modification allowed, attribution not required.
+Not permitted: selling unaltered copies, or implying endorsement by people shown
+(this photo shows none).
+
+Chosen as the "start with a sample" reference for its warm/cool contrast, full
+value range, and big readable shapes. Swap the file to change the sample; the
+filename is referenced in src/App.tsx.

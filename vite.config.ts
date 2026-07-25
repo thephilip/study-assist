@@ -30,7 +30,7 @@ export default defineConfig({
       registerType: 'prompt',
       manifest: false, // we maintain our own public/manifest.json
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}'], // webp: the sample reference photo
       },
     }),
   ],

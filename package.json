@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
-		"build:studio": "tsc && STUDIO=1 vite build --base=/studio/ --outDir dist-studio",
+		"build:studio": "tsc && STUDIO=1 vite build --base=/studio/app/ --outDir dist-studio",
 		"preview": "vite preview",
 		"typecheck": "tsc --noEmit"
 	},

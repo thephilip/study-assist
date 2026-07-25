@@ -16,7 +16,7 @@ import { unlockAll } from '@/lib/entitlements'
 const VL_TOKEN_KEY = 'vl.session.token'
 
 export function isVividLedgerBuild(): boolean {
-  return import.meta.env.BASE_URL === '/studio/'
+  return import.meta.env.BASE_URL === '/studio/app/'
 }
 
 /** Resolves once membership has been checked (or immediately off-VL). */

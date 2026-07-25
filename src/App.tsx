@@ -7,7 +7,7 @@ import { useFlip } from '@/context/FlipContext'
 import { CompareProvider, useCompareContext } from '@/context/CompareContext'
 import { ActionsMenu } from '@/components/ActionsMenu'
 import { ToolsMenu } from '@/components/ToolsMenu'
-import { TOOLS, TOOL_LABELS, type Tool } from '@/tools/index'
+import { type Tool } from '@/tools/index'
 import { isVividLedgerBuild } from '@/lib/vl-bridge'
 import { ValueMap } from '@/tools/ValueMap'
 import { Notan } from '@/tools/Notan'
@@ -77,18 +77,24 @@ function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void 
     push(canvas)
   }, [push])
 
+  // A visitor with no photo to hand still gets to see the tools work.
+  const startWithSample = useCallback(async (tool?: Tool) => {
+    const res = await fetch(`${import.meta.env.BASE_URL}sample-still-life.webp`)
+    load(new File([await res.blob()], 'sample-still-life.webp', { type: 'image/webp' }))
+    if (tool) setActiveTool(tool)
+  }, [load])
+
   return (
     <ActionsProvider globalActions={globalActions}>
     <div className={styles.root}>
-      <header className={styles.header}>
-        <div className={styles.brand}>
-          {isVividLedgerBuild() && (
-            <a className={styles.backToVL} href="/dashboard" aria-label="Back to VividLedger">
-              ‹ VividLedger
-            </a>
-          )}
-          <h1 className={styles.wordmark}><span className={styles.logoMark} aria-hidden="true" />study <span className={styles.wordmarkName}>assist</span></h1>
-        </div>
+      {/* Inside VividLedger the host site supplies the header, so this build shows
+          only the workspace controls — two stacked brand bars read as two sites. */}
+      <header className={`${styles.header} ${isVividLedgerBuild() ? styles.headerHosted : ''}`}>
+        {!isVividLedgerBuild() && (
+          <div className={styles.brand}>
+            <h1 className={styles.wordmark}><span className={styles.logoMark} aria-hidden="true" />study <span className={styles.wordmarkName}>assist</span></h1>
+          </div>
+        )}
         {image && (
           <div className={styles.headerActions}>
             <ToolsMenu activeTool={activeTool} onSelect={setActiveTool} />
@@ -105,22 +111,10 @@ function AppContent({ onImageChange }: { onImageChange?: (has: boolean) => void 
       <main className={styles.main}>
         {!image ? (
           <div className={styles.dropZone}>
-            <Welcome onFile={load} error={error ?? undefined} />
+            <Welcome onFile={load} onSample={startWithSample} error={error ?? undefined} />
           </div>
         ) : (
           <div className={styles.workspace}>
-            <nav className={styles.toolbar} aria-label="Tools">
-              {TOOLS.map(tool => (
-                <button
-                  key={tool}
-                  className={`${styles.toolBtn} ${activeTool === tool ? styles.active : ''}`}
-                  onClick={() => setActiveTool(tool)}
-                  aria-pressed={activeTool === tool}
-                >
-                  {TOOL_LABELS[tool]}
-                </button>
-              ))}
-            </nav>
             <div className={styles.canvas}>
               <ActiveTool tool={activeTool} image={image} originalImage={originalImage!} onApply={handleApply} />
             </div>

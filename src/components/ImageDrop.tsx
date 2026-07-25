@@ -1,4 +1,4 @@
-import { useRef, useState, type DragEvent, type ChangeEvent } from 'react'
+import { useRef, useState, type DragEvent, type ChangeEvent, type MouseEvent } from 'react'
 import styles from './ImageDrop.module.css'
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
 export function ImageDrop({ onFile }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
+  const browse = () => inputRef.current?.click()
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -27,11 +28,10 @@ export function ImageDrop({ onFile }: Props) {
       onDragOver={e => { e.preventDefault(); setDragging(true) }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      onClick={() => inputRef.current?.click()}
-      role="button"
-      tabIndex={0}
-      aria-label="Drop an image here or click to browse"
-      onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && inputRef.current?.click()}
+      // the button carries the semantics; clicking the surrounding zone is a convenience
+      onClick={(e: MouseEvent<HTMLDivElement>) => {
+        if (!(e.target as HTMLElement).closest('button')) browse()
+      }}
     >
       <input
         ref={inputRef}
@@ -43,9 +43,9 @@ export function ImageDrop({ onFile }: Props) {
         aria-hidden
       />
       <div className={styles.label}>
-        <span className={styles.icon}>⬆</span>
-        <span>Drop a reference image here</span>
-        <span className={styles.sub}>JPEG · PNG · WebP</span>
+        <button type="button" className={styles.cta} onClick={browse}>Add an image</button>
+        <span className={styles.sub}>or drop a photo here · paste from the clipboard</span>
+        <span className={styles.formats}>JPEG · PNG · WebP</span>
       </div>
     </div>
   )
