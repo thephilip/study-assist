@@ -4,16 +4,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 // Studio builds (vividledger.art/studio) are not installable apps: drop the
-// manifest link and Apple home-screen tags that would advertise one.
-function stripPwaTags(): Plugin {
+// manifest link and Apple home-screen tags that would advertise one. The title
+// goes too — inside VividLedger this is their Studio, not a second brand.
+function studioIndexHtml(): Plugin {
   return {
-    name: 'strip-pwa-tags',
+    name: 'studio-index-html',
     transformIndexHtml(html) {
       if (process.env.STUDIO !== '1') return html
       return html
         .split('\n')
         .filter(l => !/rel="manifest"|apple-mobile-web-app|apple-touch-icon/.test(l))
         .join('\n')
+        .replace(/<title>.*<\/title>/, '<title>Studio — VividLedger</title>')
     },
   }
 }
@@ -22,7 +24,7 @@ export default defineConfig({
   base: '/study-assist/',
   plugins: [
     react(),
-    stripPwaTags(),
+    studioIndexHtml(),
     VitePWA({
       // The /studio deployment on vividledger.art is a feature of that site,
       // not a second installable app — no service worker or manifest there.
