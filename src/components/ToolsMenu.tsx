@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { TOOL_GROUPS, TOOL_LABELS, type Tool } from '@/tools/index'
 import { useIsTouch } from '@/hooks/useIsTouch'
 import styles from './ToolsMenu.module.css'
@@ -103,7 +104,9 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
         </div>
       )}
 
-      {open && touch && (
+      {/* portal: the header's backdrop-filter is a containing block, which would
+          anchor the fixed sheet to the header instead of the viewport */}
+      {open && touch && createPortal(
         <>
           <div className={styles.backdrop} onClick={close} aria-hidden />
           <div className={styles.sheet} role="listbox" aria-label="Select tool" aria-activedescendant={`tool-${activeTool}`}>
@@ -118,7 +121,8 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
               <button className={styles.doneBtn} onClick={close}>Done</button>
             </div>
           </div>
-        </>
+        </>,
+        document.body,
       )}
     </div>
   )

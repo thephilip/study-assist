@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useActionsContext, type ToolAction } from '@/context/ActionsContext'
 import { useIsTouch } from '@/hooks/useIsTouch'
 import styles from './ActionsMenu.module.css'
@@ -157,7 +158,9 @@ export function ActionsMenu() {
         </div>
       )}
 
-      {open && touch && (
+      {/* portal: the header's backdrop-filter is a containing block, which would
+          anchor the fixed sheet to the header instead of the viewport */}
+      {open && touch && createPortal(
         <>
           <div className={styles.backdrop} onClick={close} aria-hidden />
           <div className={styles.sheet} role="menu" aria-label="Actions">
@@ -167,7 +170,8 @@ export function ActionsMenu() {
               <button className={styles.doneBtn} onClick={close}>Done</button>
             </div>
           </div>
-        </>
+        </>,
+        document.body,
       )}
     </div>
   )
