@@ -20,15 +20,26 @@ function studioIndexHtml(): Plugin {
   }
 }
 
+// Native (Capacitor) builds load their assets off the local filesystem, so the
+// base has to be relative. Studio passes its own --base on the CLI.
+const native = process.env.NATIVE === '1'
+
 export default defineConfig({
-  base: '/study-assist/',
+  base: native ? '' : '/study-assist/',
+  define: {
+    // The paid Play Store build skips brand/feature gating. Defined in every
+    // build so the check constant-folds and the dead branch is tree-shaken.
+    'import.meta.env.VITE_PAID_BUILD': JSON.stringify(native ? 'true' : 'false'),
+  },
   plugins: [
     react(),
     studioIndexHtml(),
     VitePWA({
       // The /studio deployment on vividledger.art is a feature of that site,
       // not a second installable app — no service worker or manifest there.
-      disable: process.env.STUDIO === '1',
+      // Native builds already bundle their assets; a service worker there
+      // would only ever check an origin that never has an update.
+      disable: process.env.STUDIO === '1' || native,
       registerType: 'prompt',
       manifest: false, // we maintain our own public/manifest.json
       workbox: {

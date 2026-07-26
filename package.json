@@ -8,7 +8,7 @@
 		"build:studio": "tsc && STUDIO=1 vite build --base=/studio/app/ --outDir dist-studio",
 		"preview": "vite preview",
 		"typecheck": "tsc --noEmit",
-		"build:native": "vite build --config vite.config.native.ts && npx cap copy"
+		"build:native": "tsc && NATIVE=1 vite build --outDir dist-native && npx cap copy"
 	},
 	"devDependencies": {
 		"@capacitor/android": "^8.4.1",

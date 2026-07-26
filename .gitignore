@@ -13,3 +13,4 @@ dist-studio/
 # Capacitor native projects
 android/
 ios/
+dist-native/
