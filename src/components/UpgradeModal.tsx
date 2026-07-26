@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { redeemCode } from '@/lib/entitlements'
 import { isVividLedgerBuild } from '@/lib/vl-bridge'
+import { useDismissOnBack } from '@/hooks/useDismissOnBack'
 import styles from './UpgradeModal.module.css'
 
 interface Props {
@@ -27,6 +28,8 @@ export function UpgradeModal({ title, body, onClose, onUnlock }: Props) {
   function close() {
     dialogRef.current?.close()
   }
+
+  useDismissOnBack(true, close)
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     if (e.target === dialogRef.current) close()
