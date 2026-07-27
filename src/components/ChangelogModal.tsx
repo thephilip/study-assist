@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { CHANGELOG } from '@/lib/changelog'
+import { useDismissOnBack } from '@/hooks/useDismissOnBack'
 import styles from './ChangelogModal.module.css'
 
 interface Props {
@@ -18,6 +19,8 @@ export function ChangelogModal({ onDismiss }: Props) {
   function close() {
     dialogRef.current?.close()
   }
+
+  useDismissOnBack(true, close)
 
   function handleBackdropClick(e: React.MouseEvent<HTMLDialogElement>) {
     if (e.target === dialogRef.current) close()

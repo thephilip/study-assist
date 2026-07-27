@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { TOOL_GROUPS, TOOL_LABELS, type Tool } from '@/tools/index'
 import { useIsTouch } from '@/hooks/useIsTouch'
+import { useDismissOnBack } from '@/hooks/useDismissOnBack'
 import styles from './ToolsMenu.module.css'
 
 function CheckIcon() {
@@ -48,6 +49,8 @@ export function ToolsMenu({ activeTool, onSelect }: Props) {
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
   }, [open, close])
+
+  useDismissOnBack(open, close)
 
   // Prevent body scroll when sheet is open (touch only)
   useEffect(() => {

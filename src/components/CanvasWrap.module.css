@@ -48,7 +48,10 @@
   inset: 0;
   z-index: 9999;
   background: var(--color-bg);
-  padding: var(--space-8);
+  padding: calc(var(--space-8) + env(safe-area-inset-top, 0px))
+    calc(var(--space-8) + env(safe-area-inset-right, 0px))
+    calc(var(--space-8) + env(safe-area-inset-bottom, 0px))
+    calc(var(--space-8) + env(safe-area-inset-left, 0px));
 }
 
 .resetBtn {

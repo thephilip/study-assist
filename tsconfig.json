@@ -21,5 +21,8 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  // *.check.ts are node self-check scripts run via tsx, not app code — keeping
+  // them out avoids pulling @types/node into the browser build's type graph.
+  "exclude": ["src/**/*.check.ts"]
 }
